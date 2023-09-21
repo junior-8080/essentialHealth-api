@@ -17,6 +17,14 @@ export const userValidationSchema = Joi.object({
   role: Joi.string(),
 });
 
+export const userUpdateValidationSchema = Joi.object({
+  firstName: Joi.string(),
+  lastName: Joi.string(),
+  email: Joi.string().email(),
+  phoneNumber: Joi.string(),
+  imageURL: Joi.string(),
+}).min(1);
+
 export const authValidationSchema = Joi.object({
   phoneNumber: Joi.string().required(),
 });

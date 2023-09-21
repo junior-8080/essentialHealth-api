@@ -13,7 +13,7 @@ COPY . .
 RUN npm install
 
 # Copy the rest of the application source code to the container
-COPY ./src ./src
+# COPY ./src ./src
 
 # Expose the port your application will run on (replace 3000 with your app's port)
 EXPOSE 3000

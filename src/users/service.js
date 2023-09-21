@@ -50,3 +50,17 @@ export const fetchUser = async (payload) => {
     throw error;
   }
 };
+
+export const updateUser = async (userId, payload) => {
+  try {
+    const responseData = await User.updateOne({ _id: userId }, { $set: payload });
+    return {
+      code: codes.RESOURCE_UPDATED,
+      data: {
+        id: userId,
+      },
+    };
+  } catch (error) {
+    throw error;
+  }
+};

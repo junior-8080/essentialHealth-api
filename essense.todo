@@ -1,1 +1,8 @@
-auth should create a sample auth,
+user generates otp from /auth
+verifies otp /auth/verify-otp
+        -verify otp from arkersel
+        -check if user exists
+        -if user exist continue flow
+        -if user does not exist create a user with just phonenumber,
+              - use the id to create the token
+              - the user object should be empty

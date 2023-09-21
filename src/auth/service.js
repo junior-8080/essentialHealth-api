@@ -2,18 +2,19 @@ import { codes } from "../constants/codes.js";
 import { fetchUserByPhoneNumber } from "../utils/common.js";
 import { generateAndSendOtpViaArkesel, verifyOptViaArkesel } from "../utils/arkesel.js";
 import { generateToken } from "../utils/helpers.js";
-import { fetchUsers } from "../users/service.js";
+import { createUser, fetchUsers } from "../users/service.js";
 
 export const login = async (payload) => {
   try {
     const { phoneNumber } = payload;
-    const userExist = await fetchUserByPhoneNumber(phoneNumber);
-    if (!userExist) {
-      throw {
-        code: codes.NOT_FOUND,
-        message: "User does not exist",
-      };
-    }
+
+    // const userExist = await fetchUserByPhoneNumber(phoneNumber);
+    // if (!userExist) {
+    //   throw {
+    //     code: codes.NOT_FOUND,
+    //     message: "User does not exist",
+    //   };
+    // }
     const otpData = await generateAndSendOtpViaArkesel(phoneNumber);
     return {
       code: codes.RESOURCE_CREATED,
@@ -59,35 +60,37 @@ export const adminLogin = async (payload) => {
 };
 
 export const verifyOtp = async (payload) => {
-  //   console.log("🚀 ~ file: service.js:32 ~ verifyOtp ~ payload:", payload);
   try {
     const { phoneNumber, code } = payload;
-    const userExist = await fetchUserByPhoneNumber(phoneNumber);
-    if (!userExist) {
-      throw {
-        code: codes.NOT_FOUND,
-        message: "User does not exist",
-      };
-    }
     const otpData = await verifyOptViaArkesel(phoneNumber, code);
+    console.log("🚀 ~ file: service.js:66 ~ verifyOtp ~ otpData:", otpData);
     if (otpData.code !== "1100") {
       throw {
         code: codes.UNAUTHORIZED,
         message: "Opt code has expired",
       };
     }
-    const { _id, role, firstName, lastName } = userExist;
+    let userData = await fetchUserByPhoneNumber(phoneNumber);
+    const userExist = userData;
+    if (!userExist) {
+      const responseData = await createUser({ phoneNumber });
+      userData = responseData.data;
+    }
+    const { _id, role, firstName, lastName } = userData;
+    const responseUserData = userExist
+      ? {
+          firstName,
+          lastName,
+          role,
+        }
+      : null;
     const token = generateToken({ id: _id, role });
     return {
       code: codes.RESOURCE_CREATED,
       message: "Otp verification successful",
       data: {
         token,
-        user: {
-          firstName,
-          lastName,
-          role,
-        },
+        user: responseUserData,
       },
     };
   } catch (error) {
