@@ -1,11 +1,10 @@
 import { codes } from "../constants/codes.js";
 import Category from "../models/Category.js";
-import { fetchCategoryByTitle, paginate } from "../utils/common.js";
+import { customCreate, fetchCategoryByTitle, paginate } from "../utils/common.js";
 
 export const createCategory = async (payload) => {
   try {
     const categoryExists = await fetchCategoryByTitle(payload.title);
-    console.log("🚀 ~ file: service.js:8 ~ createCategory ~ categoryExists:", categoryExists);
     if (categoryExists) {
       throw {
         code: codes.RESOURCE_EXISTS,
@@ -13,10 +12,10 @@ export const createCategory = async (payload) => {
         data: payload,
       };
     }
-    const { _doc } = await Category.create(payload);
+    const categoryData = await customCreate(Category, payload);
     return {
       code: codes.RESOURCE_CREATED,
-      data: _doc,
+      data: categoryData,
     };
   } catch (error) {
     throw error;

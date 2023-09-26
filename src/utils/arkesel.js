@@ -11,7 +11,7 @@ export const generateAndSendOtpViaArkesel = async (phoneNumber) => {
       expiry: 10,
       length: 6,
       medium: "sms",
-      message: "This is  your verification code is, %otp_code%, from Essential Health",
+      message: "Essential Health verification code:%otp_code%",
       number: phoneNumber,
       sender_id: "Test",
       type: "numeric",

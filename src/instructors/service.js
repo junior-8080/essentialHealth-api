@@ -1,11 +1,10 @@
 import { codes } from "../constants/codes.js";
-import { paginate } from "../utils/common.js";
+import { customCreate, paginate } from "../utils/common.js";
 import Instructor from "../models/Instructor.js";
 
 export const createInstructor = async (payload) => {
   try {
     const instructorData = await Instructor.findOne({ email: payload.email, phoneNumber: payload.phoneNumber });
-
     if (instructorData) {
       throw {
         code: codes.RESOURCE_EXISTS,
@@ -13,10 +12,11 @@ export const createInstructor = async (payload) => {
         data: payload,
       };
     }
-    const { _doc } = await Instructor.create(payload);
+    const InstructorData = await customCreate(Instructor, payload);
+
     return {
       code: codes.RESOURCE_CREATED,
-      data: _doc,
+      data: InstructorData,
     };
   } catch (error) {
     throw error;

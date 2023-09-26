@@ -33,6 +33,11 @@ const UserSchema = new mongoose.Schema({
     required: false,
     default: "Active",
   },
+  subscription_type: {
+    type: String,
+    enum: ["standard", "premium"],
+    default: "standard",
+  },
   created_at: {
     type: Date,
     default: Date.now(),

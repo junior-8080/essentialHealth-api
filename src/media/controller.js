@@ -11,12 +11,13 @@ export const createMedia = async (request, response, next) => {
         message: "file is required",
       };
     }
+
     const saveMediaPayload = {
-      fileUrl: `/media/${file.filename}`,
+      fileUrl: `${process.env.APP_BASE_URL}${process.env.FILE_UPLOAD_DIR}/${file.filename}`,
       type: getFileCategory(file.mimetype),
       ...request.body,
     };
-    const validPayload = await validateRequestPayload();
+    // const validPayload = await validateRequestPayload();
     const responsePayload = await mediaServices.createMedia(saveMediaPayload);
     response.locals.responsePayload = {
       ...responsePayload,

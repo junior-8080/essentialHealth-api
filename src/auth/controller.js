@@ -61,9 +61,7 @@ export const verifyOtp = async (request, response, next) => {
     const requestPayload = {
       ...request.body,
     };
-    console.log("ppppppp");
     const validPayload = await validateRequestPayload(verifyOtpValidationSchema, requestPayload);
-    // console.log("🚀 ~ file: controller.js:28 ~ verifyOtp ~ validPayload:", validPayload);
     const responsePayload = await authServices.verifyOtp(validPayload);
     response.locals.responsePayload = {
       ...responsePayload,

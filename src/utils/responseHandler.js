@@ -18,7 +18,6 @@ const responseHandler = (responsePayload = {}, response) => {
   if (!response) {
     throw new Error("responsePayload and response  are required");
   }
-  console.log("🚀 ~ file: responseHandler.js:57 ~ responseHandler ~ response:", responsePayload);
   const { code, data } = responsePayload;
   let message = responsePayload.message;
   let statusCode = 200;
@@ -56,6 +55,7 @@ const responseHandler = (responsePayload = {}, response) => {
       message = message || codeMessages[RESOURCE_EXISTS];
       break;
     default:
+      console.log(responsePayload);
       statusCode = 500;
       message = codeMessages[INTERNAL_SERVER_ERROR];
   }

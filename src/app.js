@@ -23,12 +23,12 @@ import { createUploadDirectories } from "./utils/helpers.js";
 import authorize from "./utils/middlewares.js";
 
 const app = express();
-const base = "/Users/abdulmukhsinahmed";
+const base = process.env.NODE_ENV === "development" ? "/Users/abdulmukhsinahmed" : "";
 app.use(helmet());
 app.use(cors());
 app.use(morgan("combined"));
 app.options("*", cors());
-app.use("/api/v1/uploads", express.static(`${base}/media`));
+app.use("/api/v1/uploads", express.static(`${base}/${process.env.FILE_UPLOAD_DIR}`));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
@@ -39,9 +39,9 @@ app.get("/", (request, response) =>
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", authorize, userRouter);
 app.use("/api/v1/media", authorize, mediaRouter);
-app.use("/api/v1/categories", authorize, categoriesRouter);
+app.use("/api/v1/categories", categoriesRouter);
 app.use("/api/v1/instructors", authorize, instructorsRouter);
-app.use("/api/v1/contents", authorize, contentsRouter);
+app.use("/api/v1/contents", contentsRouter);
 
 app.use((request, response) => {
   const { responsePayload } = response.locals;

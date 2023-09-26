@@ -1,8 +1,9 @@
 import express from "express";
 import * as categoryControllers from "./controller.js";
+import authorize from "../utils/middlewares.js";
 const router = express.Router();
 
-router.post("/", categoryControllers.createCategory);
+router.post("/", authorize, categoryControllers.createCategory);
 router.get("/", categoryControllers.fetchCategories);
 router.get("/:category_id", categoryControllers.fetchCategory);
 

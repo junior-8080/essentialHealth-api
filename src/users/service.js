@@ -1,6 +1,6 @@
 import { codes } from "../constants/codes.js";
 import User from "../models/User.js";
-import { fetchUserByPhoneNumber, paginate } from "../utils/common.js";
+import { customCreate, fetchUserByPhoneNumber, paginate } from "../utils/common.js";
 
 export const createUser = async (payload) => {
   try {
@@ -12,10 +12,10 @@ export const createUser = async (payload) => {
         data: payload,
       };
     }
-    const { _doc } = await User.create(payload);
+    const userData = await customCreate(User, payload);
     return {
       code: codes.RESOURCE_CREATED,
-      data: _doc,
+      data: userData,
     };
   } catch (error) {
     throw error;

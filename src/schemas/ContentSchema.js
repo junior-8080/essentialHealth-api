@@ -46,6 +46,9 @@ const categorySchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  created_by: {
+    type: String,
+  },
 });
 
 export default categorySchema;

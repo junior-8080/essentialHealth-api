@@ -41,7 +41,8 @@ export const decodeJwtToken = (token) => {
 const base = "/Users/abdulmukhsinahmed";
 
 export const createUploadDirectories = () => {
-  const absolutePath = `${base}/media`;
+  const absolutePath =
+    process.env.NODE_ENV === "development" ? `${base}/${process.env.FILE_UPLOAD_DIR}` : process.env.FILE_UPLOAD_DIR;
   if (!fs.existsSync(absolutePath)) {
     fs.mkdirSync(absolutePath, { recursive: true });
   }

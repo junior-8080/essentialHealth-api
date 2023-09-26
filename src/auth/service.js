@@ -7,14 +7,6 @@ import { createUser, fetchUsers } from "../users/service.js";
 export const login = async (payload) => {
   try {
     const { phoneNumber } = payload;
-
-    // const userExist = await fetchUserByPhoneNumber(phoneNumber);
-    // if (!userExist) {
-    //   throw {
-    //     code: codes.NOT_FOUND,
-    //     message: "User does not exist",
-    //   };
-    // }
     const otpData = await generateAndSendOtpViaArkesel(phoneNumber);
     return {
       code: codes.RESOURCE_CREATED,
@@ -63,7 +55,6 @@ export const verifyOtp = async (payload) => {
   try {
     const { phoneNumber, code } = payload;
     const otpData = await verifyOptViaArkesel(phoneNumber, code);
-    console.log("🚀 ~ file: service.js:66 ~ verifyOtp ~ otpData:", otpData);
     if (otpData.code !== "1100") {
       throw {
         code: codes.UNAUTHORIZED,
@@ -76,15 +67,16 @@ export const verifyOtp = async (payload) => {
       const responseData = await createUser({ phoneNumber });
       userData = responseData.data;
     }
-    const { _id, role, firstName, lastName } = userData;
+    const { _id, role, firstName, lastName, subscription_type } = userData;
     const responseUserData = userExist
       ? {
           firstName,
           lastName,
           role,
+          subscription_type,
         }
       : null;
-    const token = generateToken({ id: _id, role });
+    const token = generateToken({ id: _id, role, subscription_type });
     return {
       code: codes.RESOURCE_CREATED,
       message: "Otp verification successful",

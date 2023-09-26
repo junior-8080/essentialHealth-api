@@ -1,13 +1,27 @@
 import { codes } from "../constants/codes.js";
-import { paginate } from "../utils/common.js";
+import { customCreate, paginate } from "../utils/common.js";
 import Content from "../models/Content.js";
 
 export const createContent = async (payload) => {
   try {
-    const { _doc } = await Content.create(payload);
+    const contentData = await customCreate(Content, payload);
     return {
       code: codes.RESOURCE_CREATED,
-      data: _doc,
+      data: contentData,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateContent = async (contentId, payload) => {
+  try {
+    const responseData = await Content.updateOne({ _id: contentId }, { $set: payload });
+    return {
+      code: codes.RESOURCE_CREATED,
+      data: {
+        id: contentId,
+      },
     };
   } catch (error) {
     throw error;
@@ -17,7 +31,7 @@ export const createContent = async (payload) => {
 export const fetchContents = async (payload = {}) => {
   try {
     const { page, pageSize } = payload;
-    const referenceName = "category_id";
+    const referenceName = "category_id instructor_id";
     const result = await paginate({ Model: Content, page, pageSize, payload, referenceName });
     return {
       code: codes.RESOURCE_FETCHED,

@@ -1,5 +1,5 @@
 import { validateRequestPayload } from "../utils/helpers.js";
-import { contentSchema } from "../utils/schemaValidators.js";
+import { contentSchema, contentUpdateSchema } from "../utils/schemaValidators.js";
 import * as contentServices from "./service.js";
 
 export const createContent = async (request, response, next) => {
@@ -20,7 +20,28 @@ export const createContent = async (request, response, next) => {
 };
 export const fetchContents = async (request, response, next) => {
   try {
-    const responsePayload = await contentServices.fetchContents();
+    const requestPayload = {
+      ...request.query,
+    };
+    const responsePayload = await contentServices.fetchContents(requestPayload);
+    response.locals.responsePayload = {
+      ...responsePayload,
+    };
+    next();
+  } catch (error) {
+    response.locals.responsePayload = error;
+    next();
+  }
+};
+
+export const updateContent = async (request, response, next) => {
+  try {
+    const requestPayload = {
+      ...request.body,
+    };
+    const contentId = request.params.content_id;
+    const validPayload = await validateRequestPayload(contentUpdateSchema, requestPayload);
+    const responsePayload = await contentServices.updateContent(contentId, validPayload);
     response.locals.responsePayload = {
       ...responsePayload,
     };

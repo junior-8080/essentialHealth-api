@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import Category from "../models/Category.js";
+import { contentTransformer, defaultTransformer } from "./dataTransformers.js";
 
 export const fetchUserByPhoneNumber = async (phoneNumber) => {
   try {
@@ -19,21 +20,33 @@ export const fetchCategoryByTitle = async (title) => {
   }
 };
 
-export const paginate = async ({ Model, page = 1, pageSize = 10, filters = {}, referenceName = "" }) => {
+export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, referenceName = "" }) => {
   try {
     if (!Model) {
       throw new Error("Model is required");
     }
-    delete filters.page;
-    delete filters.pageSize;
+    delete payload.page;
+    delete payload.pageSize;
+    if (payload.ids) {
+      payload = {
+        ...payload,
+        _id: {
+          $in: payload.ids.split(","),
+        },
+      };
+      delete payload.ids;
+    }
+    const filters = {
+      ...payload,
+    };
     const totalCount = await Model.countDocuments(filters);
     const totalPages = Math.ceil(totalCount / pageSize);
-    const results = await Model.find(filters)
+    let results = await Model.find(filters)
       .populate(referenceName)
       .sort({ created_at: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize);
-
+    results = referenceName === "category_id instructor_id" ? contentTransformer(results) : defaultTransformer(results);
     return {
       page,
       pageSize,
@@ -41,6 +54,19 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, filters = {}, r
       totalCount,
       results,
     };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const customCreate = async (Model, payload = {}) => {
+  try {
+    if (!Model) {
+      throw new Error("Model is required");
+    }
+    const { _doc } = await Model.create(payload);
+    const { _id, ...rest } = _doc;
+    return { id: _id, ...rest };
   } catch (error) {
     throw error;
   }

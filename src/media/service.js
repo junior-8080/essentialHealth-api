@@ -1,13 +1,13 @@
 import { codes } from "../constants/codes.js";
 import Media from "../models/Media.js";
-import { paginate } from "../utils/common.js";
+import { customCreate, paginate } from "../utils/common.js";
 
 export const createMedia = async (payload) => {
   try {
-    const { _doc } = await Media.create(payload);
+    const mediaData = await customCreate(Media, payload);
     return {
       code: codes.RESOURCE_CREATED,
-      data: _doc,
+      data: mediaData,
     };
   } catch (error) {
     throw error;
