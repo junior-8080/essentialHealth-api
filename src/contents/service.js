@@ -38,7 +38,7 @@ export const fetchContents = async (payload = {}) => {
       data: result,
     };
   } catch (error) {
-    console.log("🚀 ~ file: service.js:27 ~ fetchContents ~ error:", error);
+    // console.log("🚀 ~ file: service.js:27 ~ fetchContents ~ error:", error);
     throw error;
   }
 };

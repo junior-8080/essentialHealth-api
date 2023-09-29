@@ -25,6 +25,7 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
     if (!Model) {
       throw new Error("Model is required");
     }
+    console.log(referenceName);
     delete payload.page;
     delete payload.pageSize;
     if (payload.ids) {

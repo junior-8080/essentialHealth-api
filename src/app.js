@@ -23,11 +23,10 @@ import { createUploadDirectories } from "./utils/helpers.js";
 import authorize from "./utils/middlewares.js";
 
 const app = express();
+app.use(cors());
 const base = process.env.NODE_ENV === "development" ? "/Users/abdulmukhsinahmed" : "";
 app.use(helmet());
-app.use(cors());
 app.use(morgan("combined"));
-app.options("*", cors());
 app.use("/api/v1/uploads", express.static(`${base}/${process.env.FILE_UPLOAD_DIR}`));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

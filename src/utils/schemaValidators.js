@@ -41,6 +41,12 @@ export const categoriesValidationSchema = Joi.object({
   imageURL: Joi.string(),
 });
 
+export const categoriesUpdateValidationSchema = Joi.object({
+  title: Joi.string(),
+  description: Joi.string(),
+  imageURL: Joi.string(),
+}).min(1);
+
 export const mediaValidationSchema = Joi.object({
   title: Joi.string().required(),
   description: Joi.string(),

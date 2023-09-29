@@ -1,5 +1,5 @@
 import { validateRequestPayload } from "../utils/helpers.js";
-import { categoriesValidationSchema } from "../utils/schemaValidators.js";
+import { categoriesUpdateValidationSchema, categoriesValidationSchema } from "../utils/schemaValidators.js";
 import * as categoryServices from "./service.js";
 
 export const createCategory = async (request, response, next) => {
@@ -18,6 +18,25 @@ export const createCategory = async (request, response, next) => {
     next();
   }
 };
+
+export const updateCategory = async (request, response, next) => {
+  try {
+    const requestPayload = {
+      ...request.body,
+    };
+    const categoryId = request.params.category_id;
+    const validPayload = await validateRequestPayload(categoriesUpdateValidationSchema, requestPayload);
+    const responsePayload = await categoryServices.updateCategory(categoryId, validPayload);
+    response.locals.responsePayload = {
+      ...responsePayload,
+    };
+    next();
+  } catch (error) {
+    response.locals.responsePayload = error;
+    next();
+  }
+};
+
 export const fetchCategories = async (request, response, next) => {
   try {
     const responsePayload = await categoryServices.fetchCategories();

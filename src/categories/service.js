@@ -22,6 +22,30 @@ export const createCategory = async (payload) => {
   }
 };
 
+export const updateCategory = async (categoryId, payload) => {
+  try {
+    if (payload.title) {
+      const categoryExists = await fetchCategoryByTitle(payload.title || "");
+      if (categoryExists) {
+        throw {
+          code: codes.RESOURCE_EXISTS,
+          message: "category already exists",
+          data: payload,
+        };
+      }
+    }
+    const categoryData = await Category.updateOne({ _id: categoryId }, { $set: payload });
+    return {
+      code: codes.RESOURCE_CREATED,
+      data: {
+        id: categoryId,
+      },
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const fetchCategories = async (payload = {}) => {
   try {
     const { page, pageSize } = payload;

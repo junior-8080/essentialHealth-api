@@ -1,5 +1,5 @@
 import { validateRequestPayload } from "../utils/helpers.js";
-import { userValidationSchema } from "../utils/schemaValidators.js";
+import { userUpdateValidationSchema, userValidationSchema } from "../utils/schemaValidators.js";
 import * as userServices from "./service.js";
 
 export const createUser = async (request, response, next) => {
@@ -53,8 +53,9 @@ export const updateUser = async (request, response, next) => {
     const requestPayload = {
       ...request.body,
     };
+    const validPayload = await validateRequestPayload(userUpdateValidationSchema, requestPayload);
     const userId = request.userDetails.id;
-    const responsePayload = await userServices.updateUser(userId, requestPayload);
+    const responsePayload = await userServices.updateUser(userId, validPayload);
     response.locals.responsePayload = {
       ...responsePayload,
     };
