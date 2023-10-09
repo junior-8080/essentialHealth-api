@@ -1,5 +1,6 @@
 import { codes } from "../constants/codes.js";
 import { getFileCategory, validateRequestPayload } from "../utils/helpers.js";
+import { uploadToS3 } from "../utils/s3Setup.js";
 import * as mediaServices from "./service.js";
 
 export const createMedia = async (request, response, next) => {
@@ -11,9 +12,10 @@ export const createMedia = async (request, response, next) => {
         message: "file is required",
       };
     }
-
+    const fileCategory = getFileCategory(file.mimetype);
+    const fileUrl = await uploadToS3(file.path, file.filename, file.mimetype, fileCategory);
     const saveMediaPayload = {
-      fileUrl: `${process.env.APP_BASE_URL}${process.env.FILE_UPLOAD_DIR}/${file.filename}`,
+      fileUrl,
       type: getFileCategory(file.mimetype),
       ...request.body,
     };
@@ -31,7 +33,10 @@ export const createMedia = async (request, response, next) => {
 
 export const fetchAllMedia = async (request, response, next) => {
   try {
-    const responsePayload = await mediaServices.fetchAllMedia();
+    const requestPayload = {
+      ...request.query,
+    };
+    const responsePayload = await mediaServices.fetchAllMedia(requestPayload);
     response.locals.responsePayload = {
       ...responsePayload,
     };

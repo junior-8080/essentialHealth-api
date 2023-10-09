@@ -54,16 +54,28 @@ export const updateContent = async (request, response, next) => {
 
 export const fetchContent = async (request, response, next) => {
   try {
-    const requestPayload = {
-      ...request.params,
-    };
-    const responsePayload = await contentServices.fetchContent(requestPayload);
+    const contentId = request.params.content_id;
+    const responsePayload = await contentServices.fetchContent(contentId);
     response.locals.responsePayload = {
       ...responsePayload,
     };
     next();
   } catch (error) {
-    console.log("🚀 ~ file: controller.js:45 ~ fetchUser ~ error:", error);
+    response.locals.responsePayload = error;
+    next();
+  }
+};
+
+export const fetchContentSections = async (request, response, next) => {
+  try {
+    const contentId = request.params.content_id;
+    const responsePayload = await contentServices.fetchContentSections(contentId);
+    response.locals.responsePayload = {
+      ...responsePayload,
+    };
+    next();
+  } catch (error) {
+    // console.log("🚀 ~ file: controller.js:78 ~ fetchContentSections ~ error:", error);
     response.locals.responsePayload = error;
     next();
   }

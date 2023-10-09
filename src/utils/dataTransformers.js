@@ -10,7 +10,7 @@ export const defaultTransformer = (results) => {
 
 export const contentTransformer = (results) => {
   return results.map((item) => {
-    console.log("🚀 ~ file: dataTransformers.js:13 ~ returnresults.map ~ item:", item);
+    // console.log("🚀 ~ file: dataTransformers.js:13 ~ returnresults.map ~ item:", item);
     let newItem = JSON.stringify(item);
     newItem = JSON.parse(newItem);
     newItem.id = newItem._id;

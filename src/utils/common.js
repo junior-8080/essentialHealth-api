@@ -21,11 +21,12 @@ export const fetchCategoryByTitle = async (title) => {
 };
 
 export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, referenceName = "" }) => {
+  // console.log("🚀 ~ file: common.js:24 ~ paginate ~ payload:", payload);
   try {
     if (!Model) {
       throw new Error("Model is required");
     }
-    console.log(referenceName);
+    // console.log(referenceName);
     delete payload.page;
     delete payload.pageSize;
     if (payload.ids) {
@@ -40,6 +41,9 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
     const filters = {
       ...payload,
     };
+    page = parseInt(page);
+    pageSize = parseInt(pageSize);
+
     const totalCount = await Model.countDocuments(filters);
     const totalPages = Math.ceil(totalCount / pageSize);
     let results = await Model.find(filters)

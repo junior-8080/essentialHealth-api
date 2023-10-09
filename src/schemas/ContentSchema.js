@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const categorySchema = new mongoose.Schema({
+const contentSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -25,7 +25,7 @@ const categorySchema = new mongoose.Schema({
   source: {
     type: {
       type: String,
-      enum: ["text", "audio", "video", "image", "body"],
+      enum: ["audio", "video", "image", "session", "article"],
     },
     body: String,
   },
@@ -51,4 +51,4 @@ const categorySchema = new mongoose.Schema({
   },
 });
 
-export default categorySchema;
+export default contentSchema;

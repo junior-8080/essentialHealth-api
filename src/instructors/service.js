@@ -38,8 +38,8 @@ export const fetchInstructors = async (payload = {}) => {
 
 export const fetchInstructor = async (payload) => {
   try {
-    const { user_id } = payload;
-    const { _doc } = await User.findById(user_id);
+    const { instructor_id } = payload;
+    const { _doc } = await Instructor.findById(instructor_id);
 
     return {
       code: codes.RESOURCE_FETCHED,

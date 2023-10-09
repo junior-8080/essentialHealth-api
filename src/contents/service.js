@@ -1,6 +1,7 @@
 import { codes } from "../constants/codes.js";
 import { customCreate, paginate } from "../utils/common.js";
 import Content from "../models/Content.js";
+import { contentTransformer } from "../utils/dataTransformers.js";
 
 export const createContent = async (payload) => {
   try {
@@ -31,6 +32,8 @@ export const updateContent = async (contentId, payload) => {
 export const fetchContents = async (payload = {}) => {
   try {
     const { page, pageSize } = payload;
+    payload.content_type = payload.content_type ? payload.content_type : "main";
+    console.log(payload);
     const referenceName = "category_id instructor_id";
     const result = await paginate({ Model: Content, page, pageSize, payload, referenceName });
     return {
@@ -43,16 +46,37 @@ export const fetchContents = async (payload = {}) => {
   }
 };
 
-export const fetchContent = async (payload) => {
+export const fetchContent = async (contentId) => {
   try {
-    const { user_id } = payload;
-    const { _doc } = await User.findById(user_id);
-
+    const payload = {
+      _id: contentId,
+    };
+    const page = 1;
+    const pageSize = 1;
+    const referenceName = "category_id instructor_id";
+    const result = await paginate({ Model: Content, page, pageSize, payload, referenceName });
     return {
       code: codes.RESOURCE_FETCHED,
-      data: {
-        ..._doc,
-      },
+      data: result,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchContentSections = async (contentId) => {
+  try {
+    const mainContent = (await Content.findById({ _id: contentId })) || {};
+    const sectionPayload = {
+      ids: (mainContent.sections || []).join(","),
+      content_type: "part",
+    };
+    const {
+      data: { results },
+    } = await fetchContents(sectionPayload);
+    return {
+      code: codes.RESOURCE_FETCHED,
+      data: results,
     };
   } catch (error) {
     throw error;

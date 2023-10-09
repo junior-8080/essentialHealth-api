@@ -23,7 +23,12 @@ import { createUploadDirectories } from "./utils/helpers.js";
 import authorize from "./utils/middlewares.js";
 
 const app = express();
-app.use(cors());
+const corsOptions = {
+  origin: "*",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  exposedHeaders: ["Cross-Origin-Resource-Policy"],
+};
+app.use(cors(corsOptions));
 const base = process.env.NODE_ENV === "development" ? "/Users/abdulmukhsinahmed" : "";
 app.use(helmet());
 app.use(morgan("combined"));
@@ -74,7 +79,7 @@ database
         console.log("Admin Created");
         break;
       default:
-        console.log("Error connecting to database");
+        console.log("Error connecting to database.");
         break;
     }
   });

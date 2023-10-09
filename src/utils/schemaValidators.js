@@ -70,8 +70,11 @@ export const contentSchema = Joi.object({
   sections: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
   intro: Joi.string(),
   source: Joi.object({
-    type: Joi.string().valid("text", "audio", "video", "image", "body"),
-    body: Joi.string(),
+    type: Joi.string().valid("audio", "video", "image", "session", "article"),
+    body: Joi.string().when("type", {
+      is: "session",
+      then: Joi.string().allow(""),
+    }),
   }),
   category_id: Joi.string()
     .pattern(/^[0-9a-fA-F]{24}$/)
@@ -92,7 +95,10 @@ export const contentUpdateSchema = Joi.object({
   intro: Joi.string(),
   source: Joi.object({
     type: Joi.string().valid("text", "audio", "video", "image", "body"),
-    body: Joi.string(),
+    body: Joi.string().when("type", {
+      is: "session",
+      then: Joi.string().allow(""),
+    }),
   }),
   category_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
   instructor_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
