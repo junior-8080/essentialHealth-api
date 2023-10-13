@@ -54,10 +54,15 @@ export const fetchContent = async (contentId) => {
     const page = 1;
     const pageSize = 1;
     const referenceName = "category_id instructor_id";
-    const result = await paginate({ Model: Content, page, pageSize, payload, referenceName });
+    const { results } = await paginate({ Model: Content, page, pageSize, payload, referenceName });
+    if (results.length === 0) {
+      throw {
+        code: codes.NOT_FOUND,
+      };
+    }
     return {
       code: codes.RESOURCE_FETCHED,
-      data: result,
+      data: results[0],
     };
   } catch (error) {
     throw error;
