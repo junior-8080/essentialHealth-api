@@ -109,4 +109,6 @@ export const contentUpdateSchema = Joi.object({
 export const mediaSchema = Joi.object({
   title: Joi.string(),
   fileUrl: Joi.string().required(),
+  name: Joi.string(),
+  description: Joi.string(),
 });

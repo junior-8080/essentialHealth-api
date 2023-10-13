@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
 const mediaSchema = new mongoose.Schema({
-  title: String,
+  name: String,
+  descriptions: String,
   fileUrl: {
     type: String,
     required: true,

@@ -4,6 +4,7 @@ import { uploadToS3 } from "../utils/s3Setup.js";
 import * as mediaServices from "./service.js";
 
 export const createMedia = async (request, response, next) => {
+  // console.log("🚀 ~ file: controller.js:7 ~ createMedia ~ request:", request);
   try {
     const { file } = request;
     if (!file) {
@@ -19,6 +20,7 @@ export const createMedia = async (request, response, next) => {
       type: getFileCategory(file.mimetype),
       ...request.body,
     };
+    // console.log(saveMediaPayload);
     // const validPayload = await validateRequestPayload();
     const responsePayload = await mediaServices.createMedia(saveMediaPayload);
     response.locals.responsePayload = {
