@@ -2,6 +2,7 @@ import { codes } from "../constants/codes.js";
 import { customCreate, paginate } from "../utils/common.js";
 import Content from "../models/Content.js";
 import { contentTransformer } from "../utils/dataTransformers.js";
+import { userMediaActivity } from "../users/service.js";
 
 export const createContent = async (payload) => {
   try {
@@ -29,16 +30,17 @@ export const updateContent = async (contentId, payload) => {
   }
 };
 
-export const fetchContents = async (payload = {}) => {
+export const fetchContents = async (payload = {}, userId = "") => {
   try {
     const { page, pageSize } = payload;
     payload.content_type = payload.content_type ? payload.content_type : "main";
     console.log(payload);
     const referenceName = "category_id instructor_id";
-    const result = await paginate({ Model: Content, page, pageSize, payload, referenceName });
+    let data = await paginate({ Model: Content, page, pageSize, payload, referenceName });
+    data.results = await userMediaActivity(data.results, userId);
     return {
       code: codes.RESOURCE_FETCHED,
-      data: result,
+      data: data,
     };
   } catch (error) {
     // console.log("🚀 ~ file: service.js:27 ~ fetchContents ~ error:", error);
@@ -69,7 +71,7 @@ export const fetchContent = async (contentId) => {
   }
 };
 
-export const fetchContentSections = async (contentId) => {
+export const fetchContentSections = async (contentId, userId) => {
   try {
     const mainContent = (await Content.findById({ _id: contentId })) || {};
     const sectionPayload = {
@@ -78,7 +80,9 @@ export const fetchContentSections = async (contentId) => {
     };
     const {
       data: { results },
-    } = await fetchContents(sectionPayload);
+    } = await fetchContents(sectionPayload, userId);
+    // console.log("🚀 ~ file: service.js:83 ~ fetchContentSections ~ results:", results);
+
     return {
       code: codes.RESOURCE_FETCHED,
       data: results,

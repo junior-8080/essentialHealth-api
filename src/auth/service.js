@@ -68,6 +68,7 @@ export const verifyOtp = async (payload) => {
       userData = responseData.data;
     }
     const { _id, role, firstName, lastName, subscription_type } = userData;
+    // console.log("🚀 ~ file: service.js:71 ~ verifyOtp ~ _id:", _id);
     const responseUserData = userExist
       ? {
           firstName,

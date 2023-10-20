@@ -41,10 +41,11 @@ app.get("/", (request, response) =>
 );
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/users", authorize, userRouter);
-app.use("/api/v1/media", authorize, mediaRouter);
+app.use(authorize);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/media", mediaRouter);
 app.use("/api/v1/categories", categoriesRouter);
-app.use("/api/v1/instructors", authorize, instructorsRouter);
+app.use("/api/v1/instructors", instructorsRouter);
 app.use("/api/v1/contents", contentsRouter);
 
 app.use((request, response) => {

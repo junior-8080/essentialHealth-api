@@ -23,7 +23,8 @@ export const fetchContents = async (request, response, next) => {
     const requestPayload = {
       ...request.query,
     };
-    const responsePayload = await contentServices.fetchContents(requestPayload);
+    const userId = request.userDetails.id;
+    const responsePayload = await contentServices.fetchContents(requestPayload, userId);
     response.locals.responsePayload = {
       ...responsePayload,
     };
@@ -69,13 +70,13 @@ export const fetchContent = async (request, response, next) => {
 export const fetchContentSections = async (request, response, next) => {
   try {
     const contentId = request.params.content_id;
-    const responsePayload = await contentServices.fetchContentSections(contentId);
+    const userId = request.userDetails.id;
+    const responsePayload = await contentServices.fetchContentSections(contentId, userId);
     response.locals.responsePayload = {
       ...responsePayload,
     };
     next();
   } catch (error) {
-    // console.log("🚀 ~ file: controller.js:78 ~ fetchContentSections ~ error:", error);
     response.locals.responsePayload = error;
     next();
   }

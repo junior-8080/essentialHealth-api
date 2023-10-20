@@ -112,3 +112,8 @@ export const mediaSchema = Joi.object({
   name: Joi.string(),
   description: Joi.string(),
 });
+
+export const userActivityValidationSchema = Joi.object({
+  user_id: Joi.string().required(),
+  content_id: Joi.string().required(),
+});

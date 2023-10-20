@@ -1,5 +1,6 @@
 import { codes } from "../constants/codes.js";
 import User from "../models/User.js";
+import UserMediaActivity from "../models/UserMediaActivity.js";
 import { customCreate, fetchUserByPhoneNumber, paginate } from "../utils/common.js";
 
 export const createUser = async (payload) => {
@@ -59,6 +60,37 @@ export const updateUser = async (userId, payload) => {
       data: {
         id: userId,
       },
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const userMediaActivity = async (contents, userId) => {
+  try {
+    const results = await UserMediaActivity.find({ user_id: userId });
+    const watchedContent = {};
+    results.map((activity) => {
+      watchedContent[activity.content_id] = true;
+    });
+    const data = contents.map((content) => {
+      return {
+        ...content,
+        watched: watchedContent[content.id] ? true : false,
+      };
+    });
+    return data;
+  } catch (error) {
+    console.error("Error updating content:", error);
+  }
+};
+
+export const createUserMediaActivity = async (payload) => {
+  try {
+    const userData = await customCreate(UserMediaActivity, payload);
+    return {
+      code: codes.RESOURCE_CREATED,
+      data: userData,
     };
   } catch (error) {
     throw error;
