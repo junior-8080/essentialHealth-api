@@ -37,7 +37,9 @@ export const fetchContents = async (payload = {}, userId = "") => {
     console.log(payload);
     const referenceName = "category_id instructor_id";
     let data = await paginate({ Model: Content, page, pageSize, payload, referenceName });
-    data.results = await userMediaActivity(data.results, userId);
+    if (userId) {
+      data.results = await userMediaActivity(data.results, userId);
+    }
     return {
       code: codes.RESOURCE_FETCHED,
       data: data,
@@ -57,6 +59,7 @@ export const fetchContent = async (contentId) => {
     const pageSize = 1;
     const referenceName = "category_id instructor_id";
     const { results } = await paginate({ Model: Content, page, pageSize, payload, referenceName });
+    console.log("🚀 ~ file: service.js:60 ~ fetchContent ~ results:", results);
     if (results.length === 0) {
       throw {
         code: codes.NOT_FOUND,

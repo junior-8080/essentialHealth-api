@@ -23,7 +23,7 @@ export const fetchContents = async (request, response, next) => {
     const requestPayload = {
       ...request.query,
     };
-    const userId = request.userDetails.id;
+    const userId = request.userDetails?.id;
     const responsePayload = await contentServices.fetchContents(requestPayload, userId);
     response.locals.responsePayload = {
       ...responsePayload,
@@ -70,7 +70,7 @@ export const fetchContent = async (request, response, next) => {
 export const fetchContentSections = async (request, response, next) => {
   try {
     const contentId = request.params.content_id;
-    const userId = request.userDetails.id;
+    const userId = request.userDetails?.id;
     const responsePayload = await contentServices.fetchContentSections(contentId, userId);
     response.locals.responsePayload = {
       ...responsePayload,
