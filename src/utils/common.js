@@ -21,7 +21,6 @@ export const fetchCategoryByTitle = async (title) => {
 };
 
 export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, referenceName = "" }) => {
-  // console.log("🚀 ~ file: common.js:24 ~ paginate ~ payload:", payload);
   try {
     if (!Model) {
       throw new Error("Model is required");

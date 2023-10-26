@@ -19,12 +19,15 @@ export const fetchTagContentSummaries = async (filterId, userId = "") => {
       return paginate({ Model: Content, page, pageSize, payload, referenceName });
     });
     const results = await Promise.all(allPromise);
-    // const dataDictionary = {};
-    const data = allTags.map((tag, index) => {
-      return {
-        tag_id: tag._id,
-        items: results[index].results,
-      };
+    const data = [];
+    allTags.map((tag, index) => {
+      const tagContents = results[index].results;
+      if (tagContents.length > 0) {
+        data.push({
+          tag_id: tag._id,
+          items: results[index].results,
+        });
+      }
     });
 
     return {
@@ -32,7 +35,7 @@ export const fetchTagContentSummaries = async (filterId, userId = "") => {
       data,
     };
   } catch (error) {
-    console.log("🚀 ~ file: service.js:27 ~ fetchContents ~ error:", error);
+    // console.log("🚀 ~ file: service.js:27 ~ fetchContents ~ error:", error);
     throw error;
   }
 };
