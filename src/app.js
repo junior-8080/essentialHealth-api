@@ -17,6 +17,7 @@ import mediaRouter from "./media/routes.js";
 import categoriesRouter from "./categories/routes.js";
 import instructorsRouter from "./instructors/routes.js";
 import contentsRouter from "./contents/routes.js";
+import summariesRoute from "./summaries/routes.js";
 import { createUser } from "./users/service.js";
 import { codes } from "./constants/codes.js";
 import { createUploadDirectories } from "./utils/helpers.js";
@@ -46,6 +47,7 @@ app.use("/api/v1/media", authorize, mediaRouter);
 app.use("/api/v1/categories", categoriesRouter);
 app.use("/api/v1/instructors", authorize, instructorsRouter);
 app.use("/api/v1/contents", contentsRouter);
+app.use("/api/v1/summaries", summariesRoute);
 
 app.use((request, response) => {
   const { responsePayload } = response.locals;
