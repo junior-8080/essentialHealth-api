@@ -76,9 +76,8 @@ export const contentSchema = Joi.object({
       then: Joi.string().allow(""),
     }),
   }),
-  category_id: Joi.string()
-    .pattern(/^[0-9a-fA-F]{24}$/)
-    .required(),
+  category_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+  tags: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
   instructor_id: Joi.string()
     .pattern(/^[0-9a-fA-F]{24}$/)
     .required(),
@@ -101,6 +100,7 @@ export const contentUpdateSchema = Joi.object({
     }),
   }),
   category_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+  tags: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
   instructor_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
   subscriber_type: Joi.string().valid("standard", "premium").default("standard"),
   created_by: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
