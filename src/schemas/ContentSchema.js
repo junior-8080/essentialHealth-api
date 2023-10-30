@@ -29,10 +29,10 @@ const contentSchema = new mongoose.Schema({
     },
     body: String,
   },
-  // category_id: {
-  //   type: mongoose.Schema.Types.ObjectId, // Define as ObjectId type
-  //   ref: "Category", // Reference to the Category model
-  // },
+  category_id: {
+    type: mongoose.Schema.Types.ObjectId, // Define as ObjectId type
+    ref: "Category", // Reference to the Category model
+  },
   tags: {
     type: [String],
   },

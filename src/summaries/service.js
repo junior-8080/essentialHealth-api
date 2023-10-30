@@ -29,13 +29,11 @@ export const fetchTagContentSummaries = async (filterId, userId = "") => {
         });
       }
     });
-
     return {
       code: codes.RESOURCE_FETCHED,
       data,
     };
   } catch (error) {
-    // console.log("🚀 ~ file: service.js:27 ~ fetchContents ~ error:", error);
     throw error;
   }
 };
