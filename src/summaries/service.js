@@ -10,13 +10,16 @@ export const fetchTagContentSummaries = async (filterId, userId = "") => {
     const referenceName = "instructor_id";
     const allTags = await Category.find();
     const allPromise = allTags.map((tag) => {
-      const payload = {
-        content_type: "main",
-        tags: { $all: [filterId, tag._id.toString()] },
-      };
-      const page = 1;
-      const pageSize = 2;
-      return paginate({ Model: Content, page, pageSize, payload, referenceName });
+      const stringTag = tag._id.toString();
+      if (stringTag !== process.env.NUTRITIONAL_TIPS_ID || stringTag !== process.env.WORKOUT_ID) {
+        const payload = {
+          content_type: "main",
+          tags: { $all: [filterId, stringTag] },
+        };
+        const page = 1;
+        const pageSize = 2;
+        return paginate({ Model: Content, page, pageSize, payload, referenceName });
+      }
     });
     const results = await Promise.all(allPromise);
     const data = [];
