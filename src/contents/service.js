@@ -36,7 +36,7 @@ export const fetchContents = async (payload = {}, userId = "") => {
     payload.content_type = payload.content_type ? payload.content_type : "main";
     // console.log(payload);
     if (payload.tags) {
-      payload.tags = { $in: payload.tags.split(",") };
+      payload.tags = { $all: [payload.tags.split(",")] };
     }
     const referenceName = "category_id instructor_id";
     let data = await paginate({ Model: Content, page, pageSize, payload, referenceName });
