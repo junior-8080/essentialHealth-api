@@ -29,8 +29,8 @@ export const fetchAllMedia = async (payload = {}) => {
 
 export const fetchMedia = async (payload) => {
   try {
-    const { media_id } = payload;
-    const { _doc } = await Media.findById(media_id);
+    const { mediaId } = payload;
+    const { _doc } = await Media.findById(mediaId);
 
     return {
       code: codes.RESOURCE_FETCHED,

@@ -24,7 +24,7 @@ export const updateCategory = async (request, response, next) => {
     const requestPayload = {
       ...request.body,
     };
-    const categoryId = request.params.category_id;
+    const categoryId = request.params.categoryId;
     const validPayload = await validateRequestPayload(categoriesUpdateValidationSchema, requestPayload);
     const responsePayload = await categoryServices.updateCategory(categoryId, validPayload);
     response.locals.responsePayload = {

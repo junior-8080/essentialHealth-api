@@ -1,5 +1,5 @@
 import { validateRequestPayload } from "../utils/helpers.js";
-import { contentSchema, contentUpdateSchema } from "../utils/schemaValidators.js";
+import { contentValidation, contentUpdatedValidationSchema } from "../utils/schemaValidators.js";
 import * as contentServices from "./service.js";
 
 export const createContent = async (request, response, next) => {
@@ -7,7 +7,7 @@ export const createContent = async (request, response, next) => {
     const requestPayload = {
       ...request.body,
     };
-    const validPayload = await validateRequestPayload(contentSchema, requestPayload);
+    const validPayload = await validateRequestPayload(contentValidation, requestPayload);
     const responsePayload = await contentServices.createContent(validPayload);
     response.locals.responsePayload = {
       ...responsePayload,
@@ -40,8 +40,8 @@ export const updateContent = async (request, response, next) => {
     const requestPayload = {
       ...request.body,
     };
-    const contentId = request.params.content_id;
-    const validPayload = await validateRequestPayload(contentUpdateSchema, requestPayload);
+    const contentId = request.params.contentId;
+    const validPayload = await validateRequestPayload(contentUpdatedValidationSchema, requestPayload);
     const responsePayload = await contentServices.updateContent(contentId, validPayload);
     response.locals.responsePayload = {
       ...responsePayload,
@@ -55,7 +55,7 @@ export const updateContent = async (request, response, next) => {
 
 export const fetchContent = async (request, response, next) => {
   try {
-    const contentId = request.params.content_id;
+    const contentId = request.params.contentId;
     const responsePayload = await contentServices.fetchContent(contentId);
     response.locals.responsePayload = {
       ...responsePayload,

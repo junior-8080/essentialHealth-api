@@ -54,7 +54,7 @@ export const fetchMedia = async (request, response, next) => {
     const requestPayload = {
       ...request.params,
     };
-    const responsePayload = await userServices.fetchMedia(requestPayload);
+    const responsePayload = await mediaServices.fetchMedia(requestPayload);
     response.locals.responsePayload = {
       ...responsePayload,
     };

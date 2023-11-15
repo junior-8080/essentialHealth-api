@@ -63,3 +63,10 @@ export const getFileCategory = (mimeType) => {
       return "other";
   }
 };
+
+export const defaultVitalsTargets = {
+  blood_pressure: 130,
+  sugar_level: 6.0,
+  steps: 10000,
+  water_cups: 8,
+};

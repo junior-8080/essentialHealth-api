@@ -15,13 +15,15 @@ import userRouter from "./users/routes.js";
 import authRouter from "./auth/routes.js";
 import mediaRouter from "./media/routes.js";
 import categoriesRouter from "./categories/routes.js";
+import tagsRouter from "./tags/routes.js";
 import instructorsRouter from "./instructors/routes.js";
 import contentsRouter from "./contents/routes.js";
+import shortsRouter from "./shorts/routes.js";
 import summariesRoute from "./summaries/routes.js";
 import { createUser } from "./users/service.js";
 import { codes } from "./constants/codes.js";
 import { createUploadDirectories } from "./utils/helpers.js";
-import authorize from "./utils/middlewares.js";
+import authorize from "./utils/middleware.js";
 
 const app = express();
 const corsOptions = {
@@ -45,8 +47,10 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", authorize, userRouter);
 app.use("/api/v1/media", authorize, mediaRouter);
 app.use("/api/v1/categories", categoriesRouter);
+app.use("/api/v1/tags", tagsRouter);
 app.use("/api/v1/instructors", authorize, instructorsRouter);
 app.use("/api/v1/contents", contentsRouter);
+app.use("/api/v1/shorts", authorize, shortsRouter);
 app.use("/api/v1/summaries", summariesRoute);
 
 app.use((request, response) => {

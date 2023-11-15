@@ -1,6 +1,6 @@
 import { codes } from "../constants/codes.js";
 import { validateRequestPayload } from "../utils/helpers.js";
-import { contentSchema, contentUpdateSchema } from "../utils/schemaValidators.js";
+import { contentValidation, contentUpdatedValidationSchema } from "../utils/schemaValidators.js";
 import * as contentServices from "./service.js";
 
 export const summaries = async (request, response, next) => {

@@ -61,8 +61,8 @@ export const fetchCategories = async (payload = {}) => {
 
 export const fetchCategory = async (payload) => {
   try {
-    const { category_id } = payload;
-    const { _doc } = await Category.findById(category_id);
+    const { categoryId } = payload;
+    const { _doc } = await Category.findById(categoryId);
 
     return {
       code: codes.RESOURCE_FETCHED,

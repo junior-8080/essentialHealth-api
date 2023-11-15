@@ -1,14 +1,11 @@
 import mongoose from "mongoose";
 
-const CategorySchema = new mongoose.Schema({
+const TagSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
   },
-  description: {
-    type: String,
-  },
-  imageUrl: {
+  created_by: {
     type: String,
   },
   created_at: {
@@ -17,4 +14,4 @@ const CategorySchema = new mongoose.Schema({
   },
 });
 
-export default CategorySchema;
+export default TagSchema;

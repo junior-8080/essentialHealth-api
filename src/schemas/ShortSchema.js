@@ -1,9 +1,7 @@
 import mongoose from "mongoose";
 
-const MediaSchema = new mongoose.Schema({
-  name: String,
-  descriptions: String,
-  fileUrl: {
+const ShortSchema = new mongoose.Schema({
+  resource: {
     type: String,
     required: true,
   },
@@ -11,10 +9,17 @@ const MediaSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  publish_date: {
+    type: Date,
+    default: Date.now,
+  },
+  created_by: {
+    type: String,
+  },
   created_at: {
     type: Date,
     default: Date.now,
   },
 });
 
-export default MediaSchema;
+export default ShortSchema;

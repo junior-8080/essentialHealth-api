@@ -7,6 +7,6 @@ const upload = multer({ storage: uploadStorage });
 
 router.post("/", upload.single("file"), userControllers.createMedia);
 router.get("/", userControllers.fetchAllMedia);
-router.get("/:media_id", userControllers.fetchMedia);
+router.get("/:mediaId", userControllers.fetchMedia);
 
 export default router;

@@ -6,6 +6,7 @@ import { userMediaActivity } from "../users/service.js";
 
 export const createContent = async (payload) => {
   try {
+    payload.publish_date = new Date(payload.publish_date);
     const contentData = await customCreate(Content, payload);
     return {
       code: codes.RESOURCE_CREATED,
@@ -34,11 +35,11 @@ export const fetchContents = async (payload = {}, userId = "") => {
   try {
     const { page, pageSize } = payload;
     payload.content_type = payload.content_type ? payload.content_type : "main";
-    // console.log(payload);
     if (payload.tags) {
       payload.tags = { $all: payload.tags.split(",") };
     }
-    const referenceName = "category_id instructor_id";
+
+    const referenceName = "instructor_id";
     let data = await paginate({ Model: Content, page, pageSize, payload, referenceName });
     if (userId) {
       data.results = await userMediaActivity(data.results, userId);
@@ -48,7 +49,6 @@ export const fetchContents = async (payload = {}, userId = "") => {
       data: data,
     };
   } catch (error) {
-    // console.log("🚀 ~ file: service.js:27 ~ fetchContents ~ error:", error);
     throw error;
   }
 };
@@ -62,7 +62,6 @@ export const fetchContent = async (contentId) => {
     const pageSize = 1;
     const referenceName = "category_id instructor_id";
     const { results } = await paginate({ Model: Content, page, pageSize, payload, referenceName });
-    console.log("🚀 ~ file: service.js:60 ~ fetchContent ~ results:", results);
     if (results.length === 0) {
       throw {
         code: codes.NOT_FOUND,

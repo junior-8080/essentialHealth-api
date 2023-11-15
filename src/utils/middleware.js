@@ -15,7 +15,7 @@ const authorize = async function (request, response, next) {
     request.userDetails = tokenData;
     next();
   } catch (error) {
-    console.log("🚀 ~ file: middlewares.js:18 ~ authorize ~ error:", error);
+    console.log("🚀 ~ file: middleware.js:18 ~ authorize ~ error:", error);
     const responsePayload = {
       code: codes.UNAUTHORIZED,
       message: "Invalid Token",

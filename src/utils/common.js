@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import Category from "../models/Category.js";
 import { contentTransformer, defaultTransformer } from "./dataTransformers.js";
+import mongoose from "mongoose";
 
 export const fetchUserByPhoneNumber = async (phoneNumber) => {
   try {
@@ -25,7 +26,6 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
     if (!Model) {
       throw new Error("Model is required");
     }
-    // console.log(referenceName);
     delete payload.page;
     delete payload.pageSize;
     if (payload.ids) {
@@ -37,20 +37,25 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
       };
       delete payload.ids;
     }
+    if (payload.publish_date) {
+      payload.publish_date = { $gte: payload.publish_date, $lte: payload.publish_date };
+    }
     const filters = {
       ...payload,
     };
+    // console.log("🚀 ~ file: common.js:25 ~ paginate ~ payload:", filters);
+
     page = parseInt(page);
     pageSize = parseInt(pageSize);
-
     const totalCount = await Model.countDocuments(filters);
+    console.log("🚀 ~ file: common.js:50 ~ paginate ~ totalCount:", totalCount);
     const totalPages = Math.ceil(totalCount / pageSize);
     let results = await Model.find(filters)
       .populate(referenceName)
       .sort({ created_at: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize);
-    results = referenceName === "category_id instructor_id" ? contentTransformer(results) : defaultTransformer(results);
+    results = referenceName === "instructor_id" ? contentTransformer(results) : defaultTransformer(results);
     return {
       page,
       pageSize,

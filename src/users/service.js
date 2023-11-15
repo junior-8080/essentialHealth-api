@@ -1,7 +1,10 @@
 import { codes } from "../constants/codes.js";
 import User from "../models/User.js";
 import UserMediaActivity from "../models/UserMediaActivity.js";
+import Vital from "../models/Vital.js";
+import UserTargetVital from "../models/VitalTarget.js";
 import { customCreate, fetchUserByPhoneNumber, paginate } from "../utils/common.js";
+import { defaultVitalsTargets } from "../utils/helpers.js";
 
 export const createUser = async (payload) => {
   try {
@@ -38,8 +41,8 @@ export const fetchUsers = async (payload = {}) => {
 
 export const fetchUser = async (payload) => {
   try {
-    const { user_id } = payload;
-    const { _doc } = await User.findById(user_id);
+    const { userId } = payload;
+    const { _doc } = await User.findById(userId);
 
     return {
       code: codes.RESOURCE_FETCHED,
@@ -91,6 +94,66 @@ export const createUserMediaActivity = async (payload) => {
     return {
       code: codes.RESOURCE_CREATED,
       data: userData,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createUserVitalTarget = async (payload) => {
+  try {
+    const userVitalData = await customCreate(UserTargetVital, payload);
+    return {
+      code: codes.RESOURCE_CREATED,
+      data: userVitalData,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+export const fetchUserVital = async (payload) => {
+  try {
+    let { userId, created_at } = payload;
+    if (!created_at) {
+      created_at = new Date();
+      const year = created_at.getFullYear();
+      const month = String(created_at.getMonth() + 1).padStart(2, "0");
+      const day = String(created_at.getDate()).padStart(2, "0");
+      const formattedDate = `${year}-${month}-${day}`;
+      created_at = new Date(formattedDate);
+    }
+    const result = await Vital.find({
+      created_at: { $gte: created_at, $lte: created_at },
+      user_id: userId,
+    });
+    let userVitals = {
+      blood_pressure: {
+        progress: 0,
+        target: defaultVitalsTargets.blood_pressure,
+        unit: "mmHg",
+      },
+      sugar_level: {
+        progress: 0,
+        target: defaultVitalsTargets.sugar_level,
+        unit: "mmol/L",
+      },
+      steps: {
+        progress: 0,
+        target: defaultVitalsTargets.steps,
+        unit: "steps",
+      },
+      water_cups: {
+        progress: 0,
+        target: defaultVitalsTargets.water_cups,
+        unit: "cups",
+      },
+    };
+    if (result.length > 0) {
+      userVitals = result[0];
+    }
+    return {
+      code: codes.RESOURCE_FETCHED,
+      data: userVitals,
     };
   } catch (error) {
     throw error;

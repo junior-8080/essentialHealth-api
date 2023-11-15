@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const contentSchema = new mongoose.Schema({
+const ContentSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -45,6 +45,9 @@ const contentSchema = new mongoose.Schema({
     enum: ["standard", "premium"],
     default: "standard",
   },
+  publish_date: {
+    type: Date,
+  },
   created_at: {
     type: Date,
     default: Date.now,
@@ -54,4 +57,4 @@ const contentSchema = new mongoose.Schema({
   },
 });
 
-export default contentSchema;
+export default ContentSchema;

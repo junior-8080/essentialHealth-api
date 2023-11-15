@@ -4,6 +4,6 @@ const router = express.Router();
 
 router.post("/", instructorControllers.createInstructor);
 router.get("/", instructorControllers.fetchInstructors);
-router.get("/:instructor_id", instructorControllers.fetchInstructor);
+router.get("/:instructorId", instructorControllers.fetchInstructor);
 
 export default router;

@@ -15,7 +15,6 @@ export const userValidationSchema = Joi.object({
   phoneNumber: Joi.string().required(),
   imageURL: Joi.string().allow(""),
   role: Joi.string(),
-  // subscription_type: Joi.string().valid("standard", "premium"),
 });
 
 export const userUpdateValidationSchema = Joi.object({
@@ -47,10 +46,22 @@ export const categoriesUpdateValidationSchema = Joi.object({
   imageURL: Joi.string(),
 }).min(1);
 
-export const mediaValidationSchema = Joi.object({
+export const tagValidationSchema = Joi.object({
   title: Joi.string().required(),
   description: Joi.string(),
+  imageURL: Joi.string(),
 });
+
+export const updateTagValidationSchema = Joi.object({
+  title: Joi.string().required(),
+  description: Joi.string(),
+  imageURL: Joi.string(),
+}).min(1);
+
+// export const mediaValidationSchema = Joi.object({
+//   title: Joi.string().required(),
+//   description: Joi.string(),
+// });
 
 export const instructorSchema = Joi.object({
   firstName: Joi.string().required(),
@@ -62,7 +73,7 @@ export const instructorSchema = Joi.object({
   state: Joi.string().valid("Active", "Inactive"),
 });
 
-export const contentSchema = Joi.object({
+export const contentValidation = Joi.object({
   title: Joi.string().required(),
   description: Joi.string().required(),
   content_type: Joi.string().valid("main", "part"),
@@ -77,15 +88,18 @@ export const contentSchema = Joi.object({
     }),
   }),
   category_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-  tags: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)).required(),
+  tags: Joi.array()
+    .items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/))
+    .required(),
   instructor_id: Joi.string()
     .pattern(/^[0-9a-fA-F]{24}$/)
     .required(),
   subscriber_type: Joi.string().valid("standard", "premium").default("standard"),
+  publish_date: Joi.date().required(),
   created_by: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
 });
 
-export const contentUpdateSchema = Joi.object({
+export const contentUpdatedValidationSchema = Joi.object({
   title: Joi.string(),
   description: Joi.string(),
   content_type: Joi.string().valid("main", "part"),
@@ -103,14 +117,60 @@ export const contentUpdateSchema = Joi.object({
   tags: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
   instructor_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
   subscriber_type: Joi.string().valid("standard", "premium").default("standard"),
+  publish_date: Joi.date().required(),
   created_by: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
 });
 
-export const mediaSchema = Joi.object({
+export const mediaValidationSchema = Joi.object({
   title: Joi.string(),
   fileUrl: Joi.string().required(),
   name: Joi.string(),
   description: Joi.string(),
+});
+
+export const shortValidationSchema = Joi.object({
+  resource: Joi.string(),
+  type: Joi.string().allow("image", "note", "short-video"),
+  publish_date: Joi.date().required(),
+});
+
+export const shortUpdateValidationSchema = Joi.object({
+  resource: Joi.string(),
+  type: Joi.string().allow("image", "note", "short-video"),
+  publish_date: Joi.date(),
+});
+
+export const vitalValidationSchema = Joi.object({
+  blood_pressure: {
+    progress: Joi.number(),
+    target: Joi.number(),
+    unit: Joi.string(),
+  },
+  sugar_level: {
+    progress: Joi.number(),
+    target: Joi.number(),
+    unit: Joi.string(),
+  },
+  steps: {
+    progress: Joi.number(),
+    target: Joi.number(),
+    unit: Joi.string(),
+  },
+  water_cups: {
+    progress: Joi.number(),
+    target: Joi.number(),
+    unit: Joi.string(),
+  },
+});
+
+export const vitalTargetValidationSchema = Joi.object({
+  vitals: Joi.object({
+    blood_pressure: Joi.number(),
+    sugar_level: Joi.number(),
+    steps: Joi.number(),
+    water_cups: Joi.number(),
+  }),
+  user_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
 });
 
 export const userActivityValidationSchema = Joi.object({
