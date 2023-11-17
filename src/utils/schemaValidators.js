@@ -93,7 +93,11 @@ export const contentValidation = Joi.object({
     .pattern(/^[0-9a-fA-F]{24}$/)
     .required(),
   subscriber_type: Joi.string().valid("standard", "premium").default("standard"),
-  publish_date: Joi.date().required(),
+  publish_date: Joi.date().when("content_type", {
+    is: "main",
+    then: Joi.optional(),
+    otherwise: Joi.forbidden(),
+  }),
   created_by: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
 });
 
@@ -115,7 +119,7 @@ export const contentUpdatedValidationSchema = Joi.object({
   tags: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
   instructor_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
   subscriber_type: Joi.string().valid("standard", "premium").default("standard"),
-  publish_date: Joi.date().required(),
+  publish_date: Joi.date(),
   created_by: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
 });
 
