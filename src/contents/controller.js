@@ -69,7 +69,7 @@ export const fetchContent = async (request, response, next) => {
 
 export const fetchContentSections = async (request, response, next) => {
   try {
-    const contentId = request.params.content_id;
+    const contentId = request.params.contentId;
     const userId = request.userDetails?.id;
     const responsePayload = await contentServices.fetchContentSections(contentId, userId);
     response.locals.responsePayload = {
