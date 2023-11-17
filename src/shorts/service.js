@@ -1,6 +1,6 @@
 import { codes } from "../constants/codes.js";
 import Short from "../models/Short.js";
-import { customCreate, fetchCategoryByTitle, paginate } from "../utils/common.js";
+import { customCreate, paginate } from "../utils/common.js";
 
 export const createShort = async (payload) => {
   try {

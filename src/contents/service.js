@@ -60,7 +60,7 @@ export const fetchContent = async (contentId) => {
     };
     const page = 1;
     const pageSize = 1;
-    const referenceName = "category_id instructor_id";
+    const referenceName = "instructor_id";
     const { results } = await paginate({ Model: Content, page, pageSize, payload, referenceName });
     if (results.length === 0) {
       throw {

@@ -9,6 +9,10 @@ const ShortSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  category_id: {
+    type: mongoose.Schema.Types.ObjectId, // Define as ObjectId type
+    ref: "Category", // Reference to the Category model
+  },
   publish_date: {
     type: Date,
     default: Date.now,

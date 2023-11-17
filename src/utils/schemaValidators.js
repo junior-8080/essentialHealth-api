@@ -131,12 +131,14 @@ export const mediaValidationSchema = Joi.object({
 export const shortValidationSchema = Joi.object({
   resource: Joi.string(),
   type: Joi.string().allow("image", "note", "short-video"),
+  category_id: Joi.string().uuid({ version: "uuidv4" }).required(),
   publish_date: Joi.date().required(),
 });
 
 export const shortUpdateValidationSchema = Joi.object({
   resource: Joi.string(),
   type: Joi.string().allow("image", "note", "short-video"),
+  category_id: Joi.string().uuid({ version: "uuidv4" }),
   publish_date: Joi.date(),
 });
 
