@@ -48,7 +48,6 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
     page = parseInt(page);
     pageSize = parseInt(pageSize);
     const totalCount = await Model.countDocuments(filters);
-    console.log("🚀 ~ file: common.js:50 ~ paginate ~ totalCount:", totalCount);
     const totalPages = Math.ceil(totalCount / pageSize);
     let results = await Model.find(filters)
       .populate(referenceName)

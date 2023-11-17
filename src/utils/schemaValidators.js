@@ -88,9 +88,7 @@ export const contentValidation = Joi.object({
     }),
   }),
   category_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-  tags: Joi.array()
-    .items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/))
-    .required(),
+  tags: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
   instructor_id: Joi.string()
     .pattern(/^[0-9a-fA-F]{24}$/)
     .required(),
