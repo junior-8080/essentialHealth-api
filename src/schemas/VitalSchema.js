@@ -21,6 +21,10 @@ const VitalTargetSchema = new mongoose.Schema({
     target: { type: Number },
     unit: { type: String },
   },
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId, // Define as ObjectId type
+    ref: "User", // Reference to the Category model
+  },
   created_at: {
     type: Date,
     default: Date.now(),

@@ -114,6 +114,7 @@ export const createUserVitalTarget = async (payload) => {
 export const fetchUserVital = async (payload) => {
   try {
     let { userId, created_at } = payload;
+    console.log("🚀 ~ file: service.js:117 ~ fetchUserVital ~ userId:", userId);
     if (!created_at) {
       created_at = new Date();
       const year = created_at.getFullYear();
@@ -126,7 +127,9 @@ export const fetchUserVital = async (payload) => {
       created_at: { $gte: created_at, $lte: created_at },
       user_id: userId,
     });
-    let userVitals = {
+    console.log(result);
+    let userVitals = result[0];
+    const defaultVitals = {
       blood_pressure: {
         progress: 0,
         target: defaultVitalsTargets.blood_pressure,
@@ -147,13 +150,19 @@ export const fetchUserVital = async (payload) => {
         target: defaultVitalsTargets.water_cups,
         unit: "cups",
       },
+      user_id: userId,
     };
-    if (result.length > 0) {
-      userVitals = result[0];
+
+    if (!userVitals) {
+      userVitals = await Vital.create(defaultVitals);
     }
+    const stringifyData = JSON.stringify(userVitals);
+    const data = JSON.parse(stringifyData);
+    data.id = data._id;
+    delete data._id;
     return {
       code: codes.RESOURCE_FETCHED,
-      data: userVitals,
+      data,
     };
   } catch (error) {
     throw error;
