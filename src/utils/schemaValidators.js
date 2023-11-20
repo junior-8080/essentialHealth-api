@@ -109,7 +109,7 @@ export const contentUpdatedValidationSchema = Joi.object({
   sections: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
   intro: Joi.string(),
   source: Joi.object({
-    type: Joi.string().valid("text", "audio", "video", "image", "body"),
+    type: Joi.string().valid("audio", "video", "image", "session", "article"),
     body: Joi.string().when("type", {
       is: "session",
       then: Joi.string().allow(""),
