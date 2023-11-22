@@ -39,7 +39,11 @@ export const updateShort = async (request, response, next) => {
 
 export const fetchShorts = async (request, response, next) => {
   try {
-    const responsePayload = await shortServices.fetchShorts();
+    const requestPayload = {
+      ...request.params,
+      ...request.query,
+    };
+    const responsePayload = await shortServices.fetchShorts(requestPayload);
     response.locals.responsePayload = {
       ...responsePayload,
     };
