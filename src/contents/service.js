@@ -6,7 +6,7 @@ import { userMediaActivity } from "../users/service.js";
 
 export const createContent = async (payload) => {
   try {
-    payload.publish_date = new Date(payload.publish_date);
+    payload.publish_date = payload.content_type === "main" ? new Date(payload.publish_date) : undefined;
     const contentData = await customCreate(Content, payload);
     return {
       code: codes.RESOURCE_CREATED,
