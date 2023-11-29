@@ -21,7 +21,7 @@ export const fetchCategoryByTitle = async (title) => {
   }
 };
 
-export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, referenceName = "" }) => {
+export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, referenceName = "", role = "User" }) => {
   try {
     if (!Model) {
       throw new Error("Model is required");
@@ -38,7 +38,10 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
       delete payload.ids;
     }
     if (payload.publish_date) {
-      payload.publish_date = { $gte: payload.publish_date, $lte: payload.publish_date };
+      payload.publish_date =
+        role === "Admin"
+          ? { $gte: payload.publish_date, $lte: payload.publish_date }
+          : { $gte: payload.publish_date, $lt: payload.publish_date };
     }
     const filters = {
       ...payload,

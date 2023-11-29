@@ -28,6 +28,14 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: "User",
   },
+  dob: {
+    type: Date,
+    required: false,
+  },
+  gender: {
+    type: String,
+    required: false,
+  },
   state: {
     type: String,
     required: false,

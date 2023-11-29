@@ -6,6 +6,8 @@ export const signUpValidationSchema = Joi.object({
   email: Joi.string().email(),
   phoneNumber: Joi.string().required(),
   imageURL: Joi.string().allow(""),
+  dob: Joi.date(),
+  gender: Joi.string().allow("Male", "Female"),
 });
 
 export const userValidationSchema = Joi.object({
@@ -15,6 +17,8 @@ export const userValidationSchema = Joi.object({
   phoneNumber: Joi.string().required(),
   imageURL: Joi.string().allow(""),
   role: Joi.string(),
+  dob: Joi.date(),
+  gender: Joi.string().allow("Male", "Female"),
 });
 
 export const userUpdateValidationSchema = Joi.object({

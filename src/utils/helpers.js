@@ -69,4 +69,8 @@ export const defaultVitalsTargets = {
   sugar_level: 6.0,
   steps: 10000,
   water_cups: 8,
+  sys: 90,
+  dia: 86,
+  pulse: 81,
+  sugar: 4.7,
 };

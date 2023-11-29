@@ -1,5 +1,5 @@
 import { codes } from "../constants/codes.js";
-import Vital from "../models/vital.js";
+import Vital from "../models/Vital.js";
 import { customCreate, fetchCategoryByTitle, paginate } from "../utils/common.js";
 
 export const createVital = async (payload) => {
@@ -16,16 +16,6 @@ export const createVital = async (payload) => {
 
 export const updateVital = async (vitalId, payload) => {
   try {
-    // if (payload.title) {
-    //   const categoryExists = await fetchCategoryByTitle(payload.title || "");
-    //   if (categoryExists) {
-    //     throw {
-    //       code: codes.RESOURCE_EXISTS,
-    //       message: "category already exists",
-    //       data: payload,
-    //     };
-    //   }
-    // }
     await Vital.updateOne({ _id: vitalId }, { $set: payload });
     return {
       code: codes.RESOURCE_CREATED,

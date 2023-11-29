@@ -2,9 +2,21 @@ import mongoose from "mongoose";
 
 const VitalTargetSchema = new mongoose.Schema({
   blood_pressure: {
-    progress: { type: Number },
-    target: { type: Number },
-    unit: { type: String },
+    dia: {
+      progress: { type: Number },
+      target: { type: Number },
+      unit: { type: String },
+    },
+    sys: {
+      progress: { type: Number },
+      target: { type: Number },
+      unit: { type: String },
+    },
+    pulse: {
+      progress: { type: Number },
+      target: { type: Number },
+      unit: { type: String },
+    },
   },
   sugar_level: {
     progress: { type: Number },

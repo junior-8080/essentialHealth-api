@@ -114,7 +114,7 @@ export const createUserVitalTarget = async (payload) => {
 export const fetchUserVital = async (payload) => {
   try {
     let { userId, created_at } = payload;
-    console.log("🚀 ~ file: service.js:117 ~ fetchUserVital ~ userId:", userId);
+    // console.log("🚀 ~ file: service.js:117 ~ fetchUserVital ~ userId:", userId);
     if (!created_at) {
       created_at = new Date();
       const year = created_at.getFullYear();
@@ -131,9 +131,21 @@ export const fetchUserVital = async (payload) => {
     let userVitals = result[0];
     const defaultVitals = {
       blood_pressure: {
-        progress: 0,
-        target: defaultVitalsTargets.blood_pressure,
-        unit: "mmHg",
+        dia: {
+          progress: 0,
+          target: defaultVitalsTargets.dia,
+          unit: "mmHg",
+        },
+        sys: {
+          progress: 0,
+          target: defaultVitalsTargets.sys,
+          unit: "mmHg",
+        },
+        pulse: {
+          progress: 0,
+          target: defaultVitalsTargets.pulse,
+          unit: "heart rate",
+        },
       },
       sugar_level: {
         progress: 0,
