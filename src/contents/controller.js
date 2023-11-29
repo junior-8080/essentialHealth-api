@@ -24,7 +24,7 @@ export const fetchContents = async (request, response, next) => {
       ...request.query,
     };
     const userId = request.userDetails?.id;
-    const userRole = request.userDetails.role;
+    const userRole = request.userDetails?.role;
     const responsePayload = await contentServices.fetchContents(requestPayload, userId, userRole);
     response.locals.responsePayload = {
       ...responsePayload,

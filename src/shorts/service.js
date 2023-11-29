@@ -32,7 +32,8 @@ export const updateShort = async (shortId, payload) => {
 export const fetchShorts = async (payload = {}) => {
   try {
     const { page, pageSize } = payload;
-    const result = await paginate({ Model: Short, page, pageSize, payload });
+    const sortOder = { publish_date: -1 };
+    const result = await paginate({ Model: Short, page, pageSize, payload, sortOder });
     return {
       code: codes.RESOURCE_FETCHED,
       data: result,

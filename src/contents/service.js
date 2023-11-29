@@ -31,7 +31,7 @@ export const updateContent = async (contentId, payload) => {
   }
 };
 
-export const fetchContents = async (payload = {}, userId = "", role) => {
+export const fetchContents = async (payload = {}, userId = "") => {
   try {
     const { page, pageSize } = payload;
     payload.content_type = payload.content_type ? payload.content_type : "main";
@@ -40,7 +40,8 @@ export const fetchContents = async (payload = {}, userId = "", role) => {
     }
 
     const referenceName = "instructor_id";
-    let data = await paginate({ Model: Content, page, pageSize, payload, referenceName, role });
+    const sortOder = { publish_date: -1 };
+    let data = await paginate({ Model: Content, page, pageSize, payload, referenceName, sortOder });
     if (userId) {
       data.results = await userMediaActivity(data.results, userId);
     }

@@ -21,7 +21,7 @@ export const fetchCategoryByTitle = async (title) => {
   }
 };
 
-export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, referenceName = "", role = "User" }) => {
+export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, referenceName = "", sortOder }) => {
   try {
     if (!Model) {
       throw new Error("Model is required");
@@ -38,15 +38,15 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
       delete payload.ids;
     }
     if (payload.publish_date) {
-      payload.publish_date =
-        role === "Admin"
-          ? { $gte: payload.publish_date, $lte: payload.publish_date }
-          : { $gte: payload.publish_date, $lt: payload.publish_date };
+      payload.publish_date = { $gte: payload.publish_date, $lte: payload.publish_date };
+    }
+    if (payload.summary === "yes") {
+      payload.publish_date = { $lte: Date.now() };
+      delete payload.summary;
     }
     const filters = {
       ...payload,
     };
-    // console.log("🚀 ~ file: common.js:25 ~ paginate ~ payload:", filters);
 
     page = parseInt(page);
     pageSize = parseInt(pageSize);
@@ -54,7 +54,7 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
     const totalPages = Math.ceil(totalCount / pageSize);
     let results = await Model.find(filters)
       .populate(referenceName)
-      .sort({ created_at: -1 })
+      .sort(sortOder || { created_at: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize);
     results = referenceName === "instructor_id" ? contentTransformer(results) : defaultTransformer(results);
