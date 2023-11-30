@@ -40,9 +40,9 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
     if (payload.publish_date) {
       payload.publish_date = { $gte: payload.publish_date, $lte: payload.publish_date };
     }
-    if (payload.summary === "yes") {
+    if (payload.challenge === "yes") {
       payload.publish_date = { $lte: Date.now() };
-      delete payload.summary;
+      delete payload.challenge;
     }
     const filters = {
       ...payload,
