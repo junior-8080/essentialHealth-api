@@ -47,7 +47,7 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
     const filters = {
       ...payload,
     };
-
+    console.log(filters);
     page = parseInt(page);
     pageSize = parseInt(pageSize);
     const totalCount = await Model.countDocuments(filters);

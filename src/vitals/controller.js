@@ -39,13 +39,16 @@ export const updateVital = async (request, response, next) => {
 
 export const fetchVitals = async (request, response, next) => {
   try {
-    const responsePayload = await vitalServices.fetchVitals();
+    const requestPayload = {
+      ...request.query,
+    };
+    const responsePayload = await vitalServices.fetchVitals(requestPayload);
     response.locals.responsePayload = {
       ...responsePayload,
     };
     next();
   } catch (error) {
-    console.log("🚀 ~ file: controller.js:48 ~ fetchVitals ~ error:", error);
+    // console.log("🚀 ~ file: controller.js:48 ~ fetchVitals ~ error:", error);
     response.locals.responsePayload = error;
     next();
   }

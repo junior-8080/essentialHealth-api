@@ -118,10 +118,6 @@ export const fetchUserVital = async (payload) => {
     if (!created_at) {
       created_at = new Date(Date.now());
     }
-    console.log({
-      created_at: { $gte: created_at, $lte: created_at },
-      user_id: userId,
-    });
     const result = await Vital.find({
       created_at: { $lte: created_at },
       user_id: userId,
