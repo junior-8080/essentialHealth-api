@@ -15,7 +15,7 @@ export const userValidationSchema = Joi.object({
   lastName: Joi.string().required(),
   email: Joi.string().email().required(),
   phoneNumber: Joi.string().required(),
-  imageURL: Joi.string().allow(""),
+  profileImage: Joi.string().allow(""),
   role: Joi.string(),
   dob: Joi.date(),
   gender: Joi.string().allow("Male", "Female"),
@@ -26,7 +26,7 @@ export const userUpdateValidationSchema = Joi.object({
   lastName: Joi.string(),
   email: Joi.string().email(),
   phoneNumber: Joi.string(),
-  imageURL: Joi.string(),
+  profileImage: Joi.string(),
 }).min(1);
 
 export const authValidationSchema = Joi.object({
