@@ -20,6 +20,7 @@ import instructorsRouter from "./instructors/routes.js";
 import contentsRouter from "./contents/routes.js";
 import shortsRouter from "./shorts/routes.js";
 import summariesRoute from "./summaries/routes.js";
+import vitalsRoute from "./vitals/routes.js";
 import { createUser } from "./users/service.js";
 import { codes } from "./constants/codes.js";
 import { createUploadDirectories } from "./utils/helpers.js";
@@ -52,6 +53,7 @@ app.use("/api/v1/instructors", authorize, instructorsRouter);
 app.use("/api/v1/contents", contentsRouter);
 app.use("/api/v1/shorts", authorize, shortsRouter);
 app.use("/api/v1/summaries", summariesRoute);
+app.use("/api/v1/vitals", vitalsRoute);
 
 app.use((request, response) => {
   const { responsePayload } = response.locals;

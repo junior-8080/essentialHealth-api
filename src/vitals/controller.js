@@ -45,6 +45,7 @@ export const fetchVitals = async (request, response, next) => {
     };
     next();
   } catch (error) {
+    console.log("🚀 ~ file: controller.js:48 ~ fetchVitals ~ error:", error);
     response.locals.responsePayload = error;
     next();
   }

@@ -112,22 +112,20 @@ export const createUserVitalTarget = async (payload) => {
   }
 };
 export const fetchUserVital = async (payload) => {
+  console.log("🚀 ~ file: service.js:115 ~ fetchUserVital ~ payload:", payload);
   try {
     let { userId, created_at } = payload;
-    // console.log("🚀 ~ file: service.js:117 ~ fetchUserVital ~ userId:", userId);
     if (!created_at) {
-      created_at = new Date();
-      const year = created_at.getFullYear();
-      const month = String(created_at.getMonth() + 1).padStart(2, "0");
-      const day = String(created_at.getDate()).padStart(2, "0");
-      const formattedDate = `${year}-${month}-${day}`;
-      created_at = new Date(formattedDate);
+      created_at = new Date(Date.now());
     }
-    const result = await Vital.find({
+    console.log({
       created_at: { $gte: created_at, $lte: created_at },
       user_id: userId,
     });
-    console.log(result);
+    const result = await Vital.find({
+      created_at: { $lte: created_at },
+      user_id: userId,
+    });
     let userVitals = result[0];
     const defaultVitals = {
       blood_pressure: {

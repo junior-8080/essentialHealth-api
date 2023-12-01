@@ -151,26 +151,75 @@ export const shortUpdateValidationSchema = Joi.object({
 });
 
 export const vitalValidationSchema = Joi.object({
-  blood_pressure: {
-    progress: Joi.number(),
-    target: Joi.number(),
-    unit: Joi.string(),
-  },
-  sugar_level: {
-    progress: Joi.number(),
-    target: Joi.number(),
-    unit: Joi.string(),
-  },
-  steps: {
-    progress: Joi.number(),
-    target: Joi.number(),
-    unit: Joi.string(),
-  },
-  water_cups: {
-    progress: Joi.number(),
-    target: Joi.number(),
-    unit: Joi.string(),
-  },
+  blood_pressure: Joi.object({
+    dia: Joi.object({
+      progress: Joi.number().required(),
+      target: Joi.number().required(),
+      unit: Joi.string().valid("mmHg").required(),
+    }).required(),
+    sys: Joi.object({
+      progress: Joi.number().required(),
+      target: Joi.number().required(),
+      unit: Joi.string().valid("mmHg").required(),
+    }).required(),
+    pulse: Joi.object({
+      progress: Joi.number().required(),
+      target: Joi.number().required(),
+      unit: Joi.string().valid("heart rate").required(),
+    }).required(),
+  }).required(),
+  sugar_level: Joi.object({
+    progress: Joi.number().required(),
+    target: Joi.number().required(),
+    unit: Joi.string().valid("mmol/L").required(),
+  }).required(),
+  steps: Joi.object({
+    progress: Joi.number().required(),
+    target: Joi.number().required(),
+    unit: Joi.string().valid("steps").required(),
+  }).required(),
+  water_cups: Joi.object({
+    progress: Joi.number().required(),
+    target: Joi.number().required(),
+    unit: Joi.string().valid("cups").required(),
+  }).required(),
+  user_id: Joi.string().required(),
+});
+
+export const vitalUpdateValidationSchema = Joi.object({
+  blood_pressure: Joi.object({
+    dia: Joi.object({
+      progress: Joi.number().required(),
+      target: Joi.number().required(),
+      unit: Joi.string().valid("mmHg").required(),
+    }).required(),
+    sys: Joi.object({
+      progress: Joi.number().required(),
+      target: Joi.number().required(),
+      unit: Joi.string().valid("mmHg").required(),
+    }).required(),
+    pulse: Joi.object({
+      progress: Joi.number().required(),
+      target: Joi.number().required(),
+      unit: Joi.string().valid("heart rate").required(),
+    }).required(),
+  }).required(),
+  sugar_level: Joi.object({
+    progress: Joi.number().required(),
+    target: Joi.number().required(),
+    unit: Joi.string().valid("mmol/L").required(),
+  }).required(),
+  steps: Joi.object({
+    progress: Joi.number().required(),
+    target: Joi.number().required(),
+    unit: Joi.string().valid("steps").required(),
+  }).required(),
+  water_cups: Joi.object({
+    progress: Joi.number().required(),
+    target: Joi.number().required(),
+    unit: Joi.string().valid("cups").required(),
+  }).required(),
+  user_id: Joi.string().required(),
 });
 
 export const vitalTargetValidationSchema = Joi.object({
