@@ -1,5 +1,10 @@
 import Joi from "joi";
 
+const measureSchema = Joi.object({
+  measure: Joi.number().required(),
+  measure_unit: Joi.string().required(),
+});
+
 export const signUpValidationSchema = Joi.object({
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
@@ -8,6 +13,8 @@ export const signUpValidationSchema = Joi.object({
   imageURL: Joi.string().allow(""),
   dob: Joi.date(),
   gender: Joi.string().allow("Male", "Female"),
+  height: measureSchema,
+  weight: measureSchema,
 });
 
 export const userValidationSchema = Joi.object({
