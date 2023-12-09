@@ -19,6 +19,22 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  height: {
+    measure: {
+      type: Number,
+    },
+    measure_unit: {
+      type: String,
+    },
+  },
+  weight: {
+    measure: {
+      type: Number,
+    },
+    measure_unit: {
+      type: String,
+    },
+  },
   imageURL: {
     type: String,
     required: false,
@@ -35,6 +51,10 @@ const UserSchema = new mongoose.Schema({
   gender: {
     type: String,
     required: false,
+  },
+  points: {
+    type: Number,
+    default: 0,
   },
   state: {
     type: String,

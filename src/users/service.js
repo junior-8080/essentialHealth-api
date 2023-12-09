@@ -1,4 +1,5 @@
 import { codes } from "../constants/codes.js";
+import { fetchContent } from "../contents/service.js";
 import User from "../models/User.js";
 import UserMediaActivity from "../models/UserMediaActivity.js";
 import Vital from "../models/Vital.js";
@@ -90,10 +91,29 @@ export const userMediaActivity = async (contents, userId) => {
 
 export const createUserMediaActivity = async (payload) => {
   try {
-    const userData = await customCreate(UserMediaActivity, payload);
+    const { data } = await fetchContent(payload.content_id);
+    const contentReward = data.reward;
+    const userActivities = await UserMediaActivity.findOne({
+      content_id: payload.content_id,
+      user_id: payload.user_id,
+      isChallenge: contentReward ? "yes" : "no",
+    });
+    if (!userActivities) {
+      payload.points = contentReward ? contentReward.points : 0;
+      payload.isChallenge = contentReward ? "yes" : "no";
+      await customCreate(UserMediaActivity, payload);
+    }
+    const contentRewardPoints = !userActivities && contentReward ? contentReward.points : 0;
+    const updatedUser = await User.findByIdAndUpdate(
+      { _id: payload.user_id },
+      { $inc: { points: contentRewardPoints } },
+      { new: true }
+    );
     return {
       code: codes.RESOURCE_CREATED,
-      data: userData,
+      data: {
+        points: updatedUser.points,
+      },
     };
   } catch (error) {
     throw error;
