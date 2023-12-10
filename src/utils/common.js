@@ -42,6 +42,7 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
     }
     if (payload.challenge === "yes") {
       payload.publish_date = { $lte: Date.now() };
+      payload.reward = { $exists: true };
       delete payload.challenge;
     }
     const filters = {

@@ -26,6 +26,8 @@ export const userValidationSchema = Joi.object({
   role: Joi.string(),
   dob: Joi.date(),
   gender: Joi.string().allow("Male", "Female"),
+  height: measureSchema,
+  weight: measureSchema,
 });
 
 export const userUpdateValidationSchema = Joi.object({
@@ -109,6 +111,10 @@ export const contentValidation = Joi.object({
     then: Joi.optional(),
     otherwise: Joi.forbidden(),
   }),
+  reward: Joi.object({
+    points: Joi.number().min(1).max(1000000),
+    description: Joi.string(),
+  }),
   created_by: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
 });
 
@@ -131,6 +137,10 @@ export const contentUpdatedValidationSchema = Joi.object({
   instructor_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
   subscriber_type: Joi.string().valid("standard", "premium").default("standard"),
   publish_date: Joi.date(),
+  reward: Joi.object({
+    points: Joi.number().min(1).max(1000000),
+    description: Joi.string(),
+  }),
   created_by: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
 });
 
@@ -242,4 +252,16 @@ export const vitalTargetValidationSchema = Joi.object({
 export const userActivityValidationSchema = Joi.object({
   user_id: Joi.string().required(),
   content_id: Joi.string().required(),
+});
+
+export const rewardValidationSchema = Joi.object({
+  title: Joi.string().required(),
+  redeem_procedure: Joi.string(),
+  points: Joi.number().min(1).max(10000000).required(),
+});
+
+export const rewardUpdateValidationSchema = Joi.object({
+  title: Joi.string(),
+  redeem_procedure: Joi.string(),
+  points: Joi.number().min(1).max(10000000),
 });
