@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import Category from "../models/Category.js";
-import { contentTransformer, defaultTransformer } from "./dataTransformers.js";
+import { contentTransformer, defaultTransformer, rewardClaimTransformer } from "./dataTransformers.js";
 import mongoose from "mongoose";
 
 export const fetchUserByPhoneNumber = async (phoneNumber) => {
@@ -48,17 +48,27 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
     const filters = {
       ...payload,
     };
-    console.log(filters);
     page = parseInt(page);
     pageSize = parseInt(pageSize);
     const totalCount = await Model.countDocuments(filters);
     const totalPages = Math.ceil(totalCount / pageSize);
+    const populateFields = referenceName.split(",");
     let results = await Model.find(filters)
-      .populate(referenceName)
+      .populate(populateFields)
       .sort(sortOder || { created_at: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize);
-    results = referenceName === "instructor_id" ? contentTransformer(results) : defaultTransformer(results);
+    switch (referenceName) {
+      case "instructor_id":
+        results = contentTransformer(results);
+        break;
+      case "user_id,reward_id":
+        results = rewardClaimTransformer(results);
+        break;
+      default:
+        results = defaultTransformer(results);
+        break;
+    }
     return {
       page,
       pageSize,

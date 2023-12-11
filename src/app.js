@@ -20,6 +20,7 @@ import instructorsRouter from "./instructors/routes.js";
 import contentsRouter from "./contents/routes.js";
 import shortsRouter from "./shorts/routes.js";
 import rewardsRouter from "./rewards/routes.js";
+import rewardClaimsRouter from "./rewardClaims/routes.js";
 import summariesRoute from "./summaries/routes.js";
 import vitalsRoute from "./vitals/routes.js";
 import { createUser } from "./users/service.js";
@@ -54,6 +55,7 @@ app.use("/api/v1/instructors", authorize, instructorsRouter);
 app.use("/api/v1/contents", contentsRouter);
 app.use("/api/v1/shorts", authorize, shortsRouter);
 app.use("/api/v1/rewards", authorize, rewardsRouter);
+app.use("/api/v1/reward-claims", authorize, rewardClaimsRouter);
 app.use("/api/v1/summaries", summariesRoute);
 app.use("/api/v1/vitals", vitalsRoute);
 

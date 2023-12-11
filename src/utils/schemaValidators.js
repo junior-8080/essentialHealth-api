@@ -1,3 +1,4 @@
+import e from "express";
 import Joi from "joi";
 
 const measureSchema = Joi.object({
@@ -250,8 +251,12 @@ export const vitalTargetValidationSchema = Joi.object({
 });
 
 export const userActivityValidationSchema = Joi.object({
-  user_id: Joi.string().required(),
-  content_id: Joi.string().required(),
+  user_id: Joi.string()
+    .pattern(/^[0-9a-fA-F]{24}$/)
+    .required(),
+  content_id: Joi.string()
+    .pattern(/^[0-9a-fA-F]{24}$/)
+    .required(),
 });
 
 export const rewardValidationSchema = Joi.object({
@@ -264,4 +269,14 @@ export const rewardUpdateValidationSchema = Joi.object({
   title: Joi.string(),
   redeem_procedure: Joi.string(),
   points: Joi.number().min(1).max(10000000),
+});
+
+export const rewardClaimValidationSchema = Joi.object({
+  user_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+  reward_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+});
+
+export const rewardClaimUpdatedValidationSchema = Joi.object({
+  status: Joi.string().valid("Fulfilled"),
+  rewardClaimId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
 });
