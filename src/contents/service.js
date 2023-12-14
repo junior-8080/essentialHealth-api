@@ -42,6 +42,7 @@ export const fetchContents = async (payload = {}, userId = "") => {
     const referenceName = "instructor_id";
     const sortOder = { publish_date: -1 };
     let data = await paginate({ Model: Content, page, pageSize, payload, referenceName, sortOder });
+    console.log({ userId });
     if (userId) {
       data.results = await userMediaActivity(data.results, userId);
     }

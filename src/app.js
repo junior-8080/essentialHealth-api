@@ -52,7 +52,7 @@ app.use("/api/v1/media", authorize, mediaRouter);
 app.use("/api/v1/categories", categoriesRouter);
 app.use("/api/v1/tags", tagsRouter);
 app.use("/api/v1/instructors", authorize, instructorsRouter);
-app.use("/api/v1/contents", contentsRouter);
+app.use("/api/v1/contents", authorize, contentsRouter);
 app.use("/api/v1/shorts", authorize, shortsRouter);
 app.use("/api/v1/rewards", authorize, rewardsRouter);
 app.use("/api/v1/reward-claims", authorize, rewardClaimsRouter);
