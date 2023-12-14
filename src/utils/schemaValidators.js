@@ -237,7 +237,7 @@ export const vitalUpdateValidationSchema = Joi.object({
     target: Joi.number().required(),
     unit: Joi.string().valid("cups").required(),
   }).required(),
-  user_id: Joi.string().required(),
+  // user_id: Joi.string().required(),
 });
 
 export const vitalTargetValidationSchema = Joi.object({

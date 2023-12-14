@@ -52,7 +52,7 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
     pageSize = parseInt(pageSize);
     const totalCount = await Model.countDocuments(filters);
     const totalPages = Math.ceil(totalCount / pageSize);
-    const populateFields = referenceName.split(",");
+    const populateFields = referenceName ? referenceName.split(",") : "";
     let results = await Model.find(filters)
       .populate(populateFields)
       .sort(sortOder || { created_at: -1 })

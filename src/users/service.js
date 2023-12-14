@@ -132,14 +132,15 @@ export const createUserVitalTarget = async (payload) => {
   }
 };
 export const fetchUserVital = async (payload) => {
-  console.log("🚀 ~ file: service.js:115 ~ fetchUserVital ~ payload:", payload);
   try {
     let { userId, created_at } = payload;
     if (!created_at) {
-      created_at = new Date(Date.now());
+      created_at = new Date(Date.now()).toISOString();
+      created_at = created_at.split("T")[0];
     }
+
     const result = await Vital.find({
-      created_at: { $lte: created_at },
+      created_at: { $gte: created_at },
       user_id: userId,
     });
     let userVitals = result[0];
