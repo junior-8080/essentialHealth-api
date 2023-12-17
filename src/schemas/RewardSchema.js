@@ -23,6 +23,10 @@ const RewardSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  voucher_code: {
+    type: String,
+    require: true,
+  },
   created_by: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
