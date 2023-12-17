@@ -260,15 +260,21 @@ export const userActivityValidationSchema = Joi.object({
 });
 
 export const rewardValidationSchema = Joi.object({
-  title: Joi.string().required(),
-  redeem_procedure: Joi.string(),
+  name: Joi.string().required(),
+  description: Joi.string(),
+  type: Joi.string().valid("digital", "physical"),
+  image: Joi.string().uri(),
   points: Joi.number().min(1).max(10000000).required(),
+  status: Joi.string().valid("active", "redeemed"),
 });
 
 export const rewardUpdateValidationSchema = Joi.object({
-  title: Joi.string(),
-  redeem_procedure: Joi.string(),
+  name: Joi.string().required(),
+  description: Joi.string(),
+  type: Joi.string().valid("digital", "physical"),
+  image: Joi.string().uri(),
   points: Joi.number().min(1).max(10000000),
+  status: Joi.string().valid("active", "redeemed"),
 });
 
 export const rewardClaimValidationSchema = Joi.object({

@@ -2,16 +2,26 @@ import mongoose from "mongoose";
 
 // Define the Mongoose schema
 const RewardSchema = new mongoose.Schema({
-  title: {
+  name: {
     type: String,
     required: true,
   },
-  redeem_procedure: {
+  description: {
     type: String,
+  },
+  type: {
+    type: Number,
+    required: true,
   },
   points: {
     type: Number,
     required: true,
+  },
+  status: {
+    type: String,
+  },
+  image: {
+    type: String,
   },
   created_by: {
     type: mongoose.Schema.Types.ObjectId,
