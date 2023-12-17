@@ -7,5 +7,6 @@ router.post("/", authorize, shortControllers.createShort);
 router.put("/:shortId", authorize, shortControllers.updateShort);
 router.get("/", shortControllers.fetchShorts);
 router.get("/:shortId", shortControllers.fetchShort);
+router.delete("/:shortId", shortControllers.deleteShort);
 
 export default router;

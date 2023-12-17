@@ -69,3 +69,17 @@ export const fetchShort = async (request, response, next) => {
     next();
   }
 };
+
+export const deleteShort = async (request, response, next) => {
+  try {
+    const shortId = request.params.shortId;
+    const responsePayload = await shortServices.deleteShort(shortId);
+    response.locals.responsePayload = {
+      ...responsePayload,
+    };
+    next();
+  } catch (error) {
+    response.locals.responsePayload = error;
+    next();
+  }
+};

@@ -64,3 +64,17 @@ export const fetchMedia = async (request, response, next) => {
     next();
   }
 };
+
+export const deleteMedia = async (request, response, next) => {
+  try {
+    const mediaId = request.params.mediaId;
+    const responsePayload = await mediaServices.deleteMedia(mediaId);
+    response.locals.responsePayload = {
+      ...responsePayload,
+    };
+    next();
+  } catch (error) {
+    response.locals.responsePayload = error;
+    next();
+  }
+};

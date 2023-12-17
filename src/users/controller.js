@@ -124,3 +124,17 @@ export const fetchUserVital = async (request, response, next) => {
     next();
   }
 };
+
+export const deleteUser = async (request, response, next) => {
+  try {
+    const userId = request.params.userId;
+    const responsePayload = await userServices.deleteUser(userId);
+    response.locals.responsePayload = {
+      ...responsePayload,
+    };
+    next();
+  } catch (error) {
+    response.locals.responsePayload = error;
+    next();
+  }
+};

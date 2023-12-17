@@ -8,5 +8,5 @@ router.put("/:contentId", contentControllers.updateContent);
 router.get("/", contentControllers.fetchContents);
 router.get("/:contentId", contentControllers.fetchContent);
 router.get("/:contentId/sections", contentControllers.fetchContentSections);
-
+router.delete("/:contentId", contentControllers.deleteContent);
 export default router;

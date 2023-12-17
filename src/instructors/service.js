@@ -1,5 +1,5 @@
 import { codes } from "../constants/codes.js";
-import { customCreate, paginate } from "../utils/common.js";
+import { customCreate, deleteRecord, paginate } from "../utils/common.js";
 import Instructor from "../models/Instructor.js";
 
 export const createInstructor = async (payload) => {
@@ -46,6 +46,18 @@ export const fetchInstructor = async (payload) => {
       data: {
         ..._doc,
       },
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteInstructor = async (instructorId) => {
+  console.log("🚀 ~ file: service.js:56 ~ deleteInstructor ~ instructorId:", instructorId);
+  try {
+    const result = await deleteRecord(Instructor, instructorId);
+    return {
+      code: codes.RESOURCE_DELETED,
     };
   } catch (error) {
     throw error;

@@ -1,6 +1,6 @@
 import { codes } from "../constants/codes.js";
 import Media from "../models/Media.js";
-import { customCreate, paginate } from "../utils/common.js";
+import { customCreate, deleteRecord, paginate } from "../utils/common.js";
 
 export const createMedia = async (payload) => {
   try {
@@ -37,6 +37,17 @@ export const fetchMedia = async (payload) => {
       data: {
         ..._doc,
       },
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteMedia = async (mediaId) => {
+  try {
+    await deleteRecord(Media, mediaId);
+    return {
+      code: codes.RESOURCE_DELETED,
     };
   } catch (error) {
     throw error;

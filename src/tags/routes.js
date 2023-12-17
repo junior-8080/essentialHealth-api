@@ -7,5 +7,5 @@ router.post("/", authorize, tagControllers.createTag);
 router.put("/:tagId", authorize, tagControllers.updateTag);
 router.get("/", tagControllers.fetchTags);
 router.get("/:tagId", tagControllers.fetchTag);
-
+router.delete("/:tagId", tagControllers.deleteTag);
 export default router;

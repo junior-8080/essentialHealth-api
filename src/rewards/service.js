@@ -1,6 +1,6 @@
 import { codes } from "../constants/codes.js";
 import Reward from "../models/Reward.js";
-import { customCreate, paginate } from "../utils/common.js";
+import { customCreate, deleteRecord, paginate } from "../utils/common.js";
 
 export const createReward = async (payload) => {
   try {
@@ -53,6 +53,17 @@ export const fetchReward = async (payload) => {
       data: {
         ..._doc,
       },
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteReward = async (rewardId) => {
+  try {
+    await deleteRecord(Reward, rewardId);
+    return {
+      code: codes.RESOURCE_DELETED,
     };
   } catch (error) {
     throw error;

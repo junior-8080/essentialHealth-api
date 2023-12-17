@@ -1,11 +1,12 @@
 import express from "express";
-import * as shortControllers from "./controller.js";
+import * as rewardControllers from "./controller.js";
 import authorize from "../utils/middleware.js";
 const router = express.Router();
 
-router.post("/", authorize, shortControllers.createReward);
-router.put("/:rewardId", authorize, shortControllers.updateReward);
-router.get("/", shortControllers.fetchRewards);
-router.get("/:rewardId", shortControllers.fetchReward);
+router.post("/", authorize, rewardControllers.createReward);
+router.put("/:rewardId", authorize, rewardControllers.updateReward);
+router.get("/", rewardControllers.fetchRewards);
+router.get("/:rewardId", rewardControllers.fetchReward);
+router.delete("/:rewardId", rewardControllers.deleteReward);
 
 export default router;

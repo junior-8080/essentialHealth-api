@@ -65,3 +65,17 @@ export const fetchTag = async (request, response, next) => {
     next();
   }
 };
+
+export const deleteTag = async (request, response, next) => {
+  try {
+    const tagId = request.params.tagId;
+    const responsePayload = await tagServices.deleteTag(tagId);
+    response.locals.responsePayload = {
+      ...responsePayload,
+    };
+    next();
+  } catch (error) {
+    response.locals.responsePayload = error;
+    next();
+  }
+};

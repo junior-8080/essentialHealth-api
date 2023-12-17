@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import Category from "../models/Category.js";
 import { contentTransformer, defaultTransformer, rewardClaimTransformer } from "./dataTransformers.js";
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 
 export const fetchUserByPhoneNumber = async (phoneNumber) => {
   try {
@@ -89,6 +89,18 @@ export const customCreate = async (Model, payload = {}) => {
     const { _doc } = await Model.create(payload);
     const { _id, ...rest } = _doc;
     return { id: _id, ...rest };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteRecord = async (Model, id) => {
+  try {
+    if (!Model || !id) {
+      throw new Error("Model and id required");
+    }
+    const deleteInfo = await Model.deleteOne({ _id: id });
+    return deleteInfo;
   } catch (error) {
     throw error;
   }

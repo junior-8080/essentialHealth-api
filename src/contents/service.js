@@ -1,5 +1,5 @@
 import { codes } from "../constants/codes.js";
-import { customCreate, paginate } from "../utils/common.js";
+import { customCreate, deleteRecord, paginate } from "../utils/common.js";
 import Content from "../models/Content.js";
 import { contentTransformer } from "../utils/dataTransformers.js";
 import { userMediaActivity } from "../users/service.js";
@@ -93,6 +93,17 @@ export const fetchContentSections = async (contentId, userId) => {
     return {
       code: codes.RESOURCE_FETCHED,
       data: results,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteContent = async (contentId) => {
+  try {
+    await deleteRecord(Content, contentId);
+    return {
+      code: codes.RESOURCE_DELETED,
     };
   } catch (error) {
     throw error;

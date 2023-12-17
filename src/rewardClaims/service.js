@@ -3,7 +3,7 @@ import RewardClaim from "../models/RewardClaim.js";
 import User from "../models/User.js";
 import { fetchReward } from "../rewards/service.js";
 import { fetchUser } from "../users/service.js";
-import { customCreate, paginate } from "../utils/common.js";
+import { customCreate, deleteRecord, paginate } from "../utils/common.js";
 
 export const createRewardClaim = async (payload) => {
   try {
@@ -78,6 +78,17 @@ export const fetchRewardClaim = async (rewardClaimId) => {
     return {
       code: codes.RESOURCE_FETCHED,
       data: results[0],
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteRewardClaim = async (rewardClaimId) => {
+  try {
+    await deleteRecord(RewardClaim, rewardClaimId);
+    return {
+      code: codes.RESOURCE_DELETED,
     };
   } catch (error) {
     throw error;

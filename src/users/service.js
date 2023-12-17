@@ -195,3 +195,14 @@ export const fetchUserVital = async (payload) => {
     throw error;
   }
 };
+
+export const deleteUser = async (userId) => {
+  try {
+    await deleteRecord(Content, userId);
+    return {
+      code: codes.RESOURCE_DELETED,
+    };
+  } catch (error) {
+    throw error;
+  }
+};

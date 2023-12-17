@@ -69,3 +69,17 @@ export const fetchReward = async (request, response, next) => {
     next();
   }
 };
+
+export const deleteReward = async (request, response, next) => {
+  try {
+    const rewardId = request.params.rewardId;
+    const responsePayload = await rewardServices.deleteReward(rewardId);
+    response.locals.responsePayload = {
+      ...responsePayload,
+    };
+    next();
+  } catch (error) {
+    response.locals.responsePayload = error;
+    next();
+  }
+};

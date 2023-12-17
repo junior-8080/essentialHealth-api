@@ -1,6 +1,6 @@
 import { codes } from "../constants/codes.js";
 import Tag from "../models/Tag.js";
-import { customCreate, fetchCategoryByTitle, paginate } from "../utils/common.js";
+import { customCreate, deleteRecord, fetchCategoryByTitle, paginate } from "../utils/common.js";
 
 export const createTag = async (payload) => {
   try {
@@ -61,6 +61,17 @@ export const fetchTag = async (payload) => {
       data: {
         ..._doc,
       },
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteTag = async (tagId) => {
+  try {
+    await deleteRecord(Content, tagId);
+    return {
+      code: codes.RESOURCE_DELETED,
     };
   } catch (error) {
     throw error;

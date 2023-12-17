@@ -10,5 +10,6 @@ router.put("/", userControllers.updateUser);
 router.post("/:userId/user-media-activities", userControllers.createUserMediaActivity);
 router.post("/:userId/vital-target", userControllers.createUserVitalTarget);
 router.get("/:userId/vitals", authorize, userControllers.fetchUserVital);
+router.delete("/:userId", userControllers.deleteUser);
 
 export default router;

@@ -46,3 +46,17 @@ export const fetchInstructor = async (request, response, next) => {
     next();
   }
 };
+
+export const deleteInstructor = async (request, response, next) => {
+  try {
+    const instructorId = request.params.instructorId;
+    const responsePayload = await instructorServices.deleteInstructor(instructorId);
+    response.locals.responsePayload = {
+      ...responsePayload,
+    };
+    next();
+  } catch (error) {
+    response.locals.responsePayload = error;
+    next();
+  }
+};

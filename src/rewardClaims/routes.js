@@ -7,5 +7,6 @@ router.post("/", rewardClaimServices.createRewardClaim);
 router.get("/", rewardClaimServices.fetchRewardClaims);
 router.get("/:rewardClaimId", rewardClaimServices.fetchRewardClaim);
 router.put("/:rewardClaimId", rewardClaimServices.updateRewardClaim);
+router.delete("/:rewardClaimId", rewardClaimServices.deleteRewardClaim);
 
 export default router;

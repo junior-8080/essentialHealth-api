@@ -1,6 +1,6 @@
 import { codes } from "../constants/codes.js";
 import Short from "../models/Short.js";
-import { customCreate, paginate } from "../utils/common.js";
+import { customCreate, deleteRecord, paginate } from "../utils/common.js";
 
 export const createShort = async (payload) => {
   try {
@@ -53,6 +53,17 @@ export const fetchShort = async (payload) => {
       data: {
         ..._doc,
       },
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteShort = async (shortId) => {
+  try {
+    await deleteRecord(Content, shortId);
+    return {
+      code: codes.RESOURCE_DELETED,
     };
   } catch (error) {
     throw error;

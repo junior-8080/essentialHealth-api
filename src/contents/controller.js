@@ -82,3 +82,17 @@ export const fetchContentSections = async (request, response, next) => {
     next();
   }
 };
+
+export const deleteContent = async (request, response, next) => {
+  try {
+    const contentId = request.params.contentId;
+    const responsePayload = await contentServices.deleteContent(contentId);
+    response.locals.responsePayload = {
+      ...responsePayload,
+    };
+    next();
+  } catch (error) {
+    response.locals.responsePayload = error;
+    next();
+  }
+};
