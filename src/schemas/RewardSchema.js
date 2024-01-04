@@ -27,6 +27,10 @@ const RewardSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  location: {
+    type: String,
+  },
+
   created_by: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

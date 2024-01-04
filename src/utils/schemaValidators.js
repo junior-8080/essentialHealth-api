@@ -266,6 +266,7 @@ export const rewardValidationSchema = Joi.object({
   image: Joi.string().uri(),
   voucher_code: Joi.string().required(),
   points: Joi.number().min(1).max(10000000).required(),
+  location: Joi.string(),
   status: Joi.string().valid("active", "redeemed"),
 });
 
@@ -275,6 +276,8 @@ export const rewardUpdateValidationSchema = Joi.object({
   type: Joi.string().valid("digital", "physical"),
   image: Joi.string().uri(),
   points: Joi.number().min(1).max(10000000),
+  voucher_code: Joi.string().required(),
+  location: Joi.string(),
   status: Joi.string().valid("active", "redeemed"),
 });
 
@@ -286,4 +289,16 @@ export const rewardClaimValidationSchema = Joi.object({
 export const rewardClaimUpdatedValidationSchema = Joi.object({
   status: Joi.string().valid("Fulfilled"),
   rewardClaimId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+});
+
+export const subscriptionPlanSchema = Joi.object({
+  name: Joi.string().required(),
+  description: Joi.string().allow("", null),
+  duration_in_months: Joi.number().integer().min(1).required(),
+});
+
+export const subscriptionPlanUpdateSchema = Joi.object({
+  name: Joi.string(),
+  description: Joi.string(),
+  duration_in_months: Joi.number().integer().min(1),
 });

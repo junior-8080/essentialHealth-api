@@ -1,6 +1,5 @@
 import { codes } from "../constants/codes.js";
 import { customCreate, deleteRecord, paginate } from "../utils/common.js";
-import Instructor from "../models/Instructor.js";
 
 export const createInstructor = async (payload) => {
   try {
@@ -53,7 +52,6 @@ export const fetchInstructor = async (payload) => {
 };
 
 export const deleteInstructor = async (instructorId) => {
-  console.log("🚀 ~ file: service.js:56 ~ deleteInstructor ~ instructorId:", instructorId);
   try {
     const result = await deleteRecord(Instructor, instructorId);
     return {
