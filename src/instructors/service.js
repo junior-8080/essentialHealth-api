@@ -1,5 +1,6 @@
 import { codes } from "../constants/codes.js";
 import { customCreate, deleteRecord, paginate } from "../utils/common.js";
+import Instructor from "../models/Instructor.js";
 
 export const createInstructor = async (payload) => {
   try {
