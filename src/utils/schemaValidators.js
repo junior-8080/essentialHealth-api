@@ -295,10 +295,14 @@ export const subscriptionPlanSchema = Joi.object({
   name: Joi.string().required(),
   description: Joi.string().allow("", null),
   duration_in_months: Joi.number().integer().min(1).required(),
+  price: Joi.number().required(),
+  currency: Joi.string().allow("USD", "GHS").required(),
 });
 
 export const subscriptionPlanUpdateSchema = Joi.object({
   name: Joi.string(),
   description: Joi.string(),
   duration_in_months: Joi.number().integer().min(1),
+  price: Joi.number(),
+  currency: Joi.string().allow("USD", "GHS"),
 });

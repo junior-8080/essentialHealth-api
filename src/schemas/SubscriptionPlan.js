@@ -10,6 +10,14 @@ const SubscriptionPlan = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  price: {
+    type: Number,
+    required: true,
+  },
+  currency: {
+    type: String,
+    required: true,
+  },
   created_at: {
     type: Date,
     default: Date.now,
