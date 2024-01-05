@@ -271,7 +271,7 @@ export const rewardValidationSchema = Joi.object({
 });
 
 export const rewardUpdateValidationSchema = Joi.object({
-  name: Joi.string().required(),
+  name: Joi.string(),
   description: Joi.string(),
   type: Joi.string().valid("digital", "physical"),
   image: Joi.string().uri(),

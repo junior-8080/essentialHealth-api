@@ -10,7 +10,7 @@ const RewardSchema = new mongoose.Schema({
     type: String,
   },
   type: {
-    type: Number,
+    type: String,
     required: true,
   },
   points: {
@@ -30,7 +30,6 @@ const RewardSchema = new mongoose.Schema({
   location: {
     type: String,
   },
-
   created_by: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
