@@ -75,6 +75,7 @@ export const verifyOtp = async (payload) => {
           lastName,
           role,
           subscription_type,
+          id: _id,
         }
       : null;
     const token = generateToken({ id: _id, role, subscription_type });
