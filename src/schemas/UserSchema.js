@@ -1,5 +1,28 @@
 import mongoose from "mongoose";
 
+const measureSchema = new mongoose.Schema({
+  measure: {
+    type: Number,
+    required: true,
+  },
+  measure_unit: {
+    type: String,
+    required: true,
+  },
+});
+const referenceSchema = new mongoose.Schema({
+  main_goal: String,
+  weight_goal: measureSchema,
+  training_level: {
+    type: String,
+    enum: ["Beginner", "Irregular training", "Medium", "Advanced"],
+  },
+  category_interest: {
+    type: [String],
+    default: [],
+  },
+});
+
 const UserSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -19,22 +42,9 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  height: {
-    measure: {
-      type: Number,
-    },
-    measure_unit: {
-      type: String,
-    },
-  },
-  weight: {
-    measure: {
-      type: Number,
-    },
-    measure_unit: {
-      type: String,
-    },
-  },
+  height: measureSchema,
+  weight: measureSchema,
+  reference: referenceSchema,
   imageURL: {
     type: String,
     required: false,

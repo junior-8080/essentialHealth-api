@@ -14,8 +14,14 @@ export const signUpValidationSchema = Joi.object({
   imageURL: Joi.string().allow(""),
   dob: Joi.date(),
   gender: Joi.string().allow("Male", "Female"),
-  height: measureSchema,
-  weight: measureSchema,
+  // height: measureSchema,
+  // weight: measureSchema,
+  // reference: Joi.object({
+  //   main_goal: Joi.string(),
+  //   weight_goal: measureSchema,
+  //   training_level: Joi.string("Beginner", "Irregular training", "Medium", "Advanced"),
+  //   category_interest: Joi.array().items(Joi.string()),
+  // }),
 });
 
 export const userValidationSchema = Joi.object({
@@ -29,6 +35,12 @@ export const userValidationSchema = Joi.object({
   gender: Joi.string().allow("Male", "Female"),
   height: measureSchema,
   weight: measureSchema,
+  reference: Joi.object({
+    main_goal: Joi.string(),
+    weight_goal: measureSchema,
+    training_level: Joi.string().allow("Beginner", "Irregular training", "Medium", "Advanced"),
+    category_interest: Joi.array().items(Joi.string()),
+  }),
 });
 
 export const userUpdateValidationSchema = Joi.object({
@@ -36,7 +48,17 @@ export const userUpdateValidationSchema = Joi.object({
   lastName: Joi.string(),
   email: Joi.string().email(),
   phoneNumber: Joi.string(),
-  profileImage: Joi.string(),
+  imageURL: Joi.string().allow(""),
+  dob: Joi.date(),
+  gender: Joi.string().allow("Male", "Female"),
+  height: measureSchema,
+  weight: measureSchema,
+  reference: Joi.object({
+    main_goal: Joi.string(),
+    weight_goal: measureSchema,
+    training_level: Joi.string().allow("Beginner", "Irregular training", "Medium", "Advanced"),
+    category_interest: Joi.array().items(Joi.string()),
+  }),
 }).min(1);
 
 export const authValidationSchema = Joi.object({
@@ -305,4 +327,10 @@ export const subscriptionPlanUpdateSchema = Joi.object({
   duration_in_months: Joi.number().integer().min(1),
   price: Joi.number(),
   currency: Joi.string().allow("USD", "GHS"),
+});
+
+export const billingValidationSchema = Joi.object({
+  userId: Joi.string().required(),
+  subscriptionId: Joi.string().required(),
+  email: Joi.string().required(),
 });

@@ -51,10 +51,8 @@ export const fetchSubscriptionPlans = async (request, response, next) => {
 
 export const fetchSubscriptionPlan = async (request, response, next) => {
   try {
-    const requestPayload = {
-      ...request.params,
-    };
-    const responsePayload = await subscriptionPlanServices.fetchSubscriptionPlan(requestPayload);
+    const planId = request.params.planId;
+    const responsePayload = await subscriptionPlanServices.fetchSubscriptionPlan(planId);
     response.locals.responsePayload = {
       ...responsePayload,
     };

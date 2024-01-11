@@ -134,6 +134,7 @@ export const createUserVitalTarget = async (payload) => {
 export const fetchUserVital = async (payload) => {
   try {
     let { userId, created_at } = payload;
+    console.log("🚀 ~ file: service.js:137 ~ fetchUserVital ~ created_at:", created_at);
     if (!created_at) {
       created_at = new Date(Date.now()).toISOString();
       created_at = created_at.split("T")[0];

@@ -66,6 +66,7 @@ export const updateUser = async (request, response, next) => {
     };
     next();
   } catch (error) {
+    console.log("🚀 ~ file: controller.js:69 ~ updateUser ~ error:", error);
     response.locals.responsePayload = error;
     next();
   }
@@ -113,6 +114,7 @@ export const fetchUserVital = async (request, response, next) => {
   try {
     const requestPayload = {
       ...request.params,
+      ...request.query,
     };
     const responsePayload = await userServices.fetchUserVital(requestPayload);
     response.locals.responsePayload = {

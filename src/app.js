@@ -24,6 +24,7 @@ import rewardClaimsRouter from "./rewardClaims/routes.js";
 import summariesRoute from "./summaries/routes.js";
 import vitalsRoute from "./vitals/routes.js";
 import subscriptionPlanRoute from "./subscriptionPlans/routes.js";
+import billingRoute from "./billing/routes.js";
 import { createUser } from "./users/service.js";
 import { codes } from "./constants/codes.js";
 import { createUploadDirectories } from "./utils/helpers.js";
@@ -60,6 +61,7 @@ app.use("/api/v1/reward-claims", authorize, rewardClaimsRouter);
 app.use("/api/v1/summaries", summariesRoute);
 app.use("/api/v1/vitals", vitalsRoute);
 app.use("/api/v1/subscription-plans", subscriptionPlanRoute);
+app.use("/api/v1/billing", billingRoute);
 
 app.use((request, response) => {
   const { responsePayload } = response.locals;

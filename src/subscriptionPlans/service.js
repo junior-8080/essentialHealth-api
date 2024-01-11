@@ -49,20 +49,22 @@ export const fetchSubscriptionPlans = async (payload = {}) => {
   }
 };
 
-export const fetchSubscriptionPlan = async (payload) => {
+export const fetchSubscriptionPlan = async (planId) => {
   try {
-    const { planId } = payload;
-    const subscriptionPlanData = await SubscriptionPlan.findById(planId);
-    if (!subscriptionPlanData) {
-      return {
+    const payload = {
+      _id: planId,
+    };
+    const page = 1;
+    const pageSize = 1;
+    const { results } = await paginate({ Model: SubscriptionPlan, page, pageSize, payload });
+    if (results.length === 0) {
+      throw {
         code: codes.NOT_FOUND,
       };
     }
     return {
       code: codes.RESOURCE_FETCHED,
-      data: {
-        ..._doc,
-      },
+      data: results[0],
     };
   } catch (error) {
     throw error;

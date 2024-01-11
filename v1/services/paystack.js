@@ -312,11 +312,9 @@ const getPaymentLink = () => {
   const req = https
     .request(options, (res) => {
       let data = "";
-
       res.on("data", (chunk) => {
         data += chunk;
       });
-
       res.on("end", () => {
         console.log(JSON.parse(data));
       });
