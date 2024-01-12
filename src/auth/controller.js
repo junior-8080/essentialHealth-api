@@ -42,8 +42,10 @@ export const signUp = async (request, response, next) => {
   try {
     const requestPayload = {
       ...request.body,
+      firstName: request.body.fullName.split(" ")[0],
+      lastName: request.body.fullName.split(" ")[1],
     };
-
+    delete requestPayload.fullName;
     const validPayload = await validateRequestPayload(signUpValidationSchema, requestPayload);
     const responsePayload = await userServices.createUser(validPayload);
     response.locals.responsePayload = {
