@@ -5,38 +5,41 @@ import { fetchUser } from "../users/service.js";
 import { v4 as uuidv4 } from "uuid";
 import { customCreate } from "../utils/common.js";
 import { initializeTransaction } from "../utils/paystack.js";
+import Subscription from "../models/Subscription.js";
 
 export const createCheckoutUrl = async (payload) => {
   try {
-    // get user details. Done
-    //get subscription details Done
-    //generate payment details done
-    // generate payment invoice payload Done
-    //save payment invoice payload
-    // invoice status wil be pending
-    // make a request to generate checkout url
-    // send checkout url to client.
-    const { userId, subscriptionId, email } = payload;
+    const { userId, subscriptionPlanId, email } = payload;
+    const subscriptionData = await Subscription.findOne({
+      subscriptionPlan_id: subscriptionPlanId,
+      expiry_date: { $gt: Date.now() }
+    });
+    if (subscriptionData) {
+      throw {
+        code: codes.RESOURCE_EXISTS,
+        message: "User is already subscribed for this plan. Duplicate subscription is not allowed"
+      };
+    }
     const { data: userDetails } = await fetchUser({ userId });
-    const { data: subscriptionPlanDetails } = await fetchSubscriptionPlan(subscriptionId);
-    console.log("🚀 ~ file: service.js:22 ~ createCheckoutUrl ~ subscriptionPlanDetails:", subscriptionPlanDetails);
+    const { data: subscriptionPlanDetails } = await fetchSubscriptionPlan(subscriptionPlanId);
     const paymentDetails = {
       reference: uuidv4(),
       amount: subscriptionPlanDetails.price,
       email: userDetails.email || email,
       currency: subscriptionPlanDetails.currency,
       metadata: {
-        subscriptionPlanId: subscriptionPlanDetails.id,
-        userId,
+        subscriptionPlan_id: subscriptionPlanDetails.id,
+        user_id: userId,
         username: userDetails.firstName + " " + userDetails.lastName,
-        phoneNumber: userDetails.phoneNumber,
-      },
+        phoneNumber: userDetails.phoneNumber
+      }
     };
+    console.log(paymentDetails);
     await customCreate(Transactions, paymentDetails);
     const checkoutData = await initializeTransaction(paymentDetails);
     return {
       code: codes.RESOURCE_CREATED,
-      data: checkoutData,
+      data: { paymentDetails, checkoutData }
     };
   } catch (error) {
     throw error;

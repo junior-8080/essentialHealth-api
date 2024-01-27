@@ -15,7 +15,7 @@ export const validateRequestPayload = function (schema, payload) {
     if (error) {
       reject({
         code: codes.INVALID_PARAMETERS,
-        data: errorFormatter(error),
+        data: errorFormatter(error)
       });
     }
     return resolve(value);
@@ -64,6 +64,16 @@ export const getFileCategory = (mimeType) => {
   }
 };
 
+export const calculateEndDate = (startDate, durationMonths) => {
+  console.log("🚀 ~ calculateEndDate ~ durationMonths:", durationMonths);
+  console.log("🚀 ~ calculateEndDate ~ startDate:", startDate);
+  const startDateObj = new Date(startDate);
+  const endDate = new Date(startDateObj.setMonth(startDateObj.getMonth() + durationMonths));
+  const formattedEndDate = endDate.toISOString().split("T")[0];
+
+  return formattedEndDate;
+};
+
 export const defaultVitalsTargets = {
   blood_pressure: 130,
   sugar_level: 6.0,
@@ -72,5 +82,5 @@ export const defaultVitalsTargets = {
   sys: 90,
   dia: 86,
   pulse: 81,
-  sugar: 4.7,
+  sugar: 4.7
 };

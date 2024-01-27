@@ -4,6 +4,7 @@ import User from "../models/User.js";
 import UserMediaActivity from "../models/UserMediaActivity.js";
 import Vital from "../models/Vital.js";
 import UserTargetVital from "../models/VitalTarget.js";
+import { fetchRewardClaims } from "../rewardClaims/service.js";
 import { customCreate, fetchUserByPhoneNumber, paginate } from "../utils/common.js";
 import { defaultVitalsTargets } from "../utils/helpers.js";
 
@@ -14,13 +15,13 @@ export const createUser = async (payload) => {
       throw {
         code: codes.RESOURCE_EXISTS,
         message: "phonenumber already exists",
-        data: payload,
+        data: payload
       };
     }
     const userData = await customCreate(User, payload);
     return {
       code: codes.RESOURCE_CREATED,
-      data: userData,
+      data: userData
     };
   } catch (error) {
     throw error;
@@ -33,7 +34,7 @@ export const fetchUsers = async (payload = {}) => {
     const result = await paginate({ Model: User, page, pageSize, payload });
     return {
       code: codes.RESOURCE_FETCHED,
-      data: result,
+      data: result
     };
   } catch (error) {
     throw error;
@@ -48,8 +49,8 @@ export const fetchUser = async (payload) => {
     return {
       code: codes.RESOURCE_FETCHED,
       data: {
-        ..._doc,
-      },
+        ..._doc
+      }
     };
   } catch (error) {
     throw error;
@@ -62,8 +63,8 @@ export const updateUser = async (userId, payload) => {
     return {
       code: codes.RESOURCE_UPDATED,
       data: {
-        id: userId,
-      },
+        id: userId
+      }
     };
   } catch (error) {
     throw error;
@@ -80,7 +81,7 @@ export const userMediaActivity = async (contents, userId) => {
     const data = contents.map((content) => {
       return {
         ...content,
-        watched: watchedContent[content.id] ? true : false,
+        watched: watchedContent[content.id] ? true : false
       };
     });
     return data;
@@ -96,7 +97,7 @@ export const createUserMediaActivity = async (payload) => {
     const userActivities = await UserMediaActivity.findOne({
       content_id: payload.content_id,
       user_id: payload.user_id,
-      isChallenge: contentReward ? "yes" : "no",
+      isChallenge: contentReward ? "yes" : "no"
     });
     if (!userActivities) {
       payload.points = contentReward ? contentReward.points : 0;
@@ -112,8 +113,8 @@ export const createUserMediaActivity = async (payload) => {
     return {
       code: codes.RESOURCE_CREATED,
       data: {
-        points: updatedUser.points,
-      },
+        points: updatedUser.points
+      }
     };
   } catch (error) {
     throw error;
@@ -125,7 +126,7 @@ export const createUserVitalTarget = async (payload) => {
     const userVitalData = await customCreate(UserTargetVital, payload);
     return {
       code: codes.RESOURCE_CREATED,
-      data: userVitalData,
+      data: userVitalData
     };
   } catch (error) {
     throw error;
@@ -134,7 +135,6 @@ export const createUserVitalTarget = async (payload) => {
 export const fetchUserVital = async (payload) => {
   try {
     let { userId, created_at } = payload;
-    console.log("🚀 ~ file: service.js:137 ~ fetchUserVital ~ created_at:", created_at);
     if (!created_at) {
       created_at = new Date(Date.now()).toISOString();
       created_at = created_at.split("T")[0];
@@ -142,7 +142,7 @@ export const fetchUserVital = async (payload) => {
 
     const result = await Vital.find({
       created_at: { $gte: created_at },
-      user_id: userId,
+      user_id: userId
     });
     let userVitals = result[0];
     const defaultVitals = {
@@ -150,35 +150,35 @@ export const fetchUserVital = async (payload) => {
         dia: {
           progress: 0,
           target: defaultVitalsTargets.dia,
-          unit: "mmHg",
+          unit: "mmHg"
         },
         sys: {
           progress: 0,
           target: defaultVitalsTargets.sys,
-          unit: "mmHg",
+          unit: "mmHg"
         },
         pulse: {
           progress: 0,
           target: defaultVitalsTargets.pulse,
-          unit: "heart rate",
-        },
+          unit: "heart rate"
+        }
       },
       sugar_level: {
         progress: 0,
         target: defaultVitalsTargets.sugar_level,
-        unit: "mmol/L",
+        unit: "mmol/L"
       },
       steps: {
         progress: 0,
         target: defaultVitalsTargets.steps,
-        unit: "steps",
+        unit: "steps"
       },
       water_cups: {
         progress: 0,
         target: defaultVitalsTargets.water_cups,
-        unit: "cups",
+        unit: "cups"
       },
-      user_id: userId,
+      user_id: userId
     };
 
     if (!userVitals) {
@@ -190,8 +190,16 @@ export const fetchUserVital = async (payload) => {
     delete data._id;
     return {
       code: codes.RESOURCE_FETCHED,
-      data,
+      data
     };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchUserReward = async (payload) => {
+  try {
+    return await fetchRewardClaims(payload);
   } catch (error) {
     throw error;
   }
@@ -201,7 +209,7 @@ export const deleteUser = async (userId) => {
   try {
     await deleteRecord(Content, userId);
     return {
-      code: codes.RESOURCE_DELETED,
+      code: codes.RESOURCE_DELETED
     };
   } catch (error) {
     throw error;

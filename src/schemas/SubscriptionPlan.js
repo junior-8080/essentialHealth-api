@@ -3,25 +3,29 @@ import mongoose from "mongoose";
 const SubscriptionPlan = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   description: String,
   duration_in_months: {
     type: Number,
-    required: true,
+    required: true
   },
   price: {
     type: Number,
-    required: true,
+    required: true
   },
   currency: {
     type: String,
-    required: true,
+    required: true
+  },
+  subscription_order: {
+    type: Number,
+    required: true
   },
   created_at: {
     type: Date,
-    default: Date.now,
-  },
+    default: Date.now
+  }
 });
 
 export default SubscriptionPlan;

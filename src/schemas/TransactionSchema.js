@@ -2,35 +2,37 @@ import mongoose from "mongoose";
 // Define the schema
 const TransactionSchema = new mongoose.Schema({
   reference: {
-    type: String,
+    type: String
   },
   amount: {
     type: Number,
-    required: true,
+    required: true
   },
   email: {
     type: String,
-    required: true,
+    required: true
   },
   currency: {
     type: String,
-    required: true,
+    required: true
   },
   status: {
     type: String,
-    default: "Pending",
+    default: "Pending"
   },
   metadata: {
-    subscriptionPlanId: {
-      type: String,
-      required: true,
+    subscriptionPlan_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SubscriptionPlan",
+      required: true
     },
-    userId: {
-      type: String,
-      required: true,
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
     },
     username: String,
-    phoneNumber: String,
-  },
+    phoneNumber: String
+  }
 });
 export default TransactionSchema;

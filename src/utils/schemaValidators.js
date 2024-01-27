@@ -3,7 +3,7 @@ import Joi from "joi";
 
 const measureSchema = Joi.object({
   measure: Joi.number().required(),
-  measure_unit: Joi.string().required(),
+  measure_unit: Joi.string().required()
 });
 
 export const signUpValidationSchema = Joi.object({
@@ -13,7 +13,7 @@ export const signUpValidationSchema = Joi.object({
   phoneNumber: Joi.string().required(),
   imageURL: Joi.string().allow(""),
   dob: Joi.date(),
-  gender: Joi.string().allow("Male", "Female"),
+  gender: Joi.string().allow("Male", "Female")
   // height: measureSchema,
   // weight: measureSchema,
   // reference: Joi.object({
@@ -39,8 +39,8 @@ export const userValidationSchema = Joi.object({
     main_goal: Joi.string(),
     weight_goal: measureSchema,
     training_level: Joi.string().allow("Beginner", "Irregular training", "Medium", "Advanced"),
-    category_interest: Joi.array().items(Joi.string()),
-  }),
+    category_interest: Joi.array().items(Joi.string())
+  })
 });
 
 export const userUpdateValidationSchema = Joi.object({
@@ -57,41 +57,41 @@ export const userUpdateValidationSchema = Joi.object({
     main_goal: Joi.string(),
     weight_goal: measureSchema,
     training_level: Joi.string().allow("Beginner", "Irregular training", "Medium", "Advanced"),
-    category_interest: Joi.array().items(Joi.string()),
-  }),
+    category_interest: Joi.array().items(Joi.string())
+  })
 }).min(1);
 
 export const authValidationSchema = Joi.object({
-  phoneNumber: Joi.string().required(),
+  phoneNumber: Joi.string().required()
 });
 
 export const verifyOtpValidationSchema = Joi.object({
   phoneNumber: Joi.string().required(),
-  code: Joi.number().required(),
+  code: Joi.number().required()
 });
 
 export const categoriesValidationSchema = Joi.object({
   title: Joi.string().required(),
   description: Joi.string(),
-  imageURL: Joi.string(),
+  imageURL: Joi.string()
 });
 
 export const categoriesUpdateValidationSchema = Joi.object({
   title: Joi.string(),
   description: Joi.string(),
-  imageURL: Joi.string(),
+  imageURL: Joi.string()
 }).min(1);
 
 export const tagValidationSchema = Joi.object({
   title: Joi.string().required(),
   description: Joi.string(),
-  imageURL: Joi.string(),
+  imageURL: Joi.string()
 });
 
 export const updateTagValidationSchema = Joi.object({
   title: Joi.string().required(),
   description: Joi.string(),
-  imageURL: Joi.string(),
+  imageURL: Joi.string()
 }).min(1);
 
 // export const mediaValidationSchema = Joi.object({
@@ -106,7 +106,7 @@ export const instructorSchema = Joi.object({
   phoneNumber: Joi.string(),
   imageURL: Joi.string(),
   introUrl: Joi.string(),
-  state: Joi.string().valid("Active", "Inactive"),
+  state: Joi.string().valid("Active", "Inactive")
 });
 
 export const contentValidation = Joi.object({
@@ -120,8 +120,8 @@ export const contentValidation = Joi.object({
     type: Joi.string().valid("audio", "video", "image", "session", "article"),
     body: Joi.string().when("type", {
       is: "session",
-      then: Joi.string().allow(""),
-    }),
+      then: Joi.string().allow("")
+    })
   }),
   category_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
   tags: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
@@ -132,13 +132,13 @@ export const contentValidation = Joi.object({
   publish_date: Joi.date().when("content_type", {
     is: "main",
     then: Joi.optional(),
-    otherwise: Joi.forbidden(),
+    otherwise: Joi.forbidden()
   }),
   reward: Joi.object({
     points: Joi.number().min(1).max(1000000),
-    description: Joi.string(),
+    description: Joi.string()
   }),
-  created_by: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+  created_by: Joi.string().pattern(/^[0-9a-fA-F]{24}$/)
 });
 
 export const contentUpdatedValidationSchema = Joi.object({
@@ -152,8 +152,8 @@ export const contentUpdatedValidationSchema = Joi.object({
     type: Joi.string().valid("audio", "video", "image", "session", "article"),
     body: Joi.string().when("type", {
       is: "session",
-      then: Joi.string().allow(""),
-    }),
+      then: Joi.string().allow("")
+    })
   }),
   category_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
   tags: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
@@ -162,16 +162,16 @@ export const contentUpdatedValidationSchema = Joi.object({
   publish_date: Joi.date(),
   reward: Joi.object({
     points: Joi.number().min(1).max(1000000),
-    description: Joi.string(),
+    description: Joi.string()
   }),
-  created_by: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+  created_by: Joi.string().pattern(/^[0-9a-fA-F]{24}$/)
 });
 
 export const mediaValidationSchema = Joi.object({
   title: Joi.string(),
   fileUrl: Joi.string().required(),
   name: Joi.string(),
-  description: Joi.string(),
+  description: Joi.string()
 });
 
 export const shortValidationSchema = Joi.object({
@@ -180,14 +180,14 @@ export const shortValidationSchema = Joi.object({
   category_id: Joi.string()
     .pattern(/^[0-9a-fA-F]{24}$/)
     .required(),
-  publish_date: Joi.date().required(),
+  publish_date: Joi.date().required()
 });
 
 export const shortUpdateValidationSchema = Joi.object({
   resource: Joi.string(),
   type: Joi.string().allow("image", "note", "short-video"),
   category_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-  publish_date: Joi.date(),
+  publish_date: Joi.date()
 });
 
 export const vitalValidationSchema = Joi.object({
@@ -195,35 +195,35 @@ export const vitalValidationSchema = Joi.object({
     dia: Joi.object({
       progress: Joi.number().required(),
       target: Joi.number().required(),
-      unit: Joi.string().valid("mmHg").required(),
+      unit: Joi.string().valid("mmHg").required()
     }).required(),
     sys: Joi.object({
       progress: Joi.number().required(),
       target: Joi.number().required(),
-      unit: Joi.string().valid("mmHg").required(),
+      unit: Joi.string().valid("mmHg").required()
     }).required(),
     pulse: Joi.object({
       progress: Joi.number().required(),
       target: Joi.number().required(),
-      unit: Joi.string().valid("heart rate").required(),
-    }).required(),
+      unit: Joi.string().valid("heart rate").required()
+    }).required()
   }).required(),
   sugar_level: Joi.object({
     progress: Joi.number().required(),
     target: Joi.number().required(),
-    unit: Joi.string().valid("mmol/L").required(),
+    unit: Joi.string().valid("mmol/L").required()
   }).required(),
   steps: Joi.object({
     progress: Joi.number().required(),
     target: Joi.number().required(),
-    unit: Joi.string().valid("steps").required(),
+    unit: Joi.string().valid("steps").required()
   }).required(),
   water_cups: Joi.object({
     progress: Joi.number().required(),
     target: Joi.number().required(),
-    unit: Joi.string().valid("cups").required(),
+    unit: Joi.string().valid("cups").required()
   }).required(),
-  user_id: Joi.string().required(),
+  user_id: Joi.string().required()
 });
 
 export const vitalUpdateValidationSchema = Joi.object({
@@ -231,34 +231,34 @@ export const vitalUpdateValidationSchema = Joi.object({
     dia: Joi.object({
       progress: Joi.number().required(),
       target: Joi.number().required(),
-      unit: Joi.string().valid("mmHg").required(),
+      unit: Joi.string().valid("mmHg").required()
     }).required(),
     sys: Joi.object({
       progress: Joi.number().required(),
       target: Joi.number().required(),
-      unit: Joi.string().valid("mmHg").required(),
+      unit: Joi.string().valid("mmHg").required()
     }).required(),
     pulse: Joi.object({
       progress: Joi.number().required(),
       target: Joi.number().required(),
-      unit: Joi.string().valid("heart rate").required(),
-    }).required(),
+      unit: Joi.string().valid("heart rate").required()
+    }).required()
   }).required(),
   sugar_level: Joi.object({
     progress: Joi.number().required(),
     target: Joi.number().required(),
-    unit: Joi.string().valid("mmol/L").required(),
+    unit: Joi.string().valid("mmol/L").required()
   }).required(),
   steps: Joi.object({
     progress: Joi.number().required(),
     target: Joi.number().required(),
-    unit: Joi.string().valid("steps").required(),
+    unit: Joi.string().valid("steps").required()
   }).required(),
   water_cups: Joi.object({
     progress: Joi.number().required(),
     target: Joi.number().required(),
-    unit: Joi.string().valid("cups").required(),
-  }).required(),
+    unit: Joi.string().valid("cups").required()
+  }).required()
   // user_id: Joi.string().required(),
 });
 
@@ -267,9 +267,9 @@ export const vitalTargetValidationSchema = Joi.object({
     blood_pressure: Joi.number(),
     sugar_level: Joi.number(),
     steps: Joi.number(),
-    water_cups: Joi.number(),
+    water_cups: Joi.number()
   }),
-  user_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+  user_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/)
 });
 
 export const userActivityValidationSchema = Joi.object({
@@ -278,7 +278,7 @@ export const userActivityValidationSchema = Joi.object({
     .required(),
   content_id: Joi.string()
     .pattern(/^[0-9a-fA-F]{24}$/)
-    .required(),
+    .required()
 });
 
 export const rewardValidationSchema = Joi.object({
@@ -289,7 +289,7 @@ export const rewardValidationSchema = Joi.object({
   voucher_code: Joi.string().required(),
   points: Joi.number().min(1).max(10000000).required(),
   location: Joi.string(),
-  status: Joi.string().valid("active", "redeemed"),
+  status: Joi.string().valid("active", "redeemed")
 });
 
 export const rewardUpdateValidationSchema = Joi.object({
@@ -300,17 +300,17 @@ export const rewardUpdateValidationSchema = Joi.object({
   points: Joi.number().min(1).max(10000000),
   voucher_code: Joi.string().required(),
   location: Joi.string(),
-  status: Joi.string().valid("active", "redeemed"),
+  status: Joi.string().valid("active", "redeemed")
 });
 
 export const rewardClaimValidationSchema = Joi.object({
   user_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-  reward_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+  reward_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/)
 });
 
 export const rewardClaimUpdatedValidationSchema = Joi.object({
   status: Joi.string().valid("Fulfilled"),
-  rewardClaimId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+  rewardClaimId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/)
 });
 
 export const subscriptionPlanSchema = Joi.object({
@@ -319,6 +319,7 @@ export const subscriptionPlanSchema = Joi.object({
   duration_in_months: Joi.number().integer().min(1).required(),
   price: Joi.number().required(),
   currency: Joi.string().allow("USD", "GHS").required(),
+  subscription_order: Joi.number().required()
 });
 
 export const subscriptionPlanUpdateSchema = Joi.object({
@@ -327,10 +328,17 @@ export const subscriptionPlanUpdateSchema = Joi.object({
   duration_in_months: Joi.number().integer().min(1),
   price: Joi.number(),
   currency: Joi.string().allow("USD", "GHS"),
+  subscription_order: Joi.number()
 });
 
 export const billingValidationSchema = Joi.object({
   userId: Joi.string().required(),
-  subscriptionId: Joi.string().required(),
-  email: Joi.string().required(),
+  subscriptionPlanId: Joi.string().required(),
+  email: Joi.string().required()
+});
+
+export const subscriptionSchema = Joi.object({
+  subscriptionPlanId: Joi.string().required(),
+  referenceId: Joi.string().guid({ version: ["uuidv4"] }),
+  userId: Joi.string().required()
 });

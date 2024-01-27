@@ -13,4 +13,5 @@ export const codeMessages = {
   API_START_UP: "Essential Health Api is Live",
   DB_CONNECTED: "App connected to database successfully",
   RESOURCE_EXISTS: "Resource already exists",
+  PAYMENT_REQUIRED: "Payment Required"
 };

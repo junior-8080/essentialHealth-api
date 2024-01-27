@@ -24,6 +24,7 @@ import rewardClaimsRouter from "./rewardClaims/routes.js";
 import summariesRoute from "./summaries/routes.js";
 import vitalsRoute from "./vitals/routes.js";
 import subscriptionPlanRoute from "./subscriptionPlans/routes.js";
+import subscriptionRoute from "./subscriptions/routes.js";
 import billingRoute from "./billing/routes.js";
 import { createUser } from "./users/service.js";
 import { codes } from "./constants/codes.js";
@@ -34,7 +35,7 @@ const app = express();
 const corsOptions = {
   origin: "*",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  exposedHeaders: ["Cross-Origin-Resource-Policy"],
+  exposedHeaders: ["Cross-Origin-Resource-Policy"]
 };
 app.use(cors(corsOptions));
 const base = process.env.NODE_ENV === "development" ? "/Users/abdulmukhsinahmed" : "";
@@ -61,6 +62,7 @@ app.use("/api/v1/reward-claims", authorize, rewardClaimsRouter);
 app.use("/api/v1/summaries", summariesRoute);
 app.use("/api/v1/vitals", vitalsRoute);
 app.use("/api/v1/subscription-plans", subscriptionPlanRoute);
+app.use("/api/v1/subscriptions", authorize, subscriptionRoute);
 app.use("/api/v1/billing", billingRoute);
 
 app.use((request, response) => {
@@ -82,7 +84,7 @@ database
       lastName: process.env.ADMIN_NAME.split(",")[1],
       email: process.env.ADMIN_EMAIL,
       phoneNumber: process.env.ADMIN_NUMBER,
-      role: "Admin",
+      role: "Admin"
     };
     return createUser(AdminData);
   })

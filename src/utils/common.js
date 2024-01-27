@@ -32,8 +32,8 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
       payload = {
         ...payload,
         _id: {
-          $in: payload.ids.split(","),
-        },
+          $in: payload.ids.split(",")
+        }
       };
       delete payload.ids;
     }
@@ -46,8 +46,9 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
       delete payload.challenge;
     }
     const filters = {
-      ...payload,
+      ...payload
     };
+    console.log(filters);
     page = parseInt(page);
     pageSize = parseInt(pageSize);
     const totalCount = await Model.countDocuments(filters);
@@ -74,7 +75,7 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, r
       pageSize,
       totalPages,
       totalCount,
-      results,
+      results
     };
   } catch (error) {
     throw error;

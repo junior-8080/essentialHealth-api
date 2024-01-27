@@ -12,6 +12,7 @@ const {
   NOT_FOUND,
   RESOURCE_FETCHED,
   RESOURCE_EXISTS,
+  PAYMENT_REQUIRED
 } = codes;
 
 const responseHandler = (responsePayload = {}, response) => {
@@ -54,6 +55,10 @@ const responseHandler = (responsePayload = {}, response) => {
       statusCode = 409;
       message = message || codeMessages[RESOURCE_EXISTS];
       break;
+    case PAYMENT_REQUIRED:
+      statusCode = 402;
+      message = message = message || codeMessages[PAYMET_REQUIRED];
+      break;
     default:
       console.log(responsePayload);
       statusCode = 500;
@@ -62,7 +67,7 @@ const responseHandler = (responsePayload = {}, response) => {
 
   return response.status(statusCode).json({
     message,
-    data,
+    data
   });
 };
 

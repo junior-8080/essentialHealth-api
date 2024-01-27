@@ -10,7 +10,7 @@ export const createContent = async (payload) => {
     const contentData = await customCreate(Content, payload);
     return {
       code: codes.RESOURCE_CREATED,
-      data: contentData,
+      data: contentData
     };
   } catch (error) {
     throw error;
@@ -19,12 +19,12 @@ export const createContent = async (payload) => {
 
 export const updateContent = async (contentId, payload) => {
   try {
-    const responseData = await Content.updateOne({ _id: contentId }, { $set: payload });
+    await Content.updateOne({ _id: contentId }, { $set: payload });
     return {
       code: codes.RESOURCE_CREATED,
       data: {
-        id: contentId,
-      },
+        id: contentId
+      }
     };
   } catch (error) {
     throw error;
@@ -48,7 +48,7 @@ export const fetchContents = async (payload = {}, userId = "") => {
     }
     return {
       code: codes.RESOURCE_FETCHED,
-      data: data,
+      data: data
     };
   } catch (error) {
     throw error;
@@ -58,7 +58,7 @@ export const fetchContents = async (payload = {}, userId = "") => {
 export const fetchContent = async (contentId) => {
   try {
     const payload = {
-      _id: contentId,
+      _id: contentId
     };
     const page = 1;
     const pageSize = 1;
@@ -66,12 +66,12 @@ export const fetchContent = async (contentId) => {
     const { results } = await paginate({ Model: Content, page, pageSize, payload, referenceName });
     if (results.length === 0) {
       throw {
-        code: codes.NOT_FOUND,
+        code: codes.NOT_FOUND
       };
     }
     return {
       code: codes.RESOURCE_FETCHED,
-      data: results[0],
+      data: results[0]
     };
   } catch (error) {
     throw error;
@@ -83,16 +83,16 @@ export const fetchContentSections = async (contentId, userId) => {
     const mainContent = (await Content.findById({ _id: contentId })) || {};
     const sectionPayload = {
       ids: (mainContent.sections || []).join(","),
-      content_type: "part",
+      content_type: "part"
     };
     const {
-      data: { results },
+      data: { results }
     } = await fetchContents(sectionPayload, userId);
     // console.log("🚀 ~ file: service.js:83 ~ fetchContentSections ~ results:", results);
 
     return {
       code: codes.RESOURCE_FETCHED,
-      data: results,
+      data: results
     };
   } catch (error) {
     throw error;
@@ -103,7 +103,7 @@ export const deleteContent = async (contentId) => {
   try {
     await deleteRecord(Content, contentId);
     return {
-      code: codes.RESOURCE_DELETED,
+      code: codes.RESOURCE_DELETED
     };
   } catch (error) {
     throw error;
