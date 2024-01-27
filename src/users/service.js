@@ -59,7 +59,7 @@ export const fetchUser = async (payload) => {
 
 export const updateUser = async (userId, payload) => {
   try {
-    const responseData = await User.updateOne({ _id: userId }, { $set: payload });
+    await User.updateOne({ _id: userId }, { $set: payload });
     return {
       code: codes.RESOURCE_UPDATED,
       data: {

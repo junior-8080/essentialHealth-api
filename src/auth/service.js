@@ -14,8 +14,8 @@ export const login = async (payload) => {
       data: {
         otp_expires_minutes: process.env.OTP_EXPIRY_TIME,
         otp_length: process.env.OPT_LENGTH,
-        otp_ussd_code: otpData.ussd_code,
-      },
+        otp_ussd_code: otpData.ussd_code
+      }
     };
   } catch (error) {
     throw error;
@@ -28,7 +28,7 @@ export const adminLogin = async (payload) => {
     const role = "Admin";
     if (email !== process.env.ADMIN_EMAIL || password !== process.env.ADMIN_PASSWORD) {
       throw {
-        code: codes.UNAUTHORIZED,
+        code: codes.UNAUTHORIZED
       };
     }
     const adminName = process.env.ADMIN_NAME.split(",");
@@ -42,9 +42,9 @@ export const adminLogin = async (payload) => {
           firstName: adminName[0],
           lastName: adminName[1],
           email,
-          role: "Admin",
-        },
-      },
+          role: "Admin"
+        }
+      }
     };
   } catch (error) {
     throw error;
@@ -58,7 +58,7 @@ export const verifyOtp = async (payload) => {
     if (otpData.code !== "1100") {
       throw {
         code: codes.UNAUTHORIZED,
-        message: "Opt code has expired",
+        message: "Opt code has expired"
       };
     }
     let userData = await fetchUserByPhoneNumber(phoneNumber);
@@ -68,14 +68,13 @@ export const verifyOtp = async (payload) => {
       userData = responseData.data;
     }
     const { _id, role, firstName, lastName, subscription_type } = userData;
-    // console.log("🚀 ~ file: service.js:71 ~ verifyOtp ~ _id:", _id);
     const responseUserData = userExist
       ? {
           firstName,
           lastName,
           role,
           subscription_type,
-          id: _id,
+          id: _id
         }
       : null;
     const token = generateToken({ id: _id, role, subscription_type });
@@ -84,8 +83,8 @@ export const verifyOtp = async (payload) => {
       message: "Otp verification successful",
       data: {
         token,
-        user: responseUserData,
-      },
+        user: responseUserData
+      }
     };
   } catch (error) {
     throw error;

@@ -5,6 +5,7 @@ import { customCreate, deleteRecord, paginate } from "../utils/common.js";
 import { calculateEndDate } from "../utils/helpers.js";
 import Transactions from "../models/Transactions.js";
 import { verifyPaymentViaRefId } from "../utils/paystack.js";
+import { fetchUser, updateUser } from "../users/service.js";
 
 export const createSubscription = async (payload) => {
   try {
@@ -24,7 +25,6 @@ export const createSubscription = async (payload) => {
         message: "billing details not found"
       };
     }
-    console.log(transactionData.metadata.subscriptionPlan_id);
     if (transactionData.metadata.subscriptionPlan_id.toString() !== subscriptionPlanId) {
       throw {
         code: codes.NOT_FOUND,
@@ -39,7 +39,7 @@ export const createSubscription = async (payload) => {
       };
     }
     const { data: subscriptionPlanData } = await fetchSubscriptionPlan(subscriptionPlanId);
-    console.log("🚀 ~ createSubscription ~ subscriptionPlanData:", subscriptionPlanData);
+
     const subscriptionPlanDuration = subscriptionPlanData.duration_in_months;
     const start_date = new Date().toISOString().split("T")[0];
     const expiry_date = calculateEndDate(start_date, subscriptionPlanDuration);
@@ -50,10 +50,17 @@ export const createSubscription = async (payload) => {
       start_date,
       expiry_date: expiry_date
     };
-    const subscriptionData = await customCreate(Subscription, subscriptionPayload);
+    const userSubscriptionPayload = {
+      ...subscriptionPlanData,
+      start_date,
+      expiry_date
+    };
+    await customCreate(Subscription, subscriptionPayload);
+    await updateUser(userId, { subscription_type: userSubscriptionPayload });
+    const { data } = await fetchUser({ userId });
     return {
       code: codes.RESOURCE_CREATED,
-      data: subscriptionData
+      data
     };
   } catch (error) {
     throw error;

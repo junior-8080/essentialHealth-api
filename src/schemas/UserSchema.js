@@ -3,83 +3,81 @@ import mongoose from "mongoose";
 const measureSchema = new mongoose.Schema({
   measure: {
     type: Number,
-    required: true,
+    required: true
   },
   measure_unit: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 });
 const referenceSchema = new mongoose.Schema({
   main_goal: String,
   weight_goal: measureSchema,
   training_level: {
     type: String,
-    enum: ["Beginner", "Irregular training", "Medium", "Advanced"],
+    enum: ["Beginner", "Irregular training", "Medium", "Advanced"]
   },
   category_interest: {
     type: [String],
-    default: [],
-  },
+    default: []
+  }
 });
 
 const UserSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: false,
+    required: false
   },
   lastName: {
     type: String,
-    required: false,
+    required: false
   },
   email: {
     type: String,
     required: false,
-    unique: false,
+    unique: false
   },
   phoneNumber: {
     type: String,
     required: true,
-    unique: true,
+    unique: true
   },
   height: measureSchema,
   weight: measureSchema,
   reference: referenceSchema,
   imageURL: {
     type: String,
-    required: false,
+    required: false
   },
   role: {
     type: String,
     required: true,
-    default: "User",
+    default: "User"
   },
   dob: {
     type: Date,
-    required: false,
+    required: false
   },
   gender: {
     type: String,
-    required: false,
+    required: false
   },
   points: {
     type: Number,
-    default: 0,
+    default: 0
   },
   state: {
     type: String,
     required: false,
-    default: "Active",
+    default: "Active"
   },
   subscription_type: {
-    type: String,
-    enum: ["standard", "premium"],
-    default: "standard",
+    type: Object
   },
   created_at: {
     type: Date,
-    default: Date.now(),
-  },
+    default: Date.now()
+  }
 });
 
 // Pre-hook for hashing password before save

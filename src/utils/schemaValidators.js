@@ -35,7 +35,7 @@ export const userValidationSchema = Joi.object({
   gender: Joi.string().allow("Male", "Female"),
   height: measureSchema,
   weight: measureSchema,
-  reference: Joi.object({
+  preference: Joi.object({
     main_goal: Joi.string(),
     weight_goal: measureSchema,
     training_level: Joi.string().allow("Beginner", "Irregular training", "Medium", "Advanced"),
@@ -53,7 +53,7 @@ export const userUpdateValidationSchema = Joi.object({
   gender: Joi.string().allow("Male", "Female"),
   height: measureSchema,
   weight: measureSchema,
-  reference: Joi.object({
+  preference: Joi.object({
     main_goal: Joi.string(),
     weight_goal: measureSchema,
     training_level: Joi.string().allow("Beginner", "Irregular training", "Medium", "Advanced"),
