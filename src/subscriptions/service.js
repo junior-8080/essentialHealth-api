@@ -18,15 +18,14 @@ export const createSubscription = async (payload) => {
       };
     }
     const transactionData = await Transactions.findOne({ reference: referenceId });
-    console.log("🚀 ~ createSubscription ~ transactionData:", transactionData);
     if (!transactionData) {
       throw {
         code: codes.NOT_FOUND,
         message: "billing details not found"
       };
     }
-    console.log(transactionData.metadata.subscriptionPlan_Id);
-    if (transactionData.metadata.subscriptionPlan_Id.toString() !== subscriptionPlanId) {
+    console.log(transactionData.metadata.subscriptionPlan_id);
+    if (transactionData.metadata.subscriptionPlan_id.toString() !== subscriptionPlanId) {
       throw {
         code: codes.NOT_FOUND,
         message: "subscriptionId does not belong to referenceId"
