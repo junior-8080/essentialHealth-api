@@ -65,8 +65,6 @@ export const getFileCategory = (mimeType) => {
 };
 
 export const calculateEndDate = (startDate, durationMonths) => {
-  console.log("🚀 ~ calculateEndDate ~ durationMonths:", durationMonths);
-  console.log("🚀 ~ calculateEndDate ~ startDate:", startDate);
   const startDateObj = new Date(startDate);
   const endDate = new Date(startDateObj.setMonth(startDateObj.getMonth() + durationMonths));
   const formattedEndDate = endDate.toISOString().split("T")[0];
