@@ -3,58 +3,57 @@ import mongoose from "mongoose";
 const ContentSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+    required: true
   },
   description: {
     type: String,
-    required: true,
+    required: true
   },
   content_type: {
     type: String,
-    enum: ["main", "part"],
+    enum: ["main", "part"]
   },
   cover: {
     type: String,
-    required: true,
+    required: true
   },
   sections: {
     type: [String],
-    default: [],
+    default: []
   },
   intro: String,
   source: {
     type: {
       type: String,
-      enum: ["audio", "video", "image", "session", "article"],
+      enum: ["audio", "video", "image", "session", "article"]
     },
-    body: String,
+    body: String
   },
   category_id: {
     type: mongoose.Schema.Types.ObjectId, // Define as ObjectId type
-    ref: "Category", // Reference to the Category model
+    ref: "Category" // Reference to the Category model
   },
   tags: {
-    type: [String],
+    type: [String]
   },
   instructor_id: {
     type: mongoose.Schema.Types.ObjectId, // Define as ObjectId type
-    ref: "Instructor", // Reference to the Category model
+    ref: "Instructor" // Reference to the Category model
   },
-  subscriber_type: {
-    type: String,
-    enum: ["standard", "premium"],
-    default: "standard",
+  subscriptionPlanId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: ""
   },
   publish_date: {
-    type: Date,
+    type: Date
   },
   created_at: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
   created_by: {
-    type: String,
-  },
+    type: String
+  }
 });
 
 export default ContentSchema;

@@ -128,7 +128,7 @@ export const contentValidation = Joi.object({
   instructor_id: Joi.string()
     .pattern(/^[0-9a-fA-F]{24}$/)
     .required(),
-  subscriber_type: Joi.string().valid("standard", "premium").default("standard"),
+  subscriptionPlanId: Joi.string(),
   publish_date: Joi.date().when("content_type", {
     is: "main",
     then: Joi.optional(),
@@ -158,7 +158,7 @@ export const contentUpdatedValidationSchema = Joi.object({
   category_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
   tags: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
   instructor_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-  subscriber_type: Joi.string().valid("standard", "premium").default("standard"),
+  subscriptionPlanId: Joi.string(),
   publish_date: Joi.date(),
   reward: Joi.object({
     points: Joi.number().min(1).max(1000000),

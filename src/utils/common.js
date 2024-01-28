@@ -2,6 +2,10 @@ import User from "../models/User.js";
 import Category from "../models/Category.js";
 import { contentTransformer, defaultTransformer, rewardClaimTransformer } from "./dataTransformers.js";
 import mongoose, { Model } from "mongoose";
+import Transactions from "../models/Transactions.js";
+import Subscription from "../models/Subscription.js";
+import { fetchSubscription } from "../subscriptions/service.js";
+import { fetchSubscriptionPlan } from "../subscriptionPlans/service.js";
 
 export const fetchUserByPhoneNumber = async (phoneNumber) => {
   try {
@@ -102,6 +106,21 @@ export const deleteRecord = async (Model, id) => {
     }
     const deleteInfo = await Model.deleteOne({ _id: id });
     return deleteInfo;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const retrieveSubscriptionPlanOrder = async (userId) => {
+  try {
+    const subscriptionData = await Subscription.findOne({ user_id: userId, expiry_date: { $gt: Date.now() } });
+    const subscriptionPlanId = subscriptionData.subscriptionPlan_id.toString();
+    const { data } = await fetchSubscriptionPlan(subscriptionPlanId);
+    let subscriptionOrder = 0;
+    if (subscriptionData) {
+      subscriptionOrder = data.subscription_order;
+    }
+    return subscriptionOrder;
   } catch (error) {
     throw error;
   }

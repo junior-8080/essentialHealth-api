@@ -1,12 +1,22 @@
 import { codes } from "../constants/codes.js";
-import { customCreate, deleteRecord, paginate } from "../utils/common.js";
+import { customCreate, deleteRecord, paginate, retrieveSubscriptionPlanOrder } from "../utils/common.js";
 import Content from "../models/Content.js";
 import { contentTransformer } from "../utils/dataTransformers.js";
 import { userMediaActivity } from "../users/service.js";
+import Subscription from "../models/Subscription.js";
+import { fetchSubscription } from "../subscriptions/service.js";
+import { fetchSubscriptionPlan } from "../subscriptionPlans/service.js";
 
 export const createContent = async (payload) => {
   try {
     payload.publish_date = payload.content_type === "main" ? new Date(payload.publish_date) : undefined;
+    if (payload.subscriptionId) {
+      const { data } = await fetchSubscriptionPlan(payload.subscriptionPlanId);
+      payload.subscription_order = data.subscription_order;
+    } else {
+      payload.subscription_order = 0;
+    }
+
     const contentData = await customCreate(Content, payload);
     return {
       code: codes.RESOURCE_CREATED,
@@ -38,11 +48,11 @@ export const fetchContents = async (payload = {}, userId = "") => {
     if (payload.tags) {
       payload.tags = { $all: payload.tags.split(",") };
     }
-
+    const userSubscriptionOrder = await retrieveSubscriptionPlanOrder(userId);
+    payload.subscription_order = { $lte: userSubscriptionOrder };
     const referenceName = "instructor_id";
     const sortOder = { publish_date: -1 };
     let data = await paginate({ Model: Content, page, pageSize, payload, referenceName, sortOder });
-    console.log({ userId });
     if (userId) {
       data.results = await userMediaActivity(data.results, userId);
     }
@@ -88,8 +98,6 @@ export const fetchContentSections = async (contentId, userId) => {
     const {
       data: { results }
     } = await fetchContents(sectionPayload, userId);
-    // console.log("🚀 ~ file: service.js:83 ~ fetchContentSections ~ results:", results);
-
     return {
       code: codes.RESOURCE_FETCHED,
       data: results
