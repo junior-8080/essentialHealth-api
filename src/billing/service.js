@@ -12,6 +12,7 @@ export const createCheckoutUrl = async (payload) => {
     const { userId, subscriptionPlanId, email } = payload;
     const subscriptionData = await Subscription.findOne({
       subscriptionPlan_id: subscriptionPlanId,
+      user_id: userId,
       expiry_date: { $gt: Date.now() }
     });
     if (subscriptionData) {
