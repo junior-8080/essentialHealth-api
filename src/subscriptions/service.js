@@ -58,6 +58,10 @@ export const createSubscription = async (payload) => {
     await customCreate(Subscription, subscriptionPayload);
     await updateUser(userId, { subscription_type: userSubscriptionPayload });
     const { data } = await fetchUser({ userId });
+    const responseData = {
+      id: data._id,
+      ...data
+    };
     return {
       code: codes.RESOURCE_CREATED,
       data: {
