@@ -48,8 +48,11 @@ export const fetchContents = async (payload = {}, userId = "") => {
     if (payload.tags) {
       payload.tags = { $all: payload.tags.split(",") };
     }
-    const userSubscriptionOrder = await retrieveSubscriptionPlanOrder(userId);
-    payload.subscription_order = { $lte: userSubscriptionOrder };
+    if (payload.role === "User") {
+      const userSubscriptionOrder = await retrieveSubscriptionPlanOrder(userId);
+      payload.subscription_order = { $lte: userSubscriptionOrder };
+    }
+
     const referenceName = "instructor_id";
     const sortOder = { publish_date: -1 };
     let data = await paginate({ Model: Content, page, pageSize, payload, referenceName, sortOder });
