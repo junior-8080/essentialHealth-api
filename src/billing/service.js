@@ -35,7 +35,7 @@ export const createCheckoutUrl = async (payload) => {
         phoneNumber: userDetails.phoneNumber
       }
     };
-    console.log(paymentDetails);
+
     await customCreate(Transactions, paymentDetails);
     // const checkoutData = await initializeTransaction(paymentDetails);
     return {

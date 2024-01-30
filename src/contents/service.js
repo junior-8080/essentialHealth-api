@@ -41,14 +41,14 @@ export const updateContent = async (contentId, payload) => {
   }
 };
 
-export const fetchContents = async (payload = {}, userId = "") => {
+export const fetchContents = async (payload = {}, userId = "", userRole) => {
   try {
     const { page, pageSize } = payload;
     payload.content_type = payload.content_type ? payload.content_type : "main";
     if (payload.tags) {
       payload.tags = { $all: payload.tags.split(",") };
     }
-    if (payload.role === "User") {
+    if (userRole === "User") {
       const userSubscriptionOrder = await retrieveSubscriptionPlanOrder(userId);
       payload.subscription_order = { $lte: userSubscriptionOrder };
     }
