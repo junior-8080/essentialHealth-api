@@ -60,7 +60,10 @@ export const createSubscription = async (payload) => {
     const { data } = await fetchUser({ userId });
     return {
       code: codes.RESOURCE_CREATED,
-      data
+      data: {
+        id: data._id,
+        ...data
+      }
     };
   } catch (error) {
     throw error;

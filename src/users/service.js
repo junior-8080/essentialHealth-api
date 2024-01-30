@@ -44,12 +44,13 @@ export const fetchUsers = async (payload = {}) => {
 export const fetchUser = async (payload) => {
   try {
     const { userId } = payload;
-    const { _doc } = await User.findById(userId);
-
+    const { _doc: userData } = await User.findById(userId);
+    userData.id = userData._id;
+    delete userData._id;
     return {
       code: codes.RESOURCE_FETCHED,
       data: {
-        ..._doc
+        ...userData
       }
     };
   } catch (error) {
