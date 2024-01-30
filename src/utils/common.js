@@ -113,11 +113,11 @@ export const deleteRecord = async (Model, id) => {
 
 export const retrieveSubscriptionPlanOrder = async (userId) => {
   try {
-    const subscriptionData = await Subscription.findOne({ user_id: userId, expiry_date: { $gt: Date.now() } });
-    const subscriptionPlanId = subscriptionData.subscriptionPlan_id.toString();
-    const { data } = await fetchSubscriptionPlan(subscriptionPlanId);
     let subscriptionOrder = 0;
+    const subscriptionData = await Subscription.findOne({ user_id: userId, expiry_date: { $gt: Date.now() } });
     if (subscriptionData) {
+      const subscriptionPlanId = subscriptionData.subscriptionPlan_id?.toString();
+      const { data } = await fetchSubscriptionPlan(subscriptionPlanId);
       subscriptionOrder = data.subscription_order;
     }
     return subscriptionOrder;

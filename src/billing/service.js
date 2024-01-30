@@ -25,7 +25,7 @@ export const createCheckoutUrl = async (payload) => {
     const { data: subscriptionPlanDetails } = await fetchSubscriptionPlan(subscriptionPlanId);
     const paymentDetails = {
       reference: uuidv4(),
-      amount: subscriptionPlanDetails.price,
+      amount: subscriptionPlanDetails.price * 100,
       email: userDetails.email || email,
       currency: subscriptionPlanDetails.currency,
       metadata: {
