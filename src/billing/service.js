@@ -37,10 +37,10 @@ export const createCheckoutUrl = async (payload) => {
     };
     console.log(paymentDetails);
     await customCreate(Transactions, paymentDetails);
-    const checkoutData = await initializeTransaction(paymentDetails);
+    // const checkoutData = await initializeTransaction(paymentDetails);
     return {
       code: codes.RESOURCE_CREATED,
-      data: { paymentDetails, checkoutData }
+      data: { paymentDetails }
     };
   } catch (error) {
     throw error;
