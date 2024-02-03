@@ -4,13 +4,12 @@ import { uploadToS3 } from "../utils/s3Setup.js";
 import * as mediaServices from "./service.js";
 
 export const createMedia = async (request, response, next) => {
-  // console.log("🚀 ~ file: controller.js:7 ~ createMedia ~ request:", request);
   try {
     const { file } = request;
     if (!file) {
       throw {
         code: codes.INVALID_PARAMETERS,
-        message: "file is required",
+        message: "file is required"
       };
     }
     const fileCategory = getFileCategory(file.mimetype);
@@ -18,13 +17,13 @@ export const createMedia = async (request, response, next) => {
     const saveMediaPayload = {
       fileUrl,
       type: getFileCategory(file.mimetype),
-      ...request.body,
+      ...request.body
     };
     // console.log(saveMediaPayload);
     // const validPayload = await validateRequestPayload();
     const responsePayload = await mediaServices.createMedia(saveMediaPayload);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {
@@ -36,11 +35,11 @@ export const createMedia = async (request, response, next) => {
 export const fetchAllMedia = async (request, response, next) => {
   try {
     const requestPayload = {
-      ...request.query,
+      ...request.query
     };
     const responsePayload = await mediaServices.fetchAllMedia(requestPayload);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {
@@ -52,11 +51,11 @@ export const fetchAllMedia = async (request, response, next) => {
 export const fetchMedia = async (request, response, next) => {
   try {
     const requestPayload = {
-      ...request.params,
+      ...request.params
     };
     const responsePayload = await mediaServices.fetchMedia(requestPayload);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {
@@ -70,7 +69,7 @@ export const deleteMedia = async (request, response, next) => {
     const mediaId = request.params.mediaId;
     const responsePayload = await mediaServices.deleteMedia(mediaId);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {

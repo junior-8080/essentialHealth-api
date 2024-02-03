@@ -4,10 +4,13 @@ import { customCreate, deleteRecord, paginate } from "../utils/common.js";
 
 export const createMedia = async (payload) => {
   try {
-    const mediaData = await customCreate(Media, payload);
+    let mediaData = payload;
+    if (payload.name !== "userProfileImage") {
+      mediaData = await customCreate(Media, payload);
+    }
     return {
       code: codes.RESOURCE_CREATED,
-      data: mediaData,
+      data: mediaData
     };
   } catch (error) {
     throw error;
@@ -20,7 +23,7 @@ export const fetchAllMedia = async (payload = {}) => {
     const result = await paginate({ Model: Media, page, pageSize, payload });
     return {
       code: codes.RESOURCE_FETCHED,
-      data: result,
+      data: result
     };
   } catch (error) {
     throw error;
@@ -35,8 +38,8 @@ export const fetchMedia = async (payload) => {
     return {
       code: codes.RESOURCE_FETCHED,
       data: {
-        ..._doc,
-      },
+        ..._doc
+      }
     };
   } catch (error) {
     throw error;
@@ -47,7 +50,7 @@ export const deleteMedia = async (mediaId) => {
   try {
     await deleteRecord(Media, mediaId);
     return {
-      code: codes.RESOURCE_DELETED,
+      code: codes.RESOURCE_DELETED
     };
   } catch (error) {
     throw error;

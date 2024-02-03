@@ -5,16 +5,19 @@ const MediaSchema = new mongoose.Schema({
   descriptions: String,
   fileUrl: {
     type: String,
-    required: true,
+    required: true
   },
   type: {
     type: String,
-    required: true,
+    required: true
+  },
+  isMedia: {
+    type: String
   },
   created_at: {
     type: Date,
-    default: Date.now,
-  },
+    default: Date.now
+  }
 });
 
 export default MediaSchema;
