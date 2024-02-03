@@ -72,6 +72,14 @@ export const calculateEndDate = (startDate, durationMonths) => {
   return formattedEndDate;
 };
 
+export const isDateLessThanToday = (inputDate) => {
+  console.log("🚀 ~ isDateGreaterThanToday ~ inputDate:", inputDate);
+  const inputDateObj = new Date(inputDate);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return inputDateObj < today;
+};
+
 export const defaultVitalsTargets = {
   blood_pressure: 130,
   sugar_level: 6.0,

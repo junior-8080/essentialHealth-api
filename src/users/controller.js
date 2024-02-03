@@ -65,7 +65,7 @@ export const updateUser = async (request, response, next) => {
     };
     next();
   } catch (error) {
-    console.log("🚀 ~ file: controller.js:69 ~ updateUser ~ error:", error);
+    // console.log("🚀 ~ file: controller.js:69 ~ updateUser ~ error:", error);
     response.locals.responsePayload = error;
     next();
   }

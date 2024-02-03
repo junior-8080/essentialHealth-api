@@ -5,8 +5,8 @@ import UserMediaActivity from "../models/UserMediaActivity.js";
 import Vital from "../models/Vital.js";
 import UserTargetVital from "../models/VitalTarget.js";
 import { fetchRewardClaims } from "../rewardClaims/service.js";
-import { customCreate, fetchUserByPhoneNumber, paginate } from "../utils/common.js";
-import { defaultVitalsTargets } from "../utils/helpers.js";
+import { customCreate, fetchUserByPhoneNumber, paginate, retrieveUserSubscriptionPlan } from "../utils/common.js";
+import { defaultVitalsTargets, isDateLessThanToday } from "../utils/helpers.js";
 
 export const createUser = async (payload) => {
   try {
@@ -44,14 +44,25 @@ export const fetchUsers = async (payload = {}) => {
 export const fetchUser = async (payload) => {
   try {
     const { userId } = payload;
-    const { _doc: userData } = await User.findById(userId);
-    userData.id = userData._id;
-    delete userData._id;
+    let userData = null;
+    let isSubscriptionExpired = false;
+    const { _doc } = await User.findById(userId);
+    const { _id, ...rest } = _doc;
+    userData = {
+      id: _id,
+      ...rest
+    };
+    if (userData.subscription_type) {
+      isSubscriptionExpired = isDateLessThanToday(userData.subscription_type.expiry_date);
+      console.log("🚀 ~ fetchUser ~ isSubscriptionExpired:", isSubscriptionExpired);
+    }
+    const userSubscriptionData = retrieveUserSubscriptionPlan(userId);
+    if (!userSubscriptionData || isSubscriptionExpired) {
+      userData = await revokeUserSubscription(userId);
+    }
     return {
       code: codes.RESOURCE_FETCHED,
-      data: {
-        ...userData
-      }
+      data: userData
     };
   } catch (error) {
     throw error;
@@ -60,11 +71,33 @@ export const fetchUser = async (payload) => {
 
 export const updateUser = async (userId, payload) => {
   try {
-    await User.updateOne({ _id: userId }, { $set: payload });
+    const { _doc: updatedUser } = await User.findOneAndUpdate({ _id: userId }, { $set: payload }, { new: true });
+    const { _id, ...rest } = updatedUser;
     return {
       code: codes.RESOURCE_UPDATED,
       data: {
-        id: userId
+        id: _id,
+        ...rest
+      }
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const revokeUserSubscription = async (userId) => {
+  try {
+    const { _doc: updatedUser } = await User.findOneAndUpdate(
+      { _id: userId },
+      { $unset: { subscription: "" } },
+      { new: true }
+    );
+    const { _id, ...rest } = updatedUser;
+    return {
+      code: codes.RESOURCE_UPDATED,
+      data: {
+        id: _id,
+        ...rest
       }
     };
   } catch (error) {

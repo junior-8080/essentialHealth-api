@@ -14,10 +14,10 @@ export const generateAndSendOtpViaArkesel = async (phoneNumber) => {
       message: "Essential Health verification code:%otp_code%",
       number: phoneNumber,
       sender_id: "Test",
-      type: "numeric",
+      type: "numeric"
     };
     const headers = {
-      "api-key": process.env.SMS_API_KEY,
+      "api-key": process.env.SMS_API_KEY
     };
     const response = await axios.post(`${ARKESEL_BASE_URL}/otp/generate`, data, { headers });
     return response.data;
@@ -34,12 +34,29 @@ export const verifyOptViaArkesel = async (phoneNumber, otpCode) => {
     const data = {
       api_key: process.env.SMS_API_KEY,
       code: otpCode,
-      number: phoneNumber,
+      number: phoneNumber
     };
     const headers = {
-      "api-key": process.env.SMS_API_KEY,
+      "api-key": process.env.SMS_API_KEY
     };
     const response = await axios.post(`${ARKESEL_BASE_URL}/otp/verify`, data, { headers });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const sendSMSViaArkesel = async (voucherCode, phoneNumber, userName) => {
+  try {
+    const data = {
+      sender: "Test",
+      message: `🎉 Congrats ${userName}!\n Your voucher_code is:${voucherCode}`,
+      recipients: [phoneNumber]
+    };
+    const headers = {
+      "api-key": process.env.SMS_API_KEY
+    };
+    const response = await axios.post(`${ARKESEL_BASE_URL}/v2/sms/send`, data, { headers });
     return response.data;
   } catch (error) {
     throw error;

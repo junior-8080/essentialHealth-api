@@ -125,3 +125,13 @@ export const retrieveSubscriptionPlanOrder = async (userId) => {
     throw error;
   }
 };
+
+export const retrieveUserSubscriptionPlan = async (userId) => {
+  const subscriptionData = await Subscription.findOne({ user_id: userId, expiry_date: { $gt: Date.now() } });
+  if (subscriptionData) {
+    const subscriptionPlanId = subscriptionData.subscriptionPlan_id?.toString();
+    const { data } = await fetchSubscriptionPlan(subscriptionPlanId);
+    return data;
+  }
+  return;
+};

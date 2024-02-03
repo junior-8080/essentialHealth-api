@@ -286,7 +286,11 @@ export const rewardValidationSchema = Joi.object({
   description: Joi.string(),
   type: Joi.string().valid("digital", "physical"),
   image: Joi.string().uri(),
-  voucher_code: Joi.string().required(),
+  voucher_code: Joi.string().when("type", {
+    is: "digital",
+    then: Joi.required(),
+    otherwise: Joi.forbidden()
+  }),
   points: Joi.number().min(1).max(10000000).required(),
   location: Joi.string(),
   status: Joi.string().valid("active", "redeemed")
