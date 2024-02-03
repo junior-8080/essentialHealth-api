@@ -46,11 +46,13 @@ export const verifyOptViaArkesel = async (phoneNumber, otpCode) => {
   }
 };
 
-export const sendSMSViaArkesel = async (voucherCode, phoneNumber, userName) => {
+export const sendSMSViaArkesel = async (redeemCode, phoneNumber, userName, voucherCode) => {
   try {
     const data = {
       sender: "Test",
-      message: `🎉 Congrats ${userName}!\n Your voucher_code is:${voucherCode}`,
+      message: `🎉 Congrats ${userName}!\n Your redeem code is:${redeemCode}\n ${
+        voucherCode ? "Voucher Code" + voucherCode : ""
+      }`,
       recipients: [phoneNumber]
     };
     const headers = {

@@ -3,20 +3,21 @@ import mongoose from "mongoose";
 const RewardClaimSchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "User"
   },
   reward_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Reward",
+    ref: "Reward"
   },
   status: {
     type: String,
-    default: "Not Fulfilled",
+    default: "Not Fulfilled"
   },
+
   created_at: {
     type: Date,
-    default: Date.now,
-  },
+    default: Date.now
+  }
 });
 
 export default RewardClaimSchema;

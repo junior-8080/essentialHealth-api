@@ -6,9 +6,7 @@ import randomstring from "randomstring";
 export const createReward = async (payload) => {
   try {
     payload.publish_date = new Date(payload.publish_date);
-    if (payload.type !== "digital") {
-      payload.voucher_code = randomstring.generate({ charset: "alphanumeric", length: 7 });
-    }
+    payload.code = randomstring.generate({ charset: "alphanumeric", length: 7 });
     const rewardData = await customCreate(Reward, payload);
     return {
       code: codes.RESOURCE_CREATED,

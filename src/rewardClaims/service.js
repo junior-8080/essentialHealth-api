@@ -24,9 +24,10 @@ export const createRewardClaim = async (payload) => {
       { new: true }
     );
     await sendSMSViaArkesel(
-      rewardData.voucher_code,
+      rewardData.code,
       userData.phoneNumber,
-      `${userData.firstName} ${userData.lastName}`
+      `${userData.firstName} ${userData.lastName}`,
+      rewardData.voucher_code
     );
     return {
       code: codes.RESOURCE_CREATED,

@@ -4,40 +4,44 @@ import mongoose from "mongoose";
 const RewardSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   description: {
-    type: String,
+    type: String
   },
   type: {
     type: String,
-    required: true,
+    required: true
   },
   points: {
     type: Number,
-    required: true,
+    required: true
   },
   status: {
-    type: String,
+    type: String
   },
   image: {
-    type: String,
+    type: String
   },
   voucher_code: {
     type: String,
-    require: true,
+    require: true
+  },
+  code: {
+    type: String,
+    require: true
   },
   location: {
-    type: String,
+    type: String
   },
   created_by: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "User"
   },
   created_at: {
     type: Date,
-    default: Date.now,
-  },
+    default: Date.now
+  }
 });
 
 export default RewardSchema;
