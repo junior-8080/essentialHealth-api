@@ -10,7 +10,7 @@ const measureSchema = new mongoose.Schema({
     required: true
   }
 });
-const referenceSchema = new mongoose.Schema({
+const preferenceSchema = new mongoose.Schema({
   main_goal: String,
   weight_goal: measureSchema,
   training_level: {
@@ -44,7 +44,7 @@ const UserSchema = new mongoose.Schema({
   },
   height: measureSchema,
   weight: measureSchema,
-  reference: referenceSchema,
+  preference: preferenceSchema,
   profileImage: {
     type: String,
     required: false
