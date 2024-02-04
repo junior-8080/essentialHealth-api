@@ -6,12 +6,12 @@ export const createRewardClaim = async (request, response, next) => {
   try {
     const requestPayload = {
       user_id: request.userDetails.id,
-      ...request.body,
+      ...request.body
     };
     const validPayload = await validateRequestPayload(rewardClaimValidationSchema, requestPayload);
     const responsePayload = await rewardClaimServices.createRewardClaim(validPayload);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {
@@ -24,12 +24,13 @@ export const updateRewardClaim = async (request, response, next) => {
   try {
     const requestPayload = {
       ...request.body,
-      rewardClaimId: request.params.rewardClaimId,
+      rewardClaimId: request.params.rewardClaimId
     };
+
     const validPayload = await validateRequestPayload(rewardClaimUpdatedValidationSchema, requestPayload);
     const responsePayload = await rewardClaimServices.updateRewardClaim(validPayload);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {
@@ -42,11 +43,17 @@ export const fetchRewardClaims = async (request, response, next) => {
   try {
     const requestPayload = {
       ...request.params,
-      ...request.query,
+      ...request.query
     };
-    const responsePayload = await rewardClaimServices.fetchRewardClaims(requestPayload);
+    const userRole = request.userDetails.role;
+    // console.log("🚀 ~ fetchRewardClaims ~ userRole:", userRole);
+    const userId = request.userDetails.id;
+    if (userRole === "User") {
+      requestPayload.user_id = userId;
+    }
+    const responsePayload = await rewardClaimServices.fetchRewardClaims(requestPayload, userRole);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {
@@ -59,7 +66,7 @@ export const fetchRewardClaim = async (request, response, next) => {
   try {
     const responsePayload = await rewardClaimServices.fetchRewardClaim(request.params.rewardClaimId);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {
@@ -73,7 +80,7 @@ export const deleteRewardClaim = async (request, response, next) => {
     const rewardClaimId = request.params.rewardClaimId;
     const responsePayload = await rewardClaimServices.deleteRewardClaim(rewardClaimId);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {
