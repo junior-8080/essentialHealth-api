@@ -48,7 +48,7 @@ export const userUpdateValidationSchema = Joi.object({
   lastName: Joi.string(),
   email: Joi.string().email(),
   phoneNumber: Joi.string(),
-  imageURL: Joi.string().allow(""),
+  profileImage: Joi.string().allow(""),
   dob: Joi.date(),
   gender: Joi.string().allow("Male", "Female"),
   height: measureSchema,

@@ -45,7 +45,7 @@ const UserSchema = new mongoose.Schema({
   height: measureSchema,
   weight: measureSchema,
   reference: referenceSchema,
-  imageURL: {
+  profileImage: {
     type: String,
     required: false
   },
