@@ -7,7 +7,7 @@ export const createTag = async (payload) => {
     const tagData = await customCreate(Tag, payload);
     return {
       code: codes.RESOURCE_CREATED,
-      data: tagData,
+      data: tagData
     };
   } catch (error) {
     throw error;
@@ -30,8 +30,8 @@ export const updateTag = async (tagId, payload) => {
     return {
       code: codes.RESOURCE_CREATED,
       data: {
-        id: tagId,
-      },
+        id: tagId
+      }
     };
   } catch (error) {
     throw error;
@@ -40,27 +40,32 @@ export const updateTag = async (tagId, payload) => {
 
 export const fetchTags = async (payload = {}) => {
   try {
-    const { page, pageSize } = payload;
-    const result = await paginate({ Model: Tag, page, pageSize, payload });
+    const { page, pageSize, ...filters } = payload;
+    const result = await paginate({ Model: Tag, page, pageSize, filters });
     return {
       code: codes.RESOURCE_FETCHED,
-      data: result,
+      data: result
     };
   } catch (error) {
     throw error;
   }
 };
 
-export const fetchTag = async (payload) => {
+export const fetchTag = async (tagId) => {
   try {
-    const { tagId } = payload;
-    const { _doc } = await Tag.findById(tagId);
-
+    const tag = await Tag.findById(tagId);
+    if (!tag) {
+      throw {
+        code: codes.NOT_FOUND
+      };
+    }
+    const { _id, ...rest } = tag._doc;
     return {
       code: codes.RESOURCE_FETCHED,
       data: {
-        ..._doc,
-      },
+        id: _id,
+        ...rest
+      }
     };
   } catch (error) {
     throw error;
@@ -71,7 +76,7 @@ export const deleteTag = async (tagId) => {
   try {
     await deleteRecord(Content, tagId);
     return {
-      code: codes.RESOURCE_DELETED,
+      code: codes.RESOURCE_DELETED
     };
   } catch (error) {
     throw error;

@@ -25,33 +25,29 @@ export const fetchCategoryByTitle = async (title) => {
   }
 };
 
-export const paginate = async ({ Model, page = 1, pageSize = 10, payload = {}, referenceName = "", sortOder }) => {
+export const paginate = async ({ Model, page = 1, pageSize = 10, filters = {}, referenceName = "", sortOder }) => {
   try {
     if (!Model) {
       throw new Error("Model is required");
     }
-    delete payload.page;
-    delete payload.pageSize;
-    if (payload.ids) {
-      payload = {
-        ...payload,
+    if (filters.ids) {
+      filters = {
+        ...filters,
         _id: {
-          $in: payload.ids.split(",")
+          $in: filters.ids.split(",")
         }
       };
-      delete payload.ids;
+      delete filters.ids;
     }
-    if (payload.publish_date) {
-      payload.publish_date = { $gte: payload.publish_date, $lte: payload.publish_date };
+    if (filters.publish_date) {
+      filters.publish_date = { $gte: filters.publish_date, $lte: filters.publish_date };
     }
-    if (payload.challenge === "yes") {
-      payload.publish_date = { $lte: Date.now() };
-      payload.reward = { $exists: true };
-      delete payload.challenge;
+    if (filters.challenge === "yes") {
+      filters.publish_date = { $lte: Date.now() };
+      filters.reward = { $exists: true };
+      delete filters.challenge;
     }
-    const filters = {
-      ...payload
-    };
+
     console.log(filters);
     page = parseInt(page);
     pageSize = parseInt(pageSize);

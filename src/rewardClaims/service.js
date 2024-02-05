@@ -54,10 +54,10 @@ export const updateRewardClaim = async (payload) => {
 
 export const fetchRewardClaims = async (payload = {}) => {
   try {
-    const { page, pageSize } = payload;
+    const { page, pageSize, ...filters } = payload;
     const sortOder = { created_at: -1 };
     const referenceName = "user_id,reward_id";
-    const result = await paginate({ Model: RewardClaim, page, pageSize, payload, sortOder, referenceName });
+    const result = await paginate({ Model: RewardClaim, page, pageSize, filters, sortOder, referenceName });
     return {
       code: codes.RESOURCE_FETCHED,
       data: result
@@ -69,13 +69,13 @@ export const fetchRewardClaims = async (payload = {}) => {
 
 export const fetchRewardClaim = async (rewardClaimId) => {
   try {
-    const payload = {
+    const filters = {
       _id: rewardClaimId
     };
     const page = 1;
     const pageSize = 1;
     const referenceName = "user_id,reward_id";
-    const { results } = await paginate({ Model: RewardClaim, page, pageSize, payload, referenceName });
+    const { results } = await paginate({ Model: RewardClaim, page, pageSize, filters, referenceName });
     if (results.length === 0) {
       throw {
         code: codes.NOT_FOUND

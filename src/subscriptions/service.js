@@ -90,8 +90,8 @@ export const updateSubscription = async (subscriptionId, payload) => {
 
 export const fetchSubscriptions = async (payload = {}) => {
   try {
-    const { page, pageSize } = payload;
-    const result = await paginate({ Model: Subscription, page, pageSize, payload });
+    const { page, pageSize, ...filters } = payload;
+    const result = await paginate({ Model: Subscription, page, pageSize, filters });
     return {
       code: codes.RESOURCE_FETCHED,
       data: result
@@ -103,20 +103,19 @@ export const fetchSubscriptions = async (payload = {}) => {
 
 export const fetchSubscription = async (subscriptionId) => {
   try {
-    const payload = {
-      _id: subscriptionId
-    };
-    const page = 1;
-    const pageSize = 1;
-    const { results } = await paginate({ Model: Subscription, page, pageSize, payload });
-    if (results.length === 0) {
+    const subscription = await Subscription.findById(subscriptionId);
+    if (!subscription) {
       throw {
         code: codes.NOT_FOUND
       };
     }
+    const { _id, ...rest } = subscription._doc;
     return {
       code: codes.RESOURCE_FETCHED,
-      data: results[0]
+      data: {
+        id: _id,
+        ...rest
+      }
     };
   } catch (error) {
     throw error;

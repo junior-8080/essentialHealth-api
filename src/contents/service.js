@@ -43,19 +43,18 @@ export const updateContent = async (contentId, payload) => {
 
 export const fetchContents = async (payload = {}, userId = "", userRole) => {
   try {
-    const { page, pageSize } = payload;
-    payload.content_type = payload.content_type ? payload.content_type : "main";
-    if (payload.tags) {
-      payload.tags = { $all: payload.tags.split(",") };
+    const { page, pageSize, ...filters } = payload;
+    filters.content_type = filters.content_type ? filters.content_type : "main";
+    if (filters.tags) {
+      filters.tags = { $all: filters.tags.split(",") };
     }
     if (userRole === "User") {
       const userSubscriptionOrder = await retrieveSubscriptionPlanOrder(userId);
-      payload.subscription_order = { $lte: userSubscriptionOrder };
+      filters.subscription_order = { $lte: userSubscriptionOrder };
     }
-
     const referenceName = "instructor_id";
     const sortOder = { publish_date: -1 };
-    let data = await paginate({ Model: Content, page, pageSize, payload, referenceName, sortOder });
+    let data = await paginate({ Model: Content, page, pageSize, filters, referenceName, sortOder });
     if (userId) {
       data.results = await userMediaActivity(data.results, userId);
     }
@@ -70,13 +69,13 @@ export const fetchContents = async (payload = {}, userId = "", userRole) => {
 
 export const fetchContent = async (contentId) => {
   try {
-    const payload = {
+    const filters = {
       _id: contentId
     };
     const page = 1;
     const pageSize = 1;
     const referenceName = "instructor_id";
-    const { results } = await paginate({ Model: Content, page, pageSize, payload, referenceName });
+    const { results } = await paginate({ Model: Content, page, pageSize, filters, referenceName });
     if (results.length === 0) {
       throw {
         code: codes.NOT_FOUND

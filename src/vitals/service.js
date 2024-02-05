@@ -7,7 +7,7 @@ export const createVital = async (payload) => {
     const vitalData = await customCreate(Vital, payload);
     return {
       code: codes.RESOURCE_CREATED,
-      data: vitalData,
+      data: vitalData
     };
   } catch (error) {
     throw error;
@@ -20,8 +20,8 @@ export const updateVital = async (vitalId, payload) => {
     return {
       code: codes.RESOURCE_CREATED,
       data: {
-        id: vitalId,
-      },
+        id: vitalId
+      }
     };
   } catch (error) {
     throw error;
@@ -30,12 +30,11 @@ export const updateVital = async (vitalId, payload) => {
 
 export const fetchVitals = async (payload = {}) => {
   try {
-    const { page, pageSize } = payload;
-    const result = await paginate({ Model: Vital, page, pageSize, payload });
-
+    const { page, pageSize, ...filters } = payload;
+    const result = await paginate({ Model: Vital, page, pageSize, filters });
     return {
       code: codes.RESOURCE_FETCHED,
-      data: result,
+      data: result
     };
   } catch (error) {
     throw error;
@@ -45,13 +44,19 @@ export const fetchVitals = async (payload = {}) => {
 export const fetchVital = async (payload) => {
   try {
     const { vitalId } = payload;
-    const { _doc } = await Vital.findById(vitalId);
-
+    const vital = await Vital.findById(vitalId);
+    if (!vital) {
+      throw {
+        code: codes.NOT_FOUND
+      };
+    }
+    const { _id, ...rest } = vital._doc;
     return {
       code: codes.RESOURCE_FETCHED,
       data: {
-        ..._doc,
-      },
+        id: _id,
+        ...rest
+      }
     };
   } catch (error) {
     throw error;

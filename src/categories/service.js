@@ -9,13 +9,13 @@ export const createCategory = async (payload) => {
       throw {
         code: codes.RESOURCE_EXISTS,
         message: "category already exists",
-        data: payload,
+        data: payload
       };
     }
     const categoryData = await customCreate(Category, payload);
     return {
       code: codes.RESOURCE_CREATED,
-      data: categoryData,
+      data: categoryData
     };
   } catch (error) {
     throw error;
@@ -30,7 +30,7 @@ export const updateCategory = async (categoryId, payload) => {
         throw {
           code: codes.RESOURCE_EXISTS,
           message: "category already exists",
-          data: payload,
+          data: payload
         };
       }
     }
@@ -38,8 +38,8 @@ export const updateCategory = async (categoryId, payload) => {
     return {
       code: codes.RESOURCE_CREATED,
       data: {
-        id: categoryId,
-      },
+        id: categoryId
+      }
     };
   } catch (error) {
     throw error;
@@ -48,11 +48,11 @@ export const updateCategory = async (categoryId, payload) => {
 
 export const fetchCategories = async (payload = {}) => {
   try {
-    const { page, pageSize } = payload;
-    const result = await paginate({ Model: Category, page, pageSize, payload });
+    const { page, pageSize, ...filters } = payload;
+    const result = await paginate({ Model: Category, page, pageSize, filters });
     return {
       code: codes.RESOURCE_FETCHED,
-      data: result,
+      data: result
     };
   } catch (error) {
     throw error;
@@ -62,13 +62,19 @@ export const fetchCategories = async (payload = {}) => {
 export const fetchCategory = async (payload) => {
   try {
     const { categoryId } = payload;
-    const { _doc } = await Category.findById(categoryId);
-
+    const category = await Category.findById(categoryId);
+    if (!category) {
+      throw {
+        code: codes.NOT_FOUND
+      };
+    }
+    const { _id, ...rest } = category._doc;
     return {
       code: codes.RESOURCE_FETCHED,
       data: {
-        ..._doc,
-      },
+        id: _doc,
+        ...rest
+      }
     };
   } catch (error) {
     throw error;

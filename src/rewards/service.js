@@ -33,9 +33,9 @@ export const updateReward = async (rewardId, payload) => {
 
 export const fetchRewards = async (payload = {}) => {
   try {
-    const { page, pageSize } = payload;
+    const { page, pageSize, ...filters } = payload;
     const sortOder = { publish_date: -1 };
-    const result = await paginate({ Model: Reward, page, pageSize, payload, sortOder });
+    const result = await paginate({ Model: Reward, page, pageSize, filters, sortOder });
     return {
       code: codes.RESOURCE_FETCHED,
       data: result
@@ -48,8 +48,14 @@ export const fetchRewards = async (payload = {}) => {
 export const fetchReward = async (payload) => {
   try {
     const { rewardId } = payload;
-    const { _doc } = await Reward.findById(rewardId);
-    const { _id, ...rest } = _doc;
+
+    const reward = await Reward.findById(rewardId);
+    if (!reward) {
+      throw {
+        code: codes.NOT_FOUND
+      };
+    }
+    const { _id, ...rest } = reward._doc;
     return {
       code: codes.RESOURCE_FETCHED,
       data: {

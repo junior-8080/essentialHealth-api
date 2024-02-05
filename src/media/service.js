@@ -19,8 +19,8 @@ export const createMedia = async (payload) => {
 
 export const fetchAllMedia = async (payload = {}) => {
   try {
-    const { page, pageSize } = payload;
-    const result = await paginate({ Model: Media, page, pageSize, payload });
+    const { page, pageSize, ...filters } = payload;
+    const result = await paginate({ Model: Media, page, pageSize, filters });
     return {
       code: codes.RESOURCE_FETCHED,
       data: result
@@ -33,12 +33,18 @@ export const fetchAllMedia = async (payload = {}) => {
 export const fetchMedia = async (payload) => {
   try {
     const { mediaId } = payload;
-    const { _doc } = await Media.findById(mediaId);
-
+    const media = await Media.findById(mediaId);
+    if (!media) {
+      throw {
+        code: codes.NOT_FOUND
+      };
+    }
+    const { _id, ...rest } = media._doc;
     return {
       code: codes.RESOURCE_FETCHED,
       data: {
-        ..._doc
+        id: _id,
+        ...rest
       }
     };
   } catch (error) {

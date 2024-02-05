@@ -30,8 +30,8 @@ export const createUser = async (payload) => {
 
 export const fetchUsers = async (payload = {}) => {
   try {
-    const { page, pageSize } = payload;
-    const result = await paginate({ Model: User, page, pageSize, payload });
+    const { page, pageSize, ...filters } = payload;
+    const result = await paginate({ Model: User, page, pageSize, filters });
     return {
       code: codes.RESOURCE_FETCHED,
       data: result
@@ -46,15 +46,19 @@ export const fetchUser = async (payload) => {
     const { userId } = payload;
     let userData = null;
     let isSubscriptionExpired = false;
-    const { _doc } = await User.findById(userId);
-    const { _id, ...rest } = _doc;
+    const user = await User.findById(userId);
+    if (!user) {
+      throw {
+        code: codes.NOT_FOUND
+      };
+    }
+    const { _id, ...rest } = user._doc;
     userData = {
       id: _id,
       ...rest
     };
     if (userData.subscription_type) {
       isSubscriptionExpired = isDateLessThanToday(userData.subscription_type.expiry_date);
-      console.log("🚀 ~ fetchUser ~ isSubscriptionExpired:", isSubscriptionExpired);
     }
     const userSubscriptionData = retrieveUserSubscriptionPlan(userId);
     if (!userSubscriptionData || isSubscriptionExpired) {
@@ -231,7 +235,7 @@ export const fetchUserVital = async (payload) => {
   }
 };
 
-export const fetchUserReward = async (payload) => {
+export const fetchUserVitals = async (payload) => {
   try {
     return await fetchRewardClaims(payload);
   } catch (error) {

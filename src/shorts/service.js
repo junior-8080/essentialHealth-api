@@ -8,7 +8,7 @@ export const createShort = async (payload) => {
     const shortData = await customCreate(Short, payload);
     return {
       code: codes.RESOURCE_CREATED,
-      data: shortData,
+      data: shortData
     };
   } catch (error) {
     throw error;
@@ -21,8 +21,8 @@ export const updateShort = async (shortId, payload) => {
     return {
       code: codes.RESOURCE_CREATED,
       data: {
-        id: shortId,
-      },
+        id: shortId
+      }
     };
   } catch (error) {
     throw error;
@@ -31,12 +31,12 @@ export const updateShort = async (shortId, payload) => {
 
 export const fetchShorts = async (payload = {}) => {
   try {
-    const { page, pageSize } = payload;
+    const { page, pageSize, ...filters } = payload;
     const sortOder = { publish_date: -1 };
-    const result = await paginate({ Model: Short, page, pageSize, payload, sortOder });
+    const result = await paginate({ Model: Short, page, pageSize, filters, sortOder });
     return {
       code: codes.RESOURCE_FETCHED,
-      data: result,
+      data: result
     };
   } catch (error) {
     throw error;
@@ -46,13 +46,19 @@ export const fetchShorts = async (payload = {}) => {
 export const fetchShort = async (payload) => {
   try {
     const { shortId } = payload;
-    const { _doc } = await Short.findById(shortId);
-
+    const short = await Short.findById(shortId);
+    if (!short) {
+      throw {
+        code: codes.NOT_FOUND
+      };
+    }
+    const { _id, ...rest } = short._doc;
     return {
       code: codes.RESOURCE_FETCHED,
       data: {
-        ..._doc,
-      },
+        id: _id,
+        ...rest
+      }
     };
   } catch (error) {
     throw error;
@@ -63,7 +69,7 @@ export const deleteShort = async (shortId) => {
   try {
     await deleteRecord(Content, shortId);
     return {
-      code: codes.RESOURCE_DELETED,
+      code: codes.RESOURCE_DELETED
     };
   } catch (error) {
     throw error;
