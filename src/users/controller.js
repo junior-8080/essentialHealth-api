@@ -144,6 +144,23 @@ export const fetchUserReward = async (request, response, next) => {
   }
 };
 
+export const createDeviceToken = async (request, response, next) => {
+  try {
+    const requestPayload = {
+      user_id: request.userDetails.id,
+      deviceToken: request.body.deviceToken
+    };
+    const responsePayload = await userServices.createDeviceToken(requestPayload);
+    response.locals.responsePayload = {
+      ...responsePayload
+    };
+    next();
+  } catch (error) {
+    console.log("🚀 ~ createDeviceToken ~ error:", error);
+    response.locals.responsePayload = error;
+    next();
+  }
+};
 export const deleteUser = async (request, response, next) => {
   try {
     const userId = request.params.userId;

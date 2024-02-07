@@ -1,5 +1,6 @@
 import { codes } from "../constants/codes.js";
 import { fetchContent } from "../contents/service.js";
+import DeviceToken from "../models/DeviceToken.js";
 import User from "../models/User.js";
 import UserMediaActivity from "../models/UserMediaActivity.js";
 import Vital from "../models/Vital.js";
@@ -250,6 +251,18 @@ export const deleteUser = async (userId) => {
       code: codes.RESOURCE_DELETED
     };
   } catch (error) {
+    throw error;
+  }
+};
+
+export const createDeviceToken = async (payload) => {
+  try {
+    await customCreate(DeviceToken, payload);
+    return {
+      code: codes.RESOURCE_CREATED
+    };
+  } catch (error) {
+    console.log("🚀 ~ createDeviceToken ~ error:", error);
     throw error;
   }
 };

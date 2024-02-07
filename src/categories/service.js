@@ -72,7 +72,7 @@ export const fetchCategory = async (payload) => {
     return {
       code: codes.RESOURCE_FETCHED,
       data: {
-        id: _doc,
+        id: _id,
         ...rest
       }
     };
