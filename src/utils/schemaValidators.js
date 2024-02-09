@@ -341,6 +341,12 @@ export const billingValidationSchema = Joi.object({
   email: Joi.string().required()
 });
 
+export const verifyTransactionSchema = Joi.object({
+  referenceId: Joi.string()
+    .uuid({ version: ["uuidv4"] })
+    .required()
+});
+
 export const subscriptionSchema = Joi.object({
   subscriptionPlanId: Joi.string().required(),
   referenceId: Joi.string().guid({ version: ["uuidv4"] }),

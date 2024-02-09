@@ -6,6 +6,9 @@ import Transactions from "../models/Transactions.js";
 import Subscription from "../models/Subscription.js";
 import { fetchSubscription } from "../subscriptions/service.js";
 import { fetchSubscriptionPlan } from "../subscriptionPlans/service.js";
+import { createUser } from "../users/service.js";
+import { codes } from "../constants/codes.js";
+import DeviceToken from "../models/DeviceToken.js";
 
 export const fetchUserByPhoneNumber = async (phoneNumber) => {
   try {
@@ -130,4 +133,21 @@ export const retrieveUserSubscriptionPlan = async (userId) => {
     return data;
   }
   return;
+};
+
+export const createAdmin = async (payload) => {
+  try {
+    await createUser(payload);
+  } catch (error) {
+    if (error.code === codes.RESOURCE_EXISTS) {
+      return;
+    } else {
+      throw error;
+    }
+  }
+};
+
+export const fetchDeviceTokens = async () => {
+  const deviceTokens = await DeviceToken.find({});
+  console.log(deviceTokens);
 };

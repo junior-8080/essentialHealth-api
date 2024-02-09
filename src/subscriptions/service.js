@@ -11,7 +11,6 @@ export const createSubscription = async (payload) => {
   try {
     const { subscriptionPlanId, referenceId, userId } = payload;
     const paymentDetails = await verifyPaymentViaRefId(referenceId);
-    await Transactions.updateOne({ reference: referenceId }, { $set: { status: paymentDetails.status } });
     if (paymentDetails.status === "failed") {
       throw {
         code: codes.FORBIDDEN,

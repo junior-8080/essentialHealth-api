@@ -6,7 +6,7 @@ import morgan from "morgan";
 // import passportConfig from "./config/passport.config.js";
 import database from "./config/database.config.js";
 // import router from "./router.js";
-// import firebase from "./services/firebase.js";
+import firebase from "./utils/firebase.js";
 // import { responseHandler } from "./utils/responseHandler.js";
 import { codeMessages } from "./constants/codeMessages.js";
 import responseHandler from "./utils/responseHandler.js";
@@ -26,10 +26,11 @@ import vitalsRoute from "./vitals/routes.js";
 import subscriptionPlanRoute from "./subscriptionPlans/routes.js";
 import subscriptionRoute from "./subscriptions/routes.js";
 import billingRoute from "./billing/routes.js";
-import { createUser } from "./users/service.js";
-import { codes } from "./constants/codes.js";
+// import { createUser } from "./users/service.js";
+// import { codes } from "./constants/codes.js";
 import { createUploadDirectories } from "./utils/helpers.js";
 import authorize from "./utils/middleware.js";
+import { createAdmin, fetchDeviceTokens } from "./utils/common.js";
 
 const app = express();
 const corsOptions = {
@@ -37,6 +38,7 @@ const corsOptions = {
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   exposedHeaders: ["Cross-Origin-Resource-Policy"]
 };
+
 app.use(cors(corsOptions));
 const base = process.env.NODE_ENV === "development" ? "/Users/abdulmukhsinahmed" : "";
 app.use(helmet());
@@ -67,18 +69,12 @@ app.use("/api/v1/billing", billingRoute);
 
 app.use((request, response) => {
   const { responsePayload } = response.locals;
+  console.log("🚀 ~ app.use ~ responsePayload:", responsePayload);
   return responseHandler(responsePayload, response, codeMessages);
 });
 
-database
-  .connect()
-  .then(() => {
-    createUploadDirectories();
-    app.listen(process.env.PORT || 3003, () => {
-      console.log(`${codeMessages.API_START_UP} on port:${process.env.PORT} date:${new Date().toISOString()}`);
-    });
-  })
-  .then(() => {
+const appSetUp = async () => {
+  try {
     const AdminData = {
       firstName: process.env.ADMIN_NAME.split(",")[0],
       lastName: process.env.ADMIN_NAME.split(",")[1],
@@ -86,21 +82,20 @@ database
       phoneNumber: process.env.ADMIN_NUMBER,
       role: "Admin"
     };
-    return createUser(AdminData);
-  })
-  .then((responsePayload) => {
-    console.log("Admin Created");
-  })
-  .catch((error) => {
-    switch (error.code) {
-      case codes.RESOURCE_EXISTS:
-        console.log("Admin Created");
-        break;
-      default:
-        console.log("Error connecting to database.");
-        break;
-    }
-  });
+    await database.connect();
+    await createAdmin(AdminData);
+    firebase.setup();
+    createUploadDirectories();
+    // firebase.sendNotificationToMemberById("565");
+    app.listen(process.env.PORT || 3003, () => {
+      console.log(`${codeMessages.API_START_UP} on port:${process.env.PORT} date:${new Date().toISOString()}`);
+    });
+  } catch (error) {
+    console.log("🚀 ~ appSetUp ~ error:", error);
+    console.log("Error connecting to database.");
+  }
+};
+appSetUp();
 
 /*
 Senior Thomas Setup
