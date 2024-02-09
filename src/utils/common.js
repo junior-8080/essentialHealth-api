@@ -9,6 +9,7 @@ import { fetchSubscriptionPlan } from "../subscriptionPlans/service.js";
 import { createUser } from "../users/service.js";
 import { codes } from "../constants/codes.js";
 import DeviceToken from "../models/DeviceToken.js";
+import { EventEmitter } from "events";
 
 export const fetchUserByPhoneNumber = async (phoneNumber) => {
   try {
@@ -149,5 +150,8 @@ export const createAdmin = async (payload) => {
 
 export const fetchDeviceTokens = async () => {
   const deviceTokens = await DeviceToken.find({});
-  console.log(deviceTokens);
+  console.log("🚀 ~ fetchDeviceTokens ~ deviceTokens:", deviceTokens);
+  return deviceTokens.map((item) => item.deviceToken);
 };
+
+export const AppEventEmitter = new EventEmitter();

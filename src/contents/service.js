@@ -1,11 +1,19 @@
 import { codes } from "../constants/codes.js";
-import { customCreate, deleteRecord, paginate, retrieveSubscriptionPlanOrder } from "../utils/common.js";
+import {
+  AppEventEmitter,
+  customCreate,
+  deleteRecord,
+  fetchDeviceTokens,
+  paginate,
+  retrieveSubscriptionPlanOrder
+} from "../utils/common.js";
 import Content from "../models/Content.js";
 import { contentTransformer } from "../utils/dataTransformers.js";
 import { userMediaActivity } from "../users/service.js";
 import Subscription from "../models/Subscription.js";
 import { fetchSubscription } from "../subscriptions/service.js";
 import { fetchSubscriptionPlan } from "../subscriptionPlans/service.js";
+import firebase from "../utils/firebase.js";
 
 export const createContent = async (payload) => {
   try {
@@ -16,8 +24,12 @@ export const createContent = async (payload) => {
     } else {
       payload.subscription_order = 0;
     }
-
     const contentData = await customCreate(Content, payload);
+    AppEventEmitter.emit("new-content", {
+      type: "new-data",
+      title: contentData.title,
+      content_type: contentData.source.type
+    });
     return {
       code: codes.RESOURCE_CREATED,
       data: contentData
@@ -119,3 +131,8 @@ export const deleteContent = async (contentId) => {
     throw error;
   }
 };
+
+AppEventEmitter.on("new-content", async (data) => {
+  const deviceTokenData = await fetchDeviceTokens();
+  firebase.sendNotificationToMemberById("12", data, deviceTokenData);
+});

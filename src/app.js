@@ -86,7 +86,6 @@ const appSetUp = async () => {
     await createAdmin(AdminData);
     firebase.setup();
     createUploadDirectories();
-    // firebase.sendNotificationToMemberById("565");
     app.listen(process.env.PORT || 3003, () => {
       console.log(`${codeMessages.API_START_UP} on port:${process.env.PORT} date:${new Date().toISOString()}`);
     });
