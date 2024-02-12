@@ -42,7 +42,11 @@ const ContentSchema = new mongoose.Schema({
   },
   subscriptionPlanId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: ""
+    ref: "SubscriptionPlan"
+  },
+  subscription_order: {
+    type: Number,
+    default: 0
   },
   publish_date: {
     type: Date

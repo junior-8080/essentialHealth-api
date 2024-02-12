@@ -52,7 +52,7 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, filters = {}, r
       delete filters.challenge;
     }
 
-    console.log(filters);
+    // console.log(filters);
     page = parseInt(page);
     pageSize = parseInt(pageSize);
     const totalCount = await Model.countDocuments(filters);
@@ -150,8 +150,8 @@ export const createAdmin = async (payload) => {
 
 export const fetchDeviceTokens = async () => {
   const deviceTokens = await DeviceToken.find({});
-  console.log("🚀 ~ fetchDeviceTokens ~ deviceTokens:", deviceTokens);
-  return deviceTokens.map((item) => item.deviceToken);
+  const tokens = deviceTokens.map((item) => item.deviceToken);
+  return [...new Set(tokens)];
 };
 
 export const AppEventEmitter = new EventEmitter();

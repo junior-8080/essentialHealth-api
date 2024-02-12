@@ -8,17 +8,17 @@ const authorize = async function (request, response, next) {
     if (!authToken) {
       throw {
         code: codes.FORBIDDEN,
-        message: "Provide a valid token",
+        message: "Provide a valid token"
       };
     }
     const tokenData = await decodeJwtToken(authToken);
     request.userDetails = tokenData;
     next();
   } catch (error) {
-    console.log("🚀 ~ file: middleware.js:18 ~ authorize ~ error:", error);
+    // console.log("🚀 ~ file: middleware.js:18 ~ authorize ~ error:", error);
     const responsePayload = {
       code: codes.UNAUTHORIZED,
-      message: "Invalid Token",
+      message: "Invalid Token"
     };
 
     responseHandler(responsePayload, response);

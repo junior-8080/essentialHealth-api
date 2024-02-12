@@ -133,6 +133,8 @@ export const deleteContent = async (contentId) => {
 };
 
 AppEventEmitter.on("new-content", async (data) => {
+  // console.log("🚀 ~ AppEventEmitter.on ~ data:", data);
   const deviceTokenData = await fetchDeviceTokens();
-  firebase.sendNotificationToMemberById("12", data, deviceTokenData);
+  console.log("🚀 ~ AppEventEmitter.on ~ deviceTokenData:", deviceTokenData);
+  firebase.sendNotificationToMemberById("12", data.data, deviceTokenData);
 });

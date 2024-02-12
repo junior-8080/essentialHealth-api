@@ -13,7 +13,7 @@ export const summaries = async (request, response, next) => {
         const nutritionalTipsId = process.env.NUTRITIONAL_TIPS_ID;
         responsePayload = await contentServices.fetchTagContentSummaries(nutritionalTipsId, userId);
         response.locals.responsePayload = {
-          ...responsePayload,
+          ...responsePayload
         };
         next();
         break;
@@ -21,19 +21,19 @@ export const summaries = async (request, response, next) => {
         const workOutId = process.env.WORKOUT_ID;
         responsePayload = await contentServices.fetchTagContentSummaries(workOutId, userId);
         response.locals.responsePayload = {
-          ...responsePayload,
+          ...responsePayload
         };
         next();
         break;
       default:
         response.locals.responsePayload = {
-          code: codes.NOT_FOUND,
+          code: codes.NOT_FOUND
         };
         next();
         break;
     }
   } catch (error) {
-    console.log("🚀 ~ file: controller.js:23 ~ summaries ~ error:", error);
+    // console.log("🚀 ~ file: controller.js:23 ~ summaries ~ error:", error);
     response.locals.responsePayload = error;
     next();
   }

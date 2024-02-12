@@ -156,7 +156,7 @@ export const createDeviceToken = async (request, response, next) => {
     };
     next();
   } catch (error) {
-    console.log("🚀 ~ createDeviceToken ~ error:", error);
+    // console.log("🚀 ~ createDeviceToken ~ error:", error);
     response.locals.responsePayload = error;
     next();
   }
