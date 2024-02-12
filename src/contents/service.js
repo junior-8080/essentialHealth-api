@@ -26,9 +26,8 @@ export const createContent = async (payload) => {
     }
     const contentData = await customCreate(Content, payload);
     AppEventEmitter.emit("new-content", {
-      type: "new-data",
-      title: contentData.title,
-      content_type: contentData.source.type
+      type: "content",
+      data: contentData
     });
     return {
       code: codes.RESOURCE_CREATED,
@@ -133,8 +132,6 @@ export const deleteContent = async (contentId) => {
 };
 
 AppEventEmitter.on("new-content", async (data) => {
-  // console.log("🚀 ~ AppEventEmitter.on ~ data:", data);
   const deviceTokenData = await fetchDeviceTokens();
-  console.log("🚀 ~ AppEventEmitter.on ~ deviceTokenData:", deviceTokenData);
-  firebase.sendNotificationToMemberById("12", data.data, deviceTokenData);
+  firebase.sendNotificationToMemberById("12", data, deviceTokenData);
 });
