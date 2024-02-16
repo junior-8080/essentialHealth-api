@@ -6,8 +6,8 @@ export const initializeTransaction = async function initializeTransaction(billin
       method: "POST",
       url: "https://api.paystack.co/transaction/initialize",
       data: {
-        // ...billingDetails,
-        // callback_url: "https://57b8-102-221-28-6.ngrok-free.app/api/v1/billing/payment-webhook"
+        ...billingDetails,
+        callback_url: "https://57b8-102-221-28-6.ngrok-free.app/api/v1/billing/payment-webhook"
       },
       headers: {
         Authorization: `Bearer ${process.env.PAYSTACK_API_KEY_LIVE}`
@@ -21,9 +21,6 @@ export const initializeTransaction = async function initializeTransaction(billin
 
 export const verifyPaymentViaRefId = async (refId) => {
   try {
-    console.log({
-      refId
-    });
     const response = await axios({
       method: "GET",
       url: `https://api.paystack.co/transaction/verify/${refId}`,
@@ -33,6 +30,7 @@ export const verifyPaymentViaRefId = async (refId) => {
     });
     return response.data.data;
   } catch (error) {
+    // console.log("🚀 ~ verifyPaymentViaRefId ~ error:", error);
     throw error;
   }
 };

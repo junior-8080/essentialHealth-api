@@ -3,14 +3,10 @@ import cors from "cors";
 // import http from "http";
 import helmet from "helmet";
 import morgan from "morgan";
-// import passportConfig from "./config/passport.config.js";
 import database from "./config/database.config.js";
-// import router from "./router.js";
 import firebase from "./utils/firebase.js";
-// import { responseHandler } from "./utils/responseHandler.js";
 import { codeMessages } from "./constants/codeMessages.js";
 import responseHandler from "./utils/responseHandler.js";
-// import paystack from "./services/paystack.js";
 import userRouter from "./users/routes.js";
 import authRouter from "./auth/routes.js";
 import mediaRouter from "./media/routes.js";
@@ -26,11 +22,10 @@ import vitalsRoute from "./vitals/routes.js";
 import subscriptionPlanRoute from "./subscriptionPlans/routes.js";
 import subscriptionRoute from "./subscriptions/routes.js";
 import billingRoute from "./billing/routes.js";
-// import { createUser } from "./users/service.js";
-// import { codes } from "./constants/codes.js";
+import messageRoute from "./message/routes.js";
 import { createUploadDirectories } from "./utils/helpers.js";
 import authorize from "./utils/middleware.js";
-import { createAdmin, fetchDeviceTokens } from "./utils/common.js";
+import { createAdmin } from "./utils/common.js";
 
 const app = express();
 const corsOptions = {
@@ -66,6 +61,7 @@ app.use("/api/v1/vitals", vitalsRoute);
 app.use("/api/v1/subscription-plans", subscriptionPlanRoute);
 app.use("/api/v1/subscriptions", authorize, subscriptionRoute);
 app.use("/api/v1/billing", billingRoute);
+app.use("/api/v1/chats", authorize, messageRoute);
 
 app.use((request, response) => {
   const { responsePayload } = response.locals;

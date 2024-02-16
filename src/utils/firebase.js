@@ -17,6 +17,9 @@ const sendNotificationToMemberById = (memberId, data, tokens) => {
       title = "New Content Available!!!🥳";
       data = { title: data.data.title, description: data.data.description };
       break;
+    case "message":
+      title = "You have a new message📩";
+      data = data.data;
     default:
       break;
   }

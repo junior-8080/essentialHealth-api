@@ -148,8 +148,8 @@ export const createAdmin = async (payload) => {
   }
 };
 
-export const fetchDeviceTokens = async () => {
-  const deviceTokens = await DeviceToken.find({});
+export const fetchDeviceTokens = async (filters = {}) => {
+  const deviceTokens = await DeviceToken.find(filters);
   const tokens = deviceTokens.map((item) => item.deviceToken);
   return [...new Set(tokens)];
 };

@@ -350,5 +350,11 @@ export const verifyTransactionSchema = Joi.object({
 export const subscriptionSchema = Joi.object({
   subscriptionPlanId: Joi.string().required(),
   referenceId: Joi.string().guid({ version: ["uuidv4"] }),
-  userId: Joi.string().required()
+  user_id: Joi.string().required()
+});
+
+export const messageSchema = Joi.object({
+  message: Joi.string().required(),
+  user_id: Joi.string(),
+  created_by: Joi.string().required()
 });
