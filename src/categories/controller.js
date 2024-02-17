@@ -5,12 +5,12 @@ import * as categoryServices from "./service.js";
 export const createCategory = async (request, response, next) => {
   try {
     const requestPayload = {
-      ...request.body,
+      ...request.body
     };
     const validPayload = await validateRequestPayload(categoriesValidationSchema, requestPayload);
     const responsePayload = await categoryServices.createCategory(validPayload);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {
@@ -22,13 +22,13 @@ export const createCategory = async (request, response, next) => {
 export const updateCategory = async (request, response, next) => {
   try {
     const requestPayload = {
-      ...request.body,
+      ...request.body
     };
     const categoryId = request.params.categoryId;
     const validPayload = await validateRequestPayload(categoriesUpdateValidationSchema, requestPayload);
     const responsePayload = await categoryServices.updateCategory(categoryId, validPayload);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {
@@ -39,9 +39,12 @@ export const updateCategory = async (request, response, next) => {
 
 export const fetchCategories = async (request, response, next) => {
   try {
-    const responsePayload = await categoryServices.fetchCategories();
+    const requestPayload = {
+      ...request.query
+    };
+    const responsePayload = await categoryServices.fetchCategories(requestPayload);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {
@@ -53,11 +56,11 @@ export const fetchCategories = async (request, response, next) => {
 export const fetchCategory = async (request, response, next) => {
   try {
     const requestPayload = {
-      ...request.params,
+      ...request.params
     };
     const responsePayload = await categoryServices.fetchCategory(requestPayload);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {

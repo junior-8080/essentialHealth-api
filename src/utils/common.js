@@ -44,14 +44,23 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, filters = {}, r
       delete filters.ids;
     }
     if (filters.publish_date) {
-      filters.publish_date = { $gte: filters.publish_date, $lte: filters.publish_date };
+      filters.publish_date = new Date(filters.publish_date);
+      const endOfDay = new Date(filters.publish_date);
+      endOfDay.setHours(23, 59, 59, 999);
+      filters.publish_date = { $gte: filters.publish_date, $lt: endOfDay };
+    }
+    console.log(filters);
+    if (filters.created_at) {
+      filters.created_at = new Date(filters.created_at);
+      const endOfDay = new Date(filters.created_at);
+      endOfDay.setHours(23, 59, 59, 999);
+      filters.created_at = { $gte: filters.created_at, $lt: endOfDay };
     }
     if (filters.challenge === "yes") {
       filters.publish_date = { $lte: Date.now() };
       filters.reward = { $exists: true };
       delete filters.challenge;
     }
-
     // console.log(filters);
     page = parseInt(page);
     pageSize = parseInt(pageSize);

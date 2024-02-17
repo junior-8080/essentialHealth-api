@@ -22,7 +22,7 @@ import vitalsRoute from "./vitals/routes.js";
 import subscriptionPlanRoute from "./subscriptionPlans/routes.js";
 import subscriptionRoute from "./subscriptions/routes.js";
 import billingRoute from "./billing/routes.js";
-import messageRoute from "./message/routes.js";
+import messageRoute from "./messages/routes.js";
 import { createUploadDirectories } from "./utils/helpers.js";
 import authorize from "./utils/middleware.js";
 import { createAdmin } from "./utils/common.js";

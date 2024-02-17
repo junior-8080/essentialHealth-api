@@ -2,7 +2,7 @@ import { codes } from "../constants/codes.js";
 import { fetchUserByPhoneNumber } from "../utils/common.js";
 import { generateAndSendOtpViaArkesel, verifyOptViaArkesel } from "../utils/arkesel.js";
 import { generateToken } from "../utils/helpers.js";
-import { createUser, fetchUsers } from "../users/service.js";
+import { createUser, fetchUser, fetchUsers } from "../users/service.js";
 
 export const login = async (payload) => {
   try {
@@ -25,14 +25,15 @@ export const login = async (payload) => {
 export const adminLogin = async (payload) => {
   try {
     const { email, password } = payload;
-    const role = "Admin";
-    if (email !== process.env.ADMIN_EMAIL || password !== process.env.ADMIN_PASSWORD) {
+    const { data } = await fetchUsers({ email });
+    const adminData = data.results[0];
+    if (!adminData || password !== process.env.ADMIN_PASSWORD) {
       throw {
         code: codes.UNAUTHORIZED
       };
     }
     const adminName = process.env.ADMIN_NAME.split(",");
-    const token = generateToken({ email, role });
+    const token = generateToken({ email, role: adminData.role, id: adminData.id });
     return {
       code: codes.RESOURCE_CREATED,
       message: "Otp verification successful",
@@ -42,7 +43,8 @@ export const adminLogin = async (payload) => {
           firstName: adminName[0],
           lastName: adminName[1],
           email,
-          role: "Admin"
+          id: adminData.id,
+          role: adminData.role
         }
       }
     };
