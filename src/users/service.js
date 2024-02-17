@@ -257,12 +257,16 @@ export const deleteUser = async (userId) => {
 
 export const createDeviceToken = async (payload) => {
   try {
-    await customCreate(DeviceToken, payload);
+    const data = await DeviceToken.find({ user_id: payload.user_id });
+    if (data.length === 0) {
+      await customCreate(DeviceToken, payload);
+    } else {
+      await DeviceToken.updateOne({ user_id: payload.user_id }, { $set: { deviceToken: payload.deviceToken } });
+    }
     return {
       code: codes.RESOURCE_CREATED
     };
   } catch (error) {
-    console.log("🚀 ~ createDeviceToken ~ error:", error);
     throw error;
   }
 };
