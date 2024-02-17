@@ -34,7 +34,6 @@ export const fetchMessages = async (request, response, next) => {
     };
     next();
   } catch (error) {
-    console.log("🚀 ~ fetchMessages ~ error:", error);
     response.locals.responsePayload = error;
     next();
   }
