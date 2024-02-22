@@ -1,5 +1,12 @@
 import { codes } from "../constants/codes.js";
-import { AppEventEmitter, customCreate, deleteRecord, fetchDeviceTokens, paginate } from "../utils/common.js";
+import {
+  AppEventEmitter,
+  customCreate,
+  deleteRecord,
+  fetchDeviceTokens,
+  paginate,
+  reduceUserPoints
+} from "../utils/common.js";
 import Message from "../models/Message.js";
 import { fetchUser } from "../users/service.js";
 import firebase from "../utils/firebase.js";
@@ -16,7 +23,8 @@ export const createMessage = async (payload) => {
     if (userData.role === "User") {
       payload.user_id = payload.created_by;
     }
-    //for now using the notification. this can be updated to pusher
+    const MessageData = await customCreate(Message, payload);
+    const data = await reduceUserPoints(userData.id, process.env.MESSAGE_POINTS);
     if (userData.role === "Admin") {
       AppEventEmitter.emit("new-message", {
         type: "message",
@@ -24,7 +32,6 @@ export const createMessage = async (payload) => {
         data: payload
       });
     }
-    const MessageData = await customCreate(Message, payload);
     return {
       code: codes.RESOURCE_CREATED,
       data: MessageData

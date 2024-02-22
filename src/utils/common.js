@@ -163,4 +163,9 @@ export const fetchDeviceTokens = async (filters = {}) => {
   return [...new Set(tokens)];
 };
 
+export const reduceUserPoints = async (userId, points) => {
+  const updatedUser = await User.findByIdAndUpdate({ _id: userId }, { $inc: { points: -points } }, { new: true });
+  return updatedUser;
+};
+
 export const AppEventEmitter = new EventEmitter();

@@ -4,7 +4,7 @@ import User from "../models/User.js";
 import { fetchReward, updateReward } from "../rewards/service.js";
 import { fetchUser } from "../users/service.js";
 import { sendSMSViaArkesel } from "../utils/arkesel.js";
-import { customCreate, deleteRecord, paginate } from "../utils/common.js";
+import { customCreate, deleteRecord, paginate, reduceUserPoints } from "../utils/common.js";
 
 export const createRewardClaim = async (payload) => {
   try {
@@ -18,11 +18,7 @@ export const createRewardClaim = async (payload) => {
     }
     await customCreate(RewardClaim, payload);
     await updateReward(rewardData.id, { status: "redeemed" });
-    const updatedUser = await User.findByIdAndUpdate(
-      { _id: payload.user_id },
-      { $inc: { points: -rewardData.points } },
-      { new: true }
-    );
+    const updatedUser = await reduceUserPoints(payload.user_id, rewardData.points);
     await sendSMSViaArkesel(
       rewardData.code,
       userData.phoneNumber,
