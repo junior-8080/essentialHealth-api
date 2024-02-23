@@ -5,8 +5,6 @@ import * as messageServices from "./service.js";
 
 export const createMessage = async (request, response, next) => {
   try {
-    const userRole = request.userDetails.role;
-    console.log(request.userDetails);
     const requestPayload = {
       created_by: request.userDetails.id,
       ...request.body
@@ -28,6 +26,10 @@ export const fetchMessages = async (request, response, next) => {
     const requestPayload = {
       ...request.query
     };
+    const userRole = request.userDetails.role;
+    if (userRole === "User") {
+      requestPayload.user_id = request.userDetails.id;
+    }
     const responsePayload = await messageServices.fetchMessages(requestPayload);
     response.locals.responsePayload = {
       ...responsePayload

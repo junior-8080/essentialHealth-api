@@ -48,7 +48,7 @@ export const createCheckoutUrl = async (payload) => {
 };
 
 export const verifyTransaction = async (referenceId) => {
-  console.log("🚀 ~ verifyTransaction ~ referenceId:", referenceId);
+  // console.log("🚀 ~ verifyTransaction ~ referenceId:", referenceId);
   try {
     const paymentDetails = await verifyPaymentViaRefId(referenceId);
     await Transactions.updateOne({ reference: referenceId }, { $set: { status: paymentDetails.status } });

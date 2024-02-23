@@ -65,7 +65,7 @@ app.use("/api/v1/chats", authorize, messageRoute);
 
 app.use((request, response) => {
   const { responsePayload } = response.locals;
-  console.log("🚀 ~ app.use ~ responsePayload:", responsePayload);
+  // console.log("🚀 ~ app.use ~ responsePayload:", responsePayload);
   return responseHandler(responsePayload, response, codeMessages);
 });
 

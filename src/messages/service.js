@@ -45,6 +45,7 @@ export const fetchMessages = async (payload = {}) => {
   try {
     const { page, pageSize, ...filters } = payload;
     const result = await paginate({ Model: Message, page, pageSize, filters });
+    result.results = (result.results || []).reverse();
     return {
       code: codes.RESOURCE_FETCHED,
       data: result
