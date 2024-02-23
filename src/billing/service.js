@@ -57,8 +57,8 @@ export const verifyTransaction = async (referenceId) => {
       data: {
         status: paymentDetails.status,
         amount: paymentDetails.amount,
-        currency: paymentDetails.currency,
-        paidAt: paymentDetails.paidAt
+        currency: paymentDetails.currency
+        // paidAt: paymentDetails.paidAt
       }
     };
   } catch (error) {
