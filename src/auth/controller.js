@@ -6,13 +6,12 @@ import * as authServices from "./service.js";
 export const login = async (request, response, next) => {
   try {
     const requestPayload = {
-      ...request.body,
+      ...request.body
     };
-
     const validPayload = await validateRequestPayload(authValidationSchema, requestPayload);
     const responsePayload = await authServices.login(validPayload);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {
@@ -24,12 +23,11 @@ export const login = async (request, response, next) => {
 export const adminLogin = async (request, response, next) => {
   try {
     const requestPayload = {
-      ...request.body,
+      ...request.body
     };
-
     const responsePayload = await authServices.adminLogin(requestPayload);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {
@@ -43,13 +41,13 @@ export const signUp = async (request, response, next) => {
     const requestPayload = {
       ...request.body,
       firstName: request.body.fullName.split(" ")[0],
-      lastName: request.body.fullName.split(" ")[1],
+      lastName: request.body.fullName.split(" ")[1]
     };
     delete requestPayload.fullName;
     const validPayload = await validateRequestPayload(signUpValidationSchema, requestPayload);
     const responsePayload = await userServices.createUser(validPayload);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {
@@ -61,12 +59,12 @@ export const signUp = async (request, response, next) => {
 export const verifyOtp = async (request, response, next) => {
   try {
     const requestPayload = {
-      ...request.body,
+      ...request.body
     };
     const validPayload = await validateRequestPayload(verifyOtpValidationSchema, requestPayload);
     const responsePayload = await authServices.verifyOtp(validPayload);
     response.locals.responsePayload = {
-      ...responsePayload,
+      ...responsePayload
     };
     next();
   } catch (error) {

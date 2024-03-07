@@ -1,6 +1,7 @@
 import { validateRequestPayload } from "../utils/helpers.js";
 import {
   userActivityValidationSchema,
+  userLabSchema,
   userUpdateValidationSchema,
   userValidationSchema,
   vitalTargetValidationSchema
@@ -65,7 +66,6 @@ export const updateUser = async (request, response, next) => {
     };
     next();
   } catch (error) {
-    // console.log("🚀 ~ file: controller.js:69 ~ updateUser ~ error:", error);
     response.locals.responsePayload = error;
     next();
   }
@@ -156,11 +156,43 @@ export const createDeviceToken = async (request, response, next) => {
     };
     next();
   } catch (error) {
-    // console.log("🚀 ~ createDeviceToken ~ error:", error);
     response.locals.responsePayload = error;
     next();
   }
 };
+
+export const fetchUserRecommendedLabs = async (request, response, next) => {
+  try {
+    const userId = request.userDetails.id;
+    const requestPayload = { userId };
+    const responsePayload = await userServices.fetchUserRecommendedLabs(requestPayload);
+    response.locals.responsePayload = responsePayload;
+    next();
+  } catch (error) {
+    response.locals.responsePayload = error;
+    next();
+  }
+};
+
+export const createUserLabResult = async (request, response, next) => {
+  try {
+    const requestPayload = {
+      ...request.body
+    };
+    const validPayload = await validateRequestPayload(userLabSchema, requestPayload);
+    validPayload.user_id = request.userDetails.id;
+    const responsePayload = await userServices.createUserLabResult(validPayload);
+    response.locals.responsePayload = {
+      ...responsePayload
+    };
+    next();
+  } catch (error) {
+    console.log("🚀 ~ createUserLabResult ~ error:", error);
+    response.locals.responsePayload = error;
+    next();
+  }
+};
+
 export const deleteUser = async (request, response, next) => {
   try {
     const userId = request.params.userId;

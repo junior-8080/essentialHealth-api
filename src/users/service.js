@@ -1,13 +1,16 @@
 import { codes } from "../constants/codes.js";
 import { fetchContent } from "../contents/service.js";
 import DeviceToken from "../models/DeviceToken.js";
+import Labs from "../models/Lab.js";
 import User from "../models/User.js";
+import UserLabs from "../models/UserLabs.js";
 import UserMediaActivity from "../models/UserMediaActivity.js";
 import Vital from "../models/Vital.js";
 import UserTargetVital from "../models/VitalTarget.js";
 import { fetchRewardClaims } from "../rewardClaims/service.js";
 import { customCreate, fetchUserByPhoneNumber, paginate, retrieveUserSubscriptionPlan } from "../utils/common.js";
-import { defaultVitalsTargets, isDateLessThanToday } from "../utils/helpers.js";
+import { defaultTransformer } from "../utils/dataTransformers.js";
+import { createDictionary, dateDifference, defaultVitalsTargets, isDateLessThanToday } from "../utils/helpers.js";
 
 export const createUser = async (payload) => {
   try {
@@ -249,6 +252,67 @@ export const deleteUser = async (userId) => {
     await deleteRecord(Content, userId);
     return {
       code: codes.RESOURCE_DELETED
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchUserRecommendedLabs = async (payload) => {
+  try {
+    const { userId } = payload;
+    const { data: userData } = await fetchUser({ userId });
+    const ageEndDate = new Date();
+    const ageUnit = "years";
+    const userAge = dateDifference(userData.dob, ageEndDate, ageUnit);
+    const recommendationFilter = {
+      "criteria.min_age": { $lte: userAge },
+      "criteria.max_age": { $gte: userAge },
+      "criteria.gender": { $in: [userData.gender] }
+    };
+    const recommendedLabs = await Labs.find(recommendationFilter);
+    const userLabs = await UserLabs.find({ user_id: userId });
+    const userLabsDictionaryKey = "lab_id";
+    const userLabsDictionary = createDictionary(userLabs, userLabsDictionaryKey);
+    const results = recommendedLabs.map((lab) => {
+      const labWithStatus = {
+        id: lab._id,
+        title: lab.title,
+        isCompleted: "no"
+      };
+      const keyValue = lab._id.toString();
+      const userLabData = userLabsDictionary[keyValue];
+      if (userLabData) {
+        labWithStatus.isCompleted = "yes";
+        if (lab.criteria.duration_in_months) {
+          console.log(lab);
+          const endDate = new Date();
+          const startDate = userLabData.created_at;
+          const unit = "months";
+          const durationInMonth = dateDifference(startDate, endDate, unit);
+          if (durationInMonth > lab.criteria.duration_in_months) {
+            labWithStatus.isExpired = "yes";
+            labWithStatus.created_at = userLabData.created_at;
+          }
+        }
+      }
+      return labWithStatus;
+    });
+    return {
+      code: codes.RESOURCE_FETCHED,
+      data: results
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createUserLabResult = async (payload) => {
+  try {
+    const userLabData = await customCreate(UserLabs, payload);
+    return {
+      code: codes.RESOURCE_CREATED,
+      data: userLabData
     };
   } catch (error) {
     throw error;

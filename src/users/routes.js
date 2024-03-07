@@ -11,7 +11,8 @@ router.post("/:userId/user-media-activities", userControllers.createUserMediaAct
 router.post("/:userId/vital-target", userControllers.createUserVitalTarget);
 router.get("/:userId/vitals", authorize, userControllers.fetchUserVital);
 router.get("/:userId/rewards", authorize, userControllers.fetchUserReward);
-// router.get("/:userId/messages", authorize, userControllers.fetchUserMessages);
+router.get("/:userId/recommended-labs", authorize, userControllers.fetchUserRecommendedLabs);
+router.post("/:userId/recommended-labs", authorize, userControllers.createUserLabResult);
 router.post("/:userId/device-token", userControllers.createDeviceToken);
 router.delete("/:userId", userControllers.deleteUser);
 

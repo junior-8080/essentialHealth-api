@@ -73,7 +73,6 @@ export const calculateEndDate = (startDate, durationMonths) => {
 };
 
 export const isDateLessThanToday = (inputDate) => {
-  console.log("🚀 ~ isDateGreaterThanToday ~ inputDate:", inputDate);
   const inputDateObj = new Date(inputDate);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -97,4 +96,31 @@ export const chunkArray = (array, chunkSize) => {
     result.push(array.slice(i, i + chunkSize));
   }
   return result;
+};
+
+export const dateDifference = (startDate, endDate, unit) => {
+  const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
+  const oneMonth = 30 * oneDay; // approximation for a month (30 days)
+  const diffMilliseconds = Math.abs(endDate - startDate);
+  switch (unit.toLowerCase()) {
+    case "years":
+      return Math.floor(diffMilliseconds / (365.25 * oneDay));
+    case "months":
+      return Math.floor(diffMilliseconds / oneMonth);
+    case "days":
+      return Math.floor(diffMilliseconds / oneDay);
+    default:
+      throw new Error('Invalid unit. Please use "years", "months", or "days".');
+  }
+};
+
+export const createDictionary = (list, key) => {
+  return list.reduce((dictionary, item) => {
+    const keyValue = item[key];
+    if (keyValue) {
+      const keyValueString = keyValue.toString();
+      dictionary[keyValueString] = item;
+    }
+    return dictionary;
+  }, {});
 };

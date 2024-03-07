@@ -358,3 +358,10 @@ export const messageSchema = Joi.object({
   user_id: Joi.string(),
   created_by: Joi.string().required()
 });
+
+export const userLabSchema = Joi.object({
+  lab_id: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .required(),
+  lab_result: Joi.string()
+});
