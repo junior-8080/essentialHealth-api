@@ -284,13 +284,13 @@ export const fetchUserRecommendedLabs = async (payload) => {
       const userLabData = userLabsDictionary[keyValue];
       if (userLabData) {
         labWithStatus.isCompleted = "yes";
-        if (lab.criteria.duration_in_months) {
+        if (lab.criteria.duration_in_days > 0) {
           console.log(lab);
           const endDate = new Date();
           const startDate = userLabData.created_at;
           const unit = "months";
           const durationInMonth = dateDifference(startDate, endDate, unit);
-          if (durationInMonth > lab.criteria.duration_in_months) {
+          if (durationInMonth > lab.criteria.duration_in_days) {
             labWithStatus.isExpired = "yes";
             labWithStatus.created_at = userLabData.created_at;
           }
