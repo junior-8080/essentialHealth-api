@@ -83,7 +83,7 @@ const appSetUp = async () => {
     firebase.setup();
     createUploadDirectories();
     app.listen(process.env.PORT || 3003, () => {
-      console.log(`${codeMessages.API_START_UP} on port:${process.env.PORT} date:${new Date().toISOString()}`);
+      console.log(`${codeMessages.API_START_UP} on port:${process.env.PORT} date :${new Date().toISOString()}`);
     });
   } catch (error) {
     console.log("🚀 ~ appSetUp ~ error:", error);
