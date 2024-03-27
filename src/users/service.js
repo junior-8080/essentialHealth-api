@@ -296,6 +296,7 @@ export const fetchUserRecommendedLabs = async (payload) => {
           }
         }
       }
+      labWithStatus.result = userLabData;
       return labWithStatus;
     });
     return {
