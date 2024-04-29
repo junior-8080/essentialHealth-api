@@ -4,6 +4,7 @@ import authorize from "../utils/middleware.js";
 const router = express.Router();
 
 router.post("/create-invoice", authorize, billingControllers.createCheckoutUrl);
+// router.get("/", authorize, billingControllers.getTransactions);
 router.get("/verify-transaction/:referenceId", authorize, billingControllers.verifyTransaction);
 router.post("/payment-webhook", billingControllers.paymentWebHook);
 

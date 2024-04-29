@@ -81,7 +81,6 @@ export const fetchMessageChats = async (payload = { page: 1, pageSize: 50 }) => 
   try {
     const { page, pageSize } = payload;
     const skip = (page - 1) * pageSize;
-
     const latestChats = await Message.aggregate([
       {
         $sort: { created_at: -1 }
