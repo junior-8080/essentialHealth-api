@@ -53,9 +53,9 @@ export const userValidationSchema = Joi.object({
 					"heat_rate",
 					"sleep_duration"
 				),
-				unit: Joi.string().valid("step", "mmHg", "bpm", "", "cups", "lbs", "hours", "°C", "mg/dL"),
+				unit: Joi.string().valid("step", "mmHg", "bpm", "", "cup", "lbs", "hours", "°C", "mg/dL"),
 				data_type: Joi.string().valid("string", "number", "date"),
-				target: Joi.number()
+				target: Joi.alternatives().try(Joi.number(), Joi.string())
 			})
 		)
 	})
@@ -89,9 +89,9 @@ export const userUpdateValidationSchema = Joi.object({
 					"heat_rate",
 					"sleep_duration"
 				),
-				unit: Joi.string().valid("step", "mmHg", "bpm", "", "cups", "lbs", "hours", "°C", "mg/dL"),
+				unit: Joi.string().valid("step", "mmHg", "bpm", "", "cup", "lbs", "hours", "°C", "mg/dL"),
 				data_type: Joi.string().valid("string", "number", "date"),
-				target: Joi.number()
+				target: Joi.alternatives().try(Joi.number(), Joi.string()).required()
 			})
 		)
 	})

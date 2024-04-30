@@ -1,3 +1,4 @@
+import { ObjectId } from "bson";
 import { codes } from "../constants/codes.js";
 import { fetchContent } from "../contents/service.js";
 import DeviceToken from "../models/DeviceToken.js";
@@ -8,8 +9,8 @@ import UserMediaActivity from "../models/UserMediaActivity.js";
 import Vital from "../models/Vital.js";
 import UserTargetVital from "../models/VitalTarget.js";
 import { fetchRewardClaims } from "../rewardClaims/service.js";
+import { fetchUserByPhoneNumber } from "../utils/common.js";
 import { createDictionary, dateDifference, defaultVitalsTargets, isDateLessThanToday } from "../utils/helpers.js";
-fetch 
 
 export const createUser = async (payload) => {
 	try {
@@ -261,32 +262,42 @@ export const fetchUserVitalNew = async (payload) => {
 		userVitalPreferences.map((userVital) => {
 			if (!userVitalsDictionary[userVital.type]) {
 				const defaultValue = {
-					...userVital,
-					value: 0
+					type: userVital.type,
+					unit: userVital.unit,
+					data_type: userVital.data_type,
+					target: userVital.target,
+					value: userVital.data_type === "string" ? "0" : 0,
+					user_id: new ObjectId(userId)
 				};
 				vitalsNotFound.push(defaultValue);
 			}
 		});
 		if (vitalsNotFound.length > 0) {
-			await Vital.bulkSave(vitalsNotFound);
+			await Vital.insertMany(vitalsNotFound);
 		}
 		const results = await Vital.find({
 			created_at: { $gte: created_at },
 			user_id: userId
 		});
-		const data = result.map((result) => {
-			const { _id, ...rest } = result;
+		console.log(results);
+		const formattedData = results.map((result) => {
 			return {
-				id: _id,
-				...rest
+				id: result._id.toString(),
+				type: result.type,
+				unit: result.unit,
+				data_type: result.data_type,
+				value: result.value,
+				target: result.target,
+				user_id: result.user_id.toString(),
+				created_at: result.created_at
 			};
 		});
-
 		return {
 			code: codes.RESOURCE_FETCHED,
-			data
+			data: formattedData
 		};
 	} catch (error) {
+		console.log("🚀 ~ fetchUserVitalNew ~ error:", error);
 		throw error;
 	}
 };

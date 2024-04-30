@@ -3,69 +3,68 @@ import { vitalValidationSchema, vitalUpdateValidationSchema } from "../utils/sch
 import * as vitalServices from "./service.js";
 
 export const createVital = async (request, response, next) => {
-  try {
-    const requestPayload = {
-      ...request.body,
-    };
-    const validPayload = await validateRequestPayload(vitalValidationSchema, requestPayload);
-    const responsePayload = await vitalServices.createVital(validPayload);
-    response.locals.responsePayload = {
-      ...responsePayload,
-    };
-    next();
-  } catch (error) {
-    response.locals.responsePayload = error;
-    next();
-  }
+	try {
+		const requestPayload = {
+			...request.body
+		};
+		const validPayload = await validateRequestPayload(vitalValidationSchema, requestPayload);
+		const responsePayload = await vitalServices.createVital(validPayload);
+		response.locals.responsePayload = {
+			...responsePayload
+		};
+		next();
+	} catch (error) {
+		response.locals.responsePayload = error;
+		next();
+	}
 };
 
 export const updateVital = async (request, response, next) => {
-  try {
-    const requestPayload = {
-      ...request.body,
-    };
-    const vitalId = request.params.vitalId;
-    const validPayload = await validateRequestPayload(vitalUpdateValidationSchema, requestPayload);
-    const responsePayload = await vitalServices.updateVital(vitalId, validPayload);
-    response.locals.responsePayload = {
-      ...responsePayload,
-    };
-    next();
-  } catch (error) {
-    response.locals.responsePayload = error;
-    next();
-  }
+	try {
+		const requestPayload = {
+			...request.body
+		};
+		const vitalId = request.params.vitalId;
+		const validPayload = await validateRequestPayload(vitalUpdateValidationSchema, requestPayload);
+		const responsePayload = await vitalServices.updateVital(vitalId, validPayload);
+		response.locals.responsePayload = {
+			...responsePayload
+		};
+		next();
+	} catch (error) {
+		response.locals.responsePayload = error;
+		next();
+	}
 };
 
 export const fetchVitals = async (request, response, next) => {
-  try {
-    const requestPayload = {
-      ...request.query,
-    };
-    const responsePayload = await vitalServices.fetchVitals(requestPayload);
-    response.locals.responsePayload = {
-      ...responsePayload,
-    };
-    next();
-  } catch (error) {
-    // console.log("🚀 ~ file: controller.js:48 ~ fetchVitals ~ error:", error);
-    response.locals.responsePayload = error;
-    next();
-  }
+	try {
+		const requestPayload = {
+			...request.query
+		};
+		const responsePayload = await vitalServices.fetchVitals(requestPayload);
+		response.locals.responsePayload = {
+			...responsePayload
+		};
+		next();
+	} catch (error) {
+		response.locals.responsePayload = error;
+		next();
+	}
 };
 
 export const fetchVital = async (request, response, next) => {
-  try {
-    const requestPayload = {
-      ...request.params,
-    };
-    const responsePayload = await vitalServices.fetchVital(requestPayload);
-    response.locals.responsePayload = {
-      ...responsePayload,
-    };
-    next();
-  } catch (error) {
-    response.locals.responsePayload = error;
-    next();
-  }
+	try {
+		const requestPayload = {
+			...request.params
+		};
+		const responsePayload = await vitalServices.fetchVital(requestPayload);
+		response.locals.responsePayload = {
+			...responsePayload
+		};
+		next();
+	} catch (error) {
+		response.locals.responsePayload = error;
+		next();
+	}
 };

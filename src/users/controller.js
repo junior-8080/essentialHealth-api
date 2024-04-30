@@ -115,7 +115,7 @@ export const fetchUserVital = async (request, response, next) => {
 			...request.params,
 			...request.query
 		};
-		const responsePayload = await userServices.fetchUserVital(requestPayload);
+		const responsePayload = await userServices.fetchUserVitalNew(requestPayload);
 		response.locals.responsePayload = {
 			...responsePayload
 		};

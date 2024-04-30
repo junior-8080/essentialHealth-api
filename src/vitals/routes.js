@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/", authorize, VitalControllers.createVital);
 router.put("/:vitalId", authorize, VitalControllers.updateVital);
-router.get("/", VitalControllers.fetchVitals);
+router.get("/",  VitalControllers.fetchVitals);
 router.get("/:vitalId", VitalControllers.fetchVital);
 
 export default router;
