@@ -9,7 +9,7 @@ import UserMediaActivity from "../models/UserMediaActivity.js";
 import Vital from "../models/Vital.js";
 import UserTargetVital from "../models/VitalTarget.js";
 import { fetchRewardClaims } from "../rewardClaims/service.js";
-import { fetchUserByPhoneNumber, retrieveUserSubscriptionPlan } from "../utils/common.js";
+import { customCreate, fetchUserByPhoneNumber, retrieveUserSubscriptionPlan } from "../utils/common.js";
 import { createDictionary, dateDifference, defaultVitalsTargets, isDateLessThanToday } from "../utils/helpers.js";
 
 export const createUser = async (payload) => {
