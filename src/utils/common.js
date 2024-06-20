@@ -66,7 +66,6 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, filters = {}, r
 			filters.reward = { $exists: true };
 			delete filters.challenge;
 		}
-		// console.log(filters);
 		page = parseInt(page);
 		pageSize = parseInt(pageSize);
 		const totalCount = await Model.countDocuments(filters);

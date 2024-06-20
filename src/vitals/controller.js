@@ -42,7 +42,12 @@ export const fetchVitals = async (request, response, next) => {
 		const requestPayload = {
 			...request.query
 		};
-		const responsePayload = await vitalServices.fetchVitals(requestPayload);
+		const role = request.userDetails?.role;
+		const userId = request.userDetails?.id;
+		if (role === "User") {
+			requestPayload.user_id = userId;
+		}
+		const responsePayload = await vitalServices.fetchVitals(requestPayload, role);
 		response.locals.responsePayload = {
 			...responsePayload
 		};
