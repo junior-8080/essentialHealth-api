@@ -53,7 +53,10 @@ const preferenceSchema = new mongoose.Schema({
 		type: [String],
 		default: []
 	},
-	vitals: [vitalsSchema]
+	vitals: {
+		type: [String],
+		default: []
+	}
 });
 
 const UserSchema = new mongoose.Schema({

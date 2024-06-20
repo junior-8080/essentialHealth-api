@@ -1,4 +1,3 @@
-import e from "express";
 import Joi from "joi";
 
 const measureSchema = Joi.object({
@@ -40,24 +39,7 @@ export const userValidationSchema = Joi.object({
 		weight_goal: measureSchema,
 		training_level: Joi.string().allow("Beginner", "Irregular training", "Medium", "Advanced"),
 		category_interest: Joi.array().items(Joi.string()),
-		vitals: Joi.array().items(
-			Joi.object({
-				type: Joi.string().valid(
-					"steps",
-					"blood_pressure",
-					"sugar_level",
-					"water_level",
-					"weight",
-					"cholesterol_level",
-					"body_temperature",
-					"heat_rate",
-					"sleep_duration"
-				),
-				unit: Joi.string().valid("step", "mmHg", "bpm", "", "cup", "lbs", "hours", "°C", "mg/dL"),
-				data_type: Joi.string().valid("string", "number", "date"),
-				target: Joi.alternatives().try(Joi.number(), Joi.string())
-			})
-		)
+		vitals: Joi.array().items(Joi.string())
 	})
 });
 
@@ -76,24 +58,7 @@ export const userUpdateValidationSchema = Joi.object({
 		weight_goal: measureSchema,
 		training_level: Joi.string().allow("Beginner", "Irregular training", "Medium", "Advanced"),
 		category_interest: Joi.array().items(Joi.string()),
-		vitals: Joi.array().items(
-			Joi.object({
-				type: Joi.string().valid(
-					"steps",
-					"blood_pressure",
-					"sugar_level",
-					"water_level",
-					"weight",
-					"cholesterol_level",
-					"body_temperature",
-					"heat_rate",
-					"sleep_duration"
-				),
-				unit: Joi.string().valid("step", "mmHg", "bpm", "", "cup", "lbs", "hours", "°C", "mg/dL"),
-				data_type: Joi.string().valid("string", "number", "date"),
-				target: Joi.alternatives().try(Joi.number(), Joi.string()).required()
-			})
-		)
+		vitals: Joi.array().items(Joi.string())
 	})
 }).min(1);
 
@@ -216,6 +181,9 @@ export const shortValidationSchema = Joi.object({
 	category_id: Joi.string()
 		.pattern(/^[0-9a-fA-F]{24}$/)
 		.required(),
+	tag_id: Joi.string()
+		.pattern(/^[0-9a-fA-F]{24}$/)
+		.required(),
 	publish_date: Joi.date().required()
 });
 
@@ -223,6 +191,7 @@ export const shortUpdateValidationSchema = Joi.object({
 	resource: Joi.string(),
 	type: Joi.string().allow("image", "note", "short-video"),
 	category_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+	tag_id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
 	publish_date: Joi.date()
 });
 
@@ -259,42 +228,6 @@ export const vitalValidationSchema = Joi.object({
 		target: Joi.number().required(),
 		unit: Joi.string().valid("cups").required()
 	}).required(),
-	user_id: Joi.string().required()
-});
-
-const vitalValidationSchemaNew = Joi.object({
-	type: Joi.string().valid(
-		"steps",
-		"blood_pressure",
-		"sugar_level",
-		"water_level",
-		"weight",
-		"cholesterol_level",
-		"body_temperature",
-		"heat_rate",
-		"sleep_duration"
-	),
-	unit: Joi.string().valid("step", "mmHg", "bpm", "", "cups", "lbs", "hours", "°C", "mg/dL"),
-	data_type: Joi.string().valid("string", "number", "date"),
-	value: Joi.number().required(),
-	user_id: Joi.string().required()
-});
-
-const vitalUpdateValidationSchemaNew = Joi.object({
-	type: Joi.string().valid(
-		"steps",
-		"blood_pressure",
-		"sugar_level",
-		"water_level",
-		"weight",
-		"cholesterol_level",
-		"body_temperature",
-		"heat_rate",
-		"sleep_duration"
-	),
-	unit: Joi.string().valid("step", "mmHg", "bpm", "", "cups", "lbs", "hours", "°C", "mg/dL"),
-	data_type: Joi.string().valid("string", "number", "date"),
-	value: Joi.number().required(),
 	user_id: Joi.string().required()
 });
 
@@ -436,4 +369,20 @@ export const userLabSchema = Joi.object({
 		.regex(/^[0-9a-fA-F]{24}$/)
 		.required(),
 	lab_result: Joi.string()
+});
+
+export const vitalTypeSchema = Joi.object({
+	title: Joi.string().required(),
+	type: Joi.string().required(),
+	unit: Joi.string().optional(),
+	data_type: Joi.string().optional(),
+	icon: Joi.string().optional()
+});
+
+export const updateVitalTypeScheme = Joi.object({
+	title: Joi.string(),
+	type: Joi.string(),
+	unit: Joi.string(),
+	data_type: Joi.string(),
+	icon: Joi.string()
 });

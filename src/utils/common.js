@@ -1,6 +1,11 @@
 import User from "../models/User.js";
 import Category from "../models/Category.js";
-import { contentTransformer, defaultTransformer, rewardClaimTransformer } from "./dataTransformers.js";
+import {
+	contentTransformer,
+	defaultTransformer,
+	rewardClaimTransformer,
+	shortTransformer
+} from "./dataTransformers.js";
 import mongoose, { Model } from "mongoose";
 import Transactions from "../models/Transactions.js";
 import Subscription from "../models/Subscription.js";
@@ -49,7 +54,7 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, filters = {}, r
 			endOfDay.setHours(23, 59, 59, 999);
 			filters.publish_date = { $gte: filters.publish_date, $lt: endOfDay };
 		}
-		console.log(filters);
+
 		if (filters.created_at) {
 			filters.created_at = new Date(filters.created_at);
 			const endOfDay = new Date(filters.created_at);
@@ -79,6 +84,8 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, filters = {}, r
 			case "user_id,reward_id":
 				results = rewardClaimTransformer(results);
 				break;
+			case "tag_id":
+				results = shortTransformer(results);
 			default:
 				results = defaultTransformer(results);
 				break;

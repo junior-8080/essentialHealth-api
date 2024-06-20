@@ -11,6 +11,7 @@ import UserTargetVital from "../models/VitalTarget.js";
 import { fetchRewardClaims } from "../rewardClaims/service.js";
 import { customCreate, fetchUserByPhoneNumber, paginate, retrieveUserSubscriptionPlan } from "../utils/common.js";
 import { createDictionary, dateDifference, defaultVitalsTargets, isDateLessThanToday } from "../utils/helpers.js";
+import VitalType from "../models/VitalType.js";
 
 export const createUser = async (payload) => {
 	try {
@@ -253,14 +254,16 @@ export const fetchUserVitalNew = async (payload) => {
 			};
 		}
 		const userVitalPreferences = userData.preference.vitals;
+		const userVitalPreferencesData = await VitalType.find({ type: { $in: userVitalPreferences } });
 		const userVitalResults = await Vital.find({
 			created_at: { $gte: created_at },
 			user_id: userId
 		});
 		const userVitalsDictionary = createDictionary(userVitalResults, "type");
 		const vitalsNotFound = [];
-		userVitalPreferences.map((userVital) => {
+		userVitalPreferencesData.map((userVital) => {
 			if (!userVitalsDictionary[userVital.type]) {
+				console.log("Not there");
 				const defaultValue = {
 					type: userVital.type,
 					unit: userVital.unit,
@@ -279,7 +282,6 @@ export const fetchUserVitalNew = async (payload) => {
 			created_at: { $gte: created_at },
 			user_id: userId
 		});
-		console.log(results);
 		const formattedData = results.map((result) => {
 			return {
 				id: result._id.toString(),

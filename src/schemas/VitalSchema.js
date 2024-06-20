@@ -3,22 +3,11 @@ import mongoose, { Schema } from "mongoose";
 const VitalTargetSchema = new mongoose.Schema({
 	type: {
 		type: String,
-		enum: [
-			"steps",
-			"blood_pressure",
-			"sugar_level",
-			"water_level",
-			"weight",
-			"cholesterol_level",
-			"body_temperature",
-			"heart_rate",
-			"sleep_duration"
-		],
 		required: true
 	},
 	unit: {
 		type: String,
-		enum: ["step", "mmHg", "bpm", "", "cup", "lbs", "hours", "°C", "mg/dL"],
+
 		required: true
 	},
 	data_type: {
@@ -27,8 +16,7 @@ const VitalTargetSchema = new mongoose.Schema({
 		required: true
 	},
 	target: {
-		type: Schema.Types.Mixed,
-		required: true
+		type: Schema.Types.Mixed
 	},
 	value: {
 		type: Schema.Types.Mixed
