@@ -69,10 +69,7 @@ export const fetchUser = async (payload) => {
 		if (!userSubscriptionData || isSubscriptionExpired) {
 			userData = await revokeUserSubscription(userId);
 		}
-		return {
-			code: codes.RESOURCE_FETCHED,
-			data: userData
-		};
+		return userData;
 	} catch (error) {
 		throw error;
 	}
@@ -326,7 +323,9 @@ export const deleteUser = async (userId) => {
 export const fetchUserRecommendedLabs = async (payload) => {
 	try {
 		const { userId } = payload;
-		const { data: userData } = await fetchUser({ userId });
+		const userResult = await fetchUser({ userId });
+		const userData = userResult.data;
+
 		const ageEndDate = new Date();
 		const ageUnit = "years";
 		const userAge = dateDifference(userData.dob, ageEndDate, ageUnit);
