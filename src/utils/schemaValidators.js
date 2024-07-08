@@ -232,7 +232,7 @@ export const vitalValidationSchema = Joi.object({
 });
 
 export const vitalUpdateValidationSchema = Joi.object({
-	value: Joi.number().required()
+	value: Joi.alternatives().try(Joi.number(), Joi.string()).required()
 });
 
 export const vitalTargetValidationSchema = Joi.object({
