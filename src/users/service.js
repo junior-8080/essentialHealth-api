@@ -335,7 +335,7 @@ export const fetchUserRecommendedLabs = async (payload) => {
 			"criteria.gender": { $in: [userData.gender] }
 		};
 		const recommendedLabs = await Labs.find(recommendationFilter);
-		const userLabs = await UserLabs.find({ user_id: userId });
+		const userLabs = await UserLabs.find({ user_id: userId, type: "recommended" });
 		const userLabsDictionaryKey = "lab_id";
 		const userLabsDictionary = createDictionary(userLabs, userLabsDictionaryKey);
 		const results = recommendedLabs.map((lab) => {
@@ -372,12 +372,37 @@ export const fetchUserRecommendedLabs = async (payload) => {
 	}
 };
 
-export const createUserLabResult = async (payload) => {
+export const createUserRecommendedLabResult = async (payload) => {
 	try {
 		const userLabData = await customCreate(UserLabs, payload);
 		return {
 			code: codes.RESOURCE_CREATED,
 			data: userLabData
+		};
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const createUserLab = async (payload) => {
+	try {
+		const userLabData = await customCreate(UserLabs, payload);
+		return {
+			code: codes.RESOURCE_CREATED,
+			data: userLabData
+		};
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const fetchUserLabs = async (payload = {}) => {
+	try {
+		const { page, pageSize, ...filters } = payload;
+		const result = await paginate({ Model: UserLabs, page, pageSize, filters });
+		return {
+			code: codes.RESOURCE_FETCHED,
+			data: result
 		};
 	} catch (error) {
 		throw error;

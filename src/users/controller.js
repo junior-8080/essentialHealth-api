@@ -162,6 +162,25 @@ export const createDeviceToken = async (request, response, next) => {
 	}
 };
 
+export const createUserRecommendedLabResult = async (request, response, next) => {
+	try {
+		const requestPayload = {
+			...request.body,
+			type: "recommended"
+		};
+		const validPayload = await validateRequestPayload(userLabSchema, requestPayload);
+		validPayload.user_id = request.userDetails.id;
+		const responsePayload = await userServices.createUserRecommendedLabResult(validPayload);
+		response.locals.responsePayload = {
+			...responsePayload
+		};
+		next();
+	} catch (error) {
+		response.locals.responsePayload = error;
+		next();
+	}
+};
+
 export const fetchUserRecommendedLabs = async (request, response, next) => {
 	try {
 		const userId = request.userDetails.id;
@@ -175,20 +194,32 @@ export const fetchUserRecommendedLabs = async (request, response, next) => {
 	}
 };
 
-export const createUserLabResult = async (request, response, next) => {
+export const createUserLab = async (request, response, next) => {
 	try {
 		const requestPayload = {
-			...request.body
+			user_id: request.userDetails.id,
+			lab_result: request.body.lab_result,
+			type: "unrecommended"
 		};
-		const validPayload = await validateRequestPayload(userLabSchema, requestPayload);
-		validPayload.user_id = request.userDetails.id;
-		const responsePayload = await userServices.createUserLabResult(validPayload);
+		const responsePayload = await userServices.createUserLab(requestPayload);
 		response.locals.responsePayload = {
 			...responsePayload
 		};
 		next();
 	} catch (error) {
-		console.log("🚀 ~ createUserLabResult ~ error:", error);
+		response.locals.responsePayload = error;
+		next();
+	}
+};
+
+export const fetchUserLabs = async (request, response, next) => {
+	try {
+		const userId = request.userDetails.id;
+		const requestPayload = { user_id: userId, type: "unrecommended" };
+		const responsePayload = await userServices.fetchUserLabs(requestPayload);
+		response.locals.responsePayload = responsePayload;
+		next();
+	} catch (error) {
 		response.locals.responsePayload = error;
 		next();
 	}
