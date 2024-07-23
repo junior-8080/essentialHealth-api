@@ -65,7 +65,8 @@ export const fetchUser = async (payload) => {
 		if (userData.subscription_type) {
 			isSubscriptionExpired = isDateLessThanToday(userData.subscription_type.expiry_date);
 		}
-		const userSubscriptionData = retrieveUserSubscriptionPlan(userId);
+		const userSubscriptionData = await retrieveUserSubscriptionPlan(userId);
+
 		if (!userSubscriptionData || isSubscriptionExpired) {
 			userData = await revokeUserSubscription(userId);
 		}

@@ -48,6 +48,7 @@ export const fetchUser = async (request, response, next) => {
 		};
 		next();
 	} catch (error) {
+		console.log("🚀 ~ fetchUser ~ error:", error);
 		response.locals.responsePayload = error;
 		next();
 	}
