@@ -5,8 +5,8 @@
 	"main": "app.js",
 	"type": "module",
 	"engines": {
-		"npm": "10.2.3",
-		"node": "20.10.0"
+		"npm": "9.5.1",
+		"node": "16.x"
 	},
 	"dependencies": {
 		"@sentry/node": "^7.17.3",
