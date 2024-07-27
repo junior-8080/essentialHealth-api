@@ -1,3 +1,4 @@
+import { codes } from "../constants/codes.js";
 import { validateRequestPayload } from "../utils/helpers.js";
 import {
 	userActivityValidationSchema,
@@ -215,7 +216,14 @@ export const createUserLab = async (request, response, next) => {
 
 export const fetchUserLabs = async (request, response, next) => {
 	try {
-		const userId = request.userDetails.id;
+		const userRole = request.userDetails.role;
+		let userId = userRole === "Admin" ? request.params.userId : request.userDetails.id;
+		if (!userId) {
+			throw {
+				code: codes.INVALID_PARAMETERS,
+				message: "invalid user"
+			};
+		}
 		const requestPayload = { user_id: userId, type: "unrecommended" };
 		const responsePayload = await userServices.fetchUserLabs(requestPayload);
 		response.locals.responsePayload = responsePayload;

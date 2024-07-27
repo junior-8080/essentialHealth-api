@@ -66,7 +66,6 @@ export const fetchUser = async (payload) => {
 			isSubscriptionExpired = isDateLessThanToday(userData.subscription_type.expiry_date);
 		}
 		const userSubscriptionData = await retrieveUserSubscriptionPlan(userId);
-
 		if (!userSubscriptionData || isSubscriptionExpired) {
 			userData = await revokeUserSubscription(userId);
 		}
@@ -173,6 +172,8 @@ export const createUserVitalTarget = async (payload) => {
 		throw error;
 	}
 };
+
+// deprecated function to go  fetchUserVitalNew
 export const fetchUserVital = async (payload) => {
 	try {
 		let { userId, created_at } = payload;
