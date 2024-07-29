@@ -16,6 +16,9 @@ const UserLabSchema = new mongoose.Schema({
 		type: String,
 		enum: ["recommended", "unrecommended"]
 	},
+	name: {
+		type: String
+	},
 	created_at: {
 		type: Date,
 		default: Date.now

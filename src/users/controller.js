@@ -199,6 +199,7 @@ export const fetchUserRecommendedLabs = async (request, response, next) => {
 export const createUserLab = async (request, response, next) => {
 	try {
 		const requestPayload = {
+			name: request.body.name,
 			user_id: request.userDetails.id,
 			lab_result: request.body.lab_result,
 			type: "unrecommended"

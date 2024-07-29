@@ -336,7 +336,8 @@ export const userLabSchema = Joi.object({
 	lab_id: Joi.string()
 		.regex(/^[0-9a-fA-F]{24}$/)
 		.required(),
-	lab_result: Joi.string()
+	lab_result: Joi.string(),
+	name: Joi.string()
 });
 
 export const vitalTypeSchema = Joi.object({
