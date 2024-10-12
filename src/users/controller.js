@@ -224,7 +224,11 @@ export const fetchUserLabs = async (request, response, next) => {
 				message: "invalid user"
 			};
 		}
-		const requestPayload = { user_id: userId, type: "unrecommended" };
+		const requestPayload = { user_id: userId };
+		if(userRole === "User"){
+			requestPayload.type =  "unrecommended"
+		}
+
 		const responsePayload = await userServices.fetchUserLabs(requestPayload);
 		response.locals.responsePayload = responsePayload;
 		next();
