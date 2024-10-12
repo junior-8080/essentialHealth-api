@@ -9,7 +9,13 @@ import UserMediaActivity from "../models/UserMediaActivity.js";
 import Vital from "../models/Vital.js";
 import UserTargetVital from "../models/VitalTarget.js";
 import { fetchRewardClaims } from "../rewardClaims/service.js";
-import { customCreate, fetchUserByPhoneNumber, paginate, retrieveUserSubscriptionPlan } from "../utils/common.js";
+import {
+	customCreate,
+	deleteRecord,
+	fetchUserByPhoneNumber,
+	paginate,
+	retrieveUserSubscriptionPlan
+} from "../utils/common.js";
 import { createDictionary, dateDifference, defaultVitalsTargets, isDateLessThanToday } from "../utils/helpers.js";
 import VitalType from "../models/VitalType.js";
 
@@ -298,7 +304,6 @@ export const fetchUserVitalNew = async (payload) => {
 			data: formattedData
 		};
 	} catch (error) {
-		console.log("🚀 ~ fetchUserVitalNew ~ error:", error);
 		throw error;
 	}
 };
@@ -401,10 +406,23 @@ export const createUserLab = async (payload) => {
 export const fetchUserLabs = async (payload = {}) => {
 	try {
 		const { page, pageSize, ...filters } = payload;
-		const result = await paginate({ Model: UserLabs, page, pageSize, filters });
+		const result = await paginate({ Model: UserLabs, page, pageSize, filters ,referenceName:"lab_id"});
 		return {
 			code: codes.RESOURCE_FETCHED,
-			data: result
+			data:{
+				...result,
+				results:  result.results.map((item) => {
+					if(item.type === "recommended"){
+						const labName = item.lab_id.title;
+						delete item.lab_id;
+						return {
+							name:labName,
+							...item
+						}
+					}
+					return item
+				})
+			}
 		};
 	} catch (error) {
 		throw error;
