@@ -336,7 +336,7 @@ export const fetchUserRecommendedLabs = async (payload) => {
 			"criteria.max_age": { $gte: userAge },
 			"criteria.gender": { $in: [userData.gender] }
 		};
-		const recommendedLabs = await Labs.find(recommendationFilter);
+		const recommendedLabs = await Labs.find(recommendationFilter) || []
 		const userLabs = await UserLabs.find({ user_id: userId, type: "recommended" });
 		const userLabsDictionaryKey = "lab_id";
 		const userLabsDictionary = createDictionary(userLabs, userLabsDictionaryKey);

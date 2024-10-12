@@ -1,5 +1,5 @@
-import { codes } from "../constants/codes.js";
-import { validateRequestPayload } from "../utils/helpers.js";
+import {codes} from "../constants/codes.js";
+import {validateRequestPayload} from "../utils/helpers.js";
 import {
 	userActivityValidationSchema,
 	userLabSchema,
@@ -185,10 +185,9 @@ export const createUserRecommendedLabResult = async (request, response, next) =>
 
 export const fetchUserRecommendedLabs = async (request, response, next) => {
 	try {
-		const userId = request.userDetails.id;
+		const userId = request.userDetails.role === "Admin" ? request.params.userId : request.userDetails.id;
 		const requestPayload = { userId };
-		const responsePayload = await userServices.fetchUserRecommendedLabs(requestPayload);
-		response.locals.responsePayload = responsePayload;
+		response.locals.responsePayload = await userServices.fetchUserRecommendedLabs(requestPayload);
 		next();
 	} catch (error) {
 		response.locals.responsePayload = error;
