@@ -11,37 +11,6 @@ const measureSchema = new mongoose.Schema({
 	}
 });
 
-const vitalsSchema = new mongoose.Schema({
-	type: {
-		type: String,
-		enum: [
-			"steps",
-			"blood_pressure",
-			"sugar_level",
-			"water_level",
-			"weight",
-			"cholesterol_level",
-			"body_temperature",
-			"heart_rate",
-			"sleep_duration"
-		],
-		required: true
-	},
-	unit: {
-		type: String,
-		enum: ["step", "mmHg", "bpm", "", "cup", "lbs", "hours", "°C", "mg/dL"],
-		required: true
-	},
-	data_type: {
-		type: String,
-		enum: ["string", "number", "date"],
-		required: true
-	},
-	target: {
-		type: Schema.Types.Mixed,
-		required: true
-	}
-});
 const preferenceSchema = new mongoose.Schema({
 	main_goal: String,
 	weight_goal: measureSchema,
@@ -54,7 +23,7 @@ const preferenceSchema = new mongoose.Schema({
 		default: []
 	},
 	vitals: {
-		type: [String],
+		type: [{type:  mongoose.Schema.Types.ObjectId, ref:'VitalType'}],
 		default: []
 	}
 });

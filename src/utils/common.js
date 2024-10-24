@@ -34,7 +34,7 @@ export const fetchCategoryByTitle = async (title) => {
 	}
 };
 
-export const paginate = async ({ Model, page = 1, pageSize = 10, filters = {}, referenceName = "", sortOder }) => {
+export const paginate = async ({ Model, page = 1, pageSize = 1000, filters = {}, referenceName = "", sortOder }) => {
 	try {
 		if (!Model) {
 			throw new Error("Model is required");
@@ -71,13 +71,13 @@ export const paginate = async ({ Model, page = 1, pageSize = 10, filters = {}, r
 		const totalCount = await Model.countDocuments(filters);
 		const totalPages = Math.ceil(totalCount / pageSize);
 		const populateFields = referenceName ? referenceName.split(",") : "";
-		let results = await Model.find(filters)
+		let results = await Model.find(filters).lean()
 			.populate(populateFields)
 			.sort(sortOder || { created_at: -1 })
 			.skip((page - 1) * pageSize)
 			.limit(pageSize);
 		switch (referenceName) {
-			case "instructor_id":
+			case "instructor_id,category_id":
 				results = contentTransformer(results);
 				break;
 			case "user_id,reward_id":

@@ -1,6 +1,9 @@
 import { codes } from "../constants/codes.js";
 import Vital from "../models/Vital.js";
 import { customCreate, fetchCategoryByTitle, paginate } from "../utils/common.js";
+import {fetchVitalTypes} from "../vital_types/service.js";
+import {vitalDetailsTransformer} from "../utils/helpers.js";
+import VitalType from "../models/VitalType.js";
 
 export const createVital = async (payload) => {
 	try {
@@ -32,12 +35,18 @@ export const fetchVitals = async (payload = {}) => {
 	try {
 		const { page, pageSize, ...filters } = payload;
 		const sortOder = { created_at: -1 };
-		const result = await paginate({ Model: Vital, page, pageSize, filters, sortOder });
+		const vitalsResult = await paginate({ Model: Vital, page, pageSize, filters, sortOder });
+		const vitalTypeIds = vitalsResult.results.map(vital => vital.vital_id);
+		const vitalTypes = await VitalType.find({ _id: { $in: vitalTypeIds } }).exec();
 		return {
 			code: codes.RESOURCE_FETCHED,
-			data: result
+			data: {
+				...vitalsResult,
+				results:  vitalDetailsTransformer(vitalsResult.results,vitalTypes)
+			}
 		};
 	} catch (error) {
+		console.log(error)
 		throw error;
 	}
 };

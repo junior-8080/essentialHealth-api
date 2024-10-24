@@ -117,8 +117,7 @@ export const fetchUserVital = async (request, response, next) => {
 			...request.params,
 			...request.query
 		};
-
-		const responsePayload = await userServices.fetchUserVitalNew(requestPayload);
+		const responsePayload = await userServices.fetchUserVitalNewNew(requestPayload);
 		response.locals.responsePayload = {
 			...responsePayload
 		};
@@ -229,10 +228,29 @@ export const fetchUserLabs = async (request, response, next) => {
 			requestPayload.type =  "unrecommended"
 		}
 
-		const responsePayload = await userServices.fetchUserLabs(requestPayload);
-		response.locals.responsePayload = responsePayload;
+		response.locals.responsePayload = await userServices.fetchUserLabs(requestPayload);
 		next();
 	} catch (error) {
+		response.locals.responsePayload = error;
+		next();
+	}
+};
+
+export const fetchUntrackedVitals  = async (request, response, next) => {
+	try {
+		const userRole = request.userDetails.role;
+		let userId = userRole === "Admin" ? request.params.userId : request.userDetails.id;
+		if (!userId) {
+			throw {
+				code: codes.INVALID_PARAMETERS,
+				message: "invalid user"
+			};
+		}
+		const requestPayload = {  userId };
+		response.locals.responsePayload = await userServices.fetchUntrackedVitals(requestPayload);
+		next();
+	} catch (error) {
+		console.log(error)
 		response.locals.responsePayload = error;
 		next();
 	}

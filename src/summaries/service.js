@@ -7,7 +7,7 @@ import Category from "../models/Category.js";
 
 export const fetchTagContentSummaries = async (filterId, userId = "") => {
   try {
-    const referenceName = "instructor_id";
+    const referenceName = "instructor_id,category_id";
     const allTags = await Category.find();
     const allPromise = allTags.map((tag) => {
       const stringTag = tag._id.toString();

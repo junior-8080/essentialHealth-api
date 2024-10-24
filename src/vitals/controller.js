@@ -47,7 +47,7 @@ export const fetchVitals = async (request, response, next) => {
 		if (role === "User") {
 			requestPayload.user_id = userId;
 		}
-		const responsePayload = await vitalServices.fetchVitals(requestPayload, role);
+		const responsePayload = await vitalServices.fetchVitals(requestPayload);
 		response.locals.responsePayload = {
 			...responsePayload
 		};

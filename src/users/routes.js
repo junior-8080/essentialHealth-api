@@ -1,6 +1,7 @@
 import express from "express";
 import * as userControllers from "./controller.js";
 import authorize from "../utils/middleware.js";
+import {fetchUntrackedVitals} from "./controller.js";
 const router = express.Router();
 
 router.post("/", userControllers.createUser);
@@ -15,6 +16,7 @@ router.get("/:userId/recommended-labs", authorize, userControllers.fetchUserReco
 router.post("/:userId/recommended-labs", authorize, userControllers.createUserRecommendedLabResult);
 router.post("/:userId/labs", authorize, userControllers.createUserLab);
 router.get("/:userId/labs", authorize, userControllers.fetchUserLabs);
+router.get("/:userId/untracked-vitals", authorize, userControllers.fetchUntrackedVitals);
 
 router.post("/:userId/device-token", userControllers.createDeviceToken);
 router.delete("/:userId", userControllers.deleteUser);

@@ -63,7 +63,7 @@ export const fetchContents = async (payload = {}, userId = "", userRole) => {
       const userSubscriptionOrder = await retrieveSubscriptionPlanOrder(userId);
       filters.subscription_order = { $lte: userSubscriptionOrder };
     }
-    const referenceName = "instructor_id";
+    const referenceName = "instructor_id,category_id";
     const sortOder = { publish_date: -1 };
     let data = await paginate({ Model: Content, page, pageSize, filters, referenceName, sortOder });
     if (userId) {

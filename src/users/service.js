@@ -1,6 +1,6 @@
-import { ObjectId } from "bson";
-import { codes } from "../constants/codes.js";
-import { fetchContent } from "../contents/service.js";
+import {ObjectId} from "bson";
+import {codes} from "../constants/codes.js";
+import {fetchContent} from "../contents/service.js";
 import DeviceToken from "../models/DeviceToken.js";
 import Labs from "../models/Lab.js";
 import User from "../models/User.js";
@@ -8,439 +8,497 @@ import UserLabs from "../models/UserLabs.js";
 import UserMediaActivity from "../models/UserMediaActivity.js";
 import Vital from "../models/Vital.js";
 import UserTargetVital from "../models/VitalTarget.js";
-import { fetchRewardClaims } from "../rewardClaims/service.js";
+import {fetchRewardClaims} from "../rewardClaims/service.js";
 import {
-	customCreate,
-	deleteRecord,
-	fetchUserByPhoneNumber,
-	paginate,
-	retrieveUserSubscriptionPlan
+    customCreate,
+    deleteRecord,
+    fetchUserByPhoneNumber,
+    paginate,
+    retrieveUserSubscriptionPlan
 } from "../utils/common.js";
-import { createDictionary, dateDifference, defaultVitalsTargets, isDateLessThanToday } from "../utils/helpers.js";
+import {
+    createDictionary,
+    dateDifference,
+    defaultVitalsTargets,
+    isDateLessThanToday,
+    userVitalDetailsTransformer
+} from "../utils/helpers.js";
 import VitalType from "../models/VitalType.js";
+import {fetchVitalTypes} from "../vital_types/service.js";
 
 export const createUser = async (payload) => {
-	try {
-		const userExists = await fetchUserByPhoneNumber(payload.phoneNumber);
-		if (userExists) {
-			throw {
-				code: codes.RESOURCE_EXISTS,
-				message: "phonenumber already exists",
-				data: payload
-			};
-		}
-		const userData = await customCreate(User, payload);
-		return {
-			code: codes.RESOURCE_CREATED,
-			data: userData
-		};
-	} catch (error) {
-		throw error;
-	}
+    try {
+        const userExists = await fetchUserByPhoneNumber(payload.phoneNumber);
+        if (userExists) {
+            throw {
+                code: codes.RESOURCE_EXISTS,
+                message: "phonenumber already exists",
+                data: payload
+            };
+        }
+        const userData = await customCreate(User, payload);
+        return {
+            code: codes.RESOURCE_CREATED,
+            data: userData
+        };
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const fetchUsers = async (payload = {}) => {
-	try {
-		const { page, pageSize, ...filters } = payload;
-		const result = await paginate({ Model: User, page, pageSize, filters });
-		return {
-			code: codes.RESOURCE_FETCHED,
-			data: result
-		};
-	} catch (error) {
-		throw error;
-	}
+    try {
+        const {page, pageSize, ...filters} = payload;
+        const result = await paginate({Model: User, page, pageSize, filters});
+        return {
+            code: codes.RESOURCE_FETCHED,
+            data: result
+        };
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const fetchUser = async (payload) => {
-	try {
-		const { userId } = payload;
-		let userData = null;
-		let isSubscriptionExpired = false;
-		const user = await User.findById(userId);
-		if (!user) {
-			throw {
-				code: codes.NOT_FOUND
-			};
-		}
-		const { _id, ...rest } = user._doc;
-		userData = {
-			id: _id,
-			...rest
-		};
-		if (userData.subscription_type) {
-			isSubscriptionExpired = isDateLessThanToday(userData.subscription_type.expiry_date);
-		}
-		const userSubscriptionData = await retrieveUserSubscriptionPlan(userId);
-		if (!userSubscriptionData || isSubscriptionExpired) {
-			userData = await revokeUserSubscription(userId);
-		}
-		return userData;
-	} catch (error) {
-		throw error;
-	}
+    try {
+        const {userId} = payload;
+        let userData = null;
+        let isSubscriptionExpired = false;
+        const user = await User.findById(userId);
+        if (!user) {
+            throw {
+                code: codes.NOT_FOUND
+            };
+        }
+        const {_id, ...rest} = user._doc;
+        userData = {
+            id: _id,
+            ...rest
+        };
+        if (userData.subscription_type) {
+            isSubscriptionExpired = isDateLessThanToday(userData.subscription_type.expiry_date);
+        }
+        const userSubscriptionData = await retrieveUserSubscriptionPlan(userId);
+        if (!userSubscriptionData || isSubscriptionExpired) {
+            userData = await revokeUserSubscription(userId);
+        }
+        return userData;
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const updateUser = async (userId, payload) => {
-	try {
-		const { _doc: updatedUser } = await User.findOneAndUpdate({ _id: userId }, { $set: payload }, { new: true });
-		const { _id, ...rest } = updatedUser;
-		return {
-			code: codes.RESOURCE_UPDATED,
-			data: {
-				id: _id,
-				...rest
-			}
-		};
-	} catch (error) {
-		throw error;
-	}
+    try {
+        const {_doc: updatedUser} = await User.findOneAndUpdate({_id: userId}, {$set: payload}, {new: true});
+        const {_id, ...rest} = updatedUser;
+        return {
+            code: codes.RESOURCE_UPDATED,
+            data: {
+                id: _id,
+                ...rest
+            }
+        };
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const revokeUserSubscription = async (userId) => {
-	try {
-		const { _doc: updatedUser } = await User.findOneAndUpdate(
-			{ _id: userId },
-			{ $unset: { subscription: "" } },
-			{ new: true }
-		);
-		const { _id, ...rest } = updatedUser;
-		return {
-			code: codes.RESOURCE_UPDATED,
-			data: {
-				id: _id,
-				...rest
-			}
-		};
-	} catch (error) {
-		throw error;
-	}
+    try {
+        const {_doc: updatedUser} = await User.findOneAndUpdate(
+            {_id: userId},
+            {$unset: {subscription: ""}},
+            {new: true}
+        );
+        const {_id, ...rest} = updatedUser;
+        return {
+            code: codes.RESOURCE_UPDATED,
+            data: {
+                id: _id,
+                ...rest
+            }
+        };
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const userMediaActivity = async (contents, userId) => {
-	try {
-		const results = await UserMediaActivity.find({ user_id: userId });
-		const watchedContent = {};
-		results.map((activity) => {
-			watchedContent[activity.content_id] = true;
-		});
-		const data = contents.map((content) => {
-			return {
-				...content,
-				watched: watchedContent[content.id] ? true : false
-			};
-		});
-		return data;
-	} catch (error) {
-		console.error("Error updating content:", error);
-	}
+    try {
+        const results = await UserMediaActivity.find({user_id: userId});
+        const watchedContent = {};
+        results.map((activity) => {
+            watchedContent[activity.content_id] = true;
+        });
+        const data = contents.map((content) => {
+            return {
+                ...content,
+                watched: watchedContent[content.id] ? true : false
+            };
+        });
+        return data;
+    } catch (error) {
+        console.error("Error updating content:", error);
+    }
 };
 
 export const createUserMediaActivity = async (payload) => {
-	try {
-		const { data } = await fetchContent(payload.content_id);
-		const contentReward = data.reward;
-		const userActivities = await UserMediaActivity.findOne({
-			content_id: payload.content_id,
-			user_id: payload.user_id,
-			isChallenge: contentReward ? "yes" : "no"
-		});
-		if (!userActivities) {
-			payload.points = contentReward ? contentReward.points : 0;
-			payload.isChallenge = contentReward ? "yes" : "no";
-			await customCreate(UserMediaActivity, payload);
-		}
-		const contentRewardPoints = !userActivities && contentReward ? contentReward.points : 0;
-		const updatedUser = await User.findByIdAndUpdate(
-			{ _id: payload.user_id },
-			{ $inc: { points: contentRewardPoints } },
-			{ new: true }
-		);
-		return {
-			code: codes.RESOURCE_CREATED,
-			data: {
-				points: updatedUser.points
-			}
-		};
-	} catch (error) {
-		throw error;
-	}
+    try {
+        const {data} = await fetchContent(payload.content_id);
+        const contentReward = data.reward;
+        const userActivities = await UserMediaActivity.findOne({
+            content_id: payload.content_id,
+            user_id: payload.user_id,
+            isChallenge: contentReward ? "yes" : "no"
+        });
+        if (!userActivities) {
+            payload.points = contentReward ? contentReward.points : 0;
+            payload.isChallenge = contentReward ? "yes" : "no";
+            await customCreate(UserMediaActivity, payload);
+        }
+        const contentRewardPoints = !userActivities && contentReward ? contentReward.points : 0;
+        const updatedUser = await User.findByIdAndUpdate(
+            {_id: payload.user_id},
+            {$inc: {points: contentRewardPoints}},
+            {new: true}
+        );
+        return {
+            code: codes.RESOURCE_CREATED,
+            data: {
+                points: updatedUser.points
+            }
+        };
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const createUserVitalTarget = async (payload) => {
-	try {
-		const userVitalData = await customCreate(UserTargetVital, payload);
-		return {
-			code: codes.RESOURCE_CREATED,
-			data: userVitalData
-		};
-	} catch (error) {
-		throw error;
-	}
+    try {
+        const userVitalData = await customCreate(UserTargetVital, payload);
+        return {
+            code: codes.RESOURCE_CREATED,
+            data: userVitalData
+        };
+    } catch (error) {
+        throw error;
+    }
 };
 
 // deprecated function to go  fetchUserVitalNew
 export const fetchUserVital = async (payload) => {
-	try {
-		let { userId, created_at } = payload;
-		if (!created_at) {
-			created_at = new Date(Date.now()).toISOString();
-			created_at = created_at.split("T")[0];
-		}
+    try {
+        let {userId, created_at} = payload;
+        if (!created_at) {
+            created_at = new Date(Date.now()).toISOString();
+            created_at = created_at.split("T")[0];
+        }
 
-		const result = await Vital.find({
-			created_at: { $gte: created_at },
-			user_id: userId
-		});
-		let userVitals = result[0];
-		const defaultVitals = {
-			blood_pressure: {
-				dia: {
-					progress: 0,
-					target: defaultVitalsTargets.dia,
-					unit: "mmHg"
-				},
-				sys: {
-					progress: 0,
-					target: defaultVitalsTargets.sys,
-					unit: "mmHg"
-				},
-				pulse: {
-					progress: 0,
-					target: defaultVitalsTargets.pulse,
-					unit: "heart rate"
-				}
-			},
-			sugar_level: {
-				progress: 0,
-				target: defaultVitalsTargets.sugar_level,
-				unit: "mmol/L"
-			},
-			steps: {
-				progress: 0,
-				target: defaultVitalsTargets.steps,
-				unit: "steps"
-			},
-			water_cups: {
-				progress: 0,
-				target: defaultVitalsTargets.water_cups,
-				unit: "cups"
-			},
-			user_id: userId
-		};
+        const result = await Vital.find({
+            created_at: {$gte: created_at},
+            user_id: userId
+        });
+        let userVitals = result[0];
+        const defaultVitals = {
+            blood_pressure: {
+                dia: {
+                    progress: 0,
+                    target: defaultVitalsTargets.dia,
+                    unit: "mmHg"
+                },
+                sys: {
+                    progress: 0,
+                    target: defaultVitalsTargets.sys,
+                    unit: "mmHg"
+                },
+                pulse: {
+                    progress: 0,
+                    target: defaultVitalsTargets.pulse,
+                    unit: "heart rate"
+                }
+            },
+            sugar_level: {
+                progress: 0,
+                target: defaultVitalsTargets.sugar_level,
+                unit: "mmol/L"
+            },
+            steps: {
+                progress: 0,
+                target: defaultVitalsTargets.steps,
+                unit: "steps"
+            },
+            water_cups: {
+                progress: 0,
+                target: defaultVitalsTargets.water_cups,
+                unit: "cups"
+            },
+            user_id: userId
+        };
 
-		if (!userVitals) {
-			userVitals = await Vital.create(defaultVitals);
-		}
-		const stringifyData = JSON.stringify(userVitals);
-		const data = JSON.parse(stringifyData);
-		data.id = data._id;
-		delete data._id;
-		return {
-			code: codes.RESOURCE_FETCHED,
-			data
-		};
-	} catch (error) {
-		throw error;
-	}
+        if (!userVitals) {
+            userVitals = await Vital.create(defaultVitals);
+        }
+        const stringifyData = JSON.stringify(userVitals);
+        const data = JSON.parse(stringifyData);
+        data.id = data._id;
+        delete data._id;
+        return {
+            code: codes.RESOURCE_FETCHED,
+            data
+        };
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const fetchUserVitalNew = async (payload) => {
-	try {
-		let { userId, created_at } = payload;
-		if (!created_at) {
-			created_at = new Date(Date.now()).toISOString();
-			created_at = created_at.split("T")[0];
-		}
-		const userData = await User.findById(userId);
-		if (!userData) {
-			throw {
-				code: codes.NOT_FOUND
-			};
-		}
-		const userVitalPreferences = userData.preference.vitals;
-		const userVitalPreferencesData = await VitalType.find({ type: { $in: userVitalPreferences } });
-		const userVitalResults = await Vital.find({
-			created_at: { $gte: created_at },
-			user_id: userId
-		});
-		const userVitalsDictionary = createDictionary(userVitalResults, "type");
-		const vitalsNotFound = [];
-		userVitalPreferencesData.map((userVital) => {
-			if (!userVitalsDictionary[userVital.type]) {
-				console.log("Not there");
-				const defaultValue = {
-					type: userVital.type,
-					unit: userVital.unit,
-					data_type: userVital.data_type,
-					target: userVital.target,
-					value: userVital.data_type === "string" ? "0" : 0,
-					user_id: new ObjectId(userId)
-				};
-				vitalsNotFound.push(defaultValue);
-			}
-		});
-		if (vitalsNotFound.length > 0) {
-			await Vital.insertMany(vitalsNotFound);
-		}
-		const results = await Vital.find({
-			created_at: { $gte: created_at },
-			user_id: userId
-		});
-		const formattedData = results.map((result) => {
-			return {
-				id: result._id.toString(),
-				type: result.type,
-				unit: result.unit,
-				data_type: result.data_type,
-				value: result.value,
-				target: result.target,
-				user_id: result.user_id.toString(),
-				created_at: result.created_at
-			};
-		});
-		return {
-			code: codes.RESOURCE_FETCHED,
-			data: formattedData
-		};
-	} catch (error) {
-		throw error;
-	}
+    try {
+        let {userId, created_at} = payload;
+        if (!created_at) {
+            created_at = new Date(Date.now()).toISOString();
+            created_at = created_at.split("T")[0];
+        }
+        const userData = await User.findById(userId);
+        if (!userData) {
+            throw {
+                code: codes.NOT_FOUND
+            };
+        }
+        const userVitalPreferences = userData.preference.vitals;
+        const userVitalPreferencesData = await VitalType.find({type: {$in: userVitalPreferences}});
+        const userVitalResults = await Vital.find({
+            created_at: {$gte: created_at},
+            user_id: userId
+        });
+        const userVitalsDictionary = createDictionary(userVitalResults, "type");
+        const vitalsNotFound = [];
+        userVitalPreferencesData.map((userVital) => {
+            if (!userVitalsDictionary[userVital.type]) {
+                console.log("Not there");
+                const defaultValue = {
+                    type: userVital.type,
+                    unit: userVital.unit,
+                    data_type: userVital.data_type,
+                    target: userVital.target,
+                    value: userVital.data_type === "string" ? "0" : 0,
+                    user_id: new ObjectId(userId)
+                };
+                vitalsNotFound.push(defaultValue);
+            }
+        });
+        if (vitalsNotFound.length > 0) {
+            await Vital.insertMany(vitalsNotFound);
+        }
+        const results = await Vital.find({
+            created_at: {$gte: created_at},
+            user_id: userId
+        });
+        const formattedData = results.map((result) => {
+            return {
+                id: result._id.toString(),
+                type: result.type,
+                unit: result.unit,
+                data_type: result.data_type,
+                value: result.value,
+                target: result.target,
+                user_id: result.user_id.toString(),
+                created_at: result.created_at
+            };
+        });
+        return {
+            code: codes.RESOURCE_FETCHED,
+            data: formattedData
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+export const fetchUserVitalNewNew = async (payload) => {
+    try {
+        let {userId} = payload;
+        const userResult = await fetchUser({userId})
+        const user = userResult.data;
+        if (!user) {
+            throw {
+                code: codes.NOT_FOUND
+            };
+        }
+        const userVitalPreferences = user.preference.vitals;
+        const todayStart = new Date();
+        const todayEnd = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+        todayEnd.setHours(23, 59, 59, 999)
+
+        const userVitalTypes = await VitalType.find({_id: {$in: userVitalPreferences}});
+        const userVitalResults = await Vital.find({
+            created_at: {
+                $gte: todayStart,
+                $lte: todayEnd
+            },
+            user_id: userId
+        });
+        return {
+            code: codes.RESOURCE_FETCHED,
+            data: userVitalDetailsTransformer(userVitalResults,userVitalTypes,userVitalPreferences)
+        };
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const fetchUserVitals = async (payload) => {
-	try {
-		return await fetchRewardClaims(payload);
-	} catch (error) {
-		throw error;
-	}
+    try {
+        return await fetchRewardClaims(payload);
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const deleteUser = async (userId) => {
-	try {
-		await deleteRecord(Content, userId);
-		return {
-			code: codes.RESOURCE_DELETED
-		};
-	} catch (error) {
-		throw error;
-	}
+    try {
+        await deleteRecord(Content, userId);
+        return {
+            code: codes.RESOURCE_DELETED
+        };
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const fetchUserRecommendedLabs = async (payload) => {
-	try {
-		const { userId } = payload;
-		const userResult = await fetchUser({ userId });
-		const userData = userResult.data;
+    try {
+        const {userId} = payload;
+        const userResult = await fetchUser({userId});
+        const userData = userResult.data;
 
-		const ageEndDate = new Date();
-		const ageUnit = "years";
-		const userAge = dateDifference(userData.dob, ageEndDate, ageUnit);
-		const recommendationFilter = {
-			"criteria.min_age": { $lte: userAge },
-			"criteria.max_age": { $gte: userAge },
-			"criteria.gender": { $in: [userData.gender] }
-		};
-		const recommendedLabs = await Labs.find(recommendationFilter) || []
-		const userLabs = await UserLabs.find({ user_id: userId, type: "recommended" });
-		const userLabsDictionaryKey = "lab_id";
-		const userLabsDictionary = createDictionary(userLabs, userLabsDictionaryKey);
-		const results = recommendedLabs.map((lab) => {
-			const labWithStatus = {
-				id: lab._id,
-				title: lab.title,
-				isCompleted: "no"
-			};
-			const keyValue = lab._id.toString();
-			const userLabData = userLabsDictionary[keyValue];
-			if (userLabData) {
-				labWithStatus.isCompleted = "yes";
-				if (lab.criteria.duration_in_days > 0) {
-					console.log(lab);
-					const endDate = new Date();
-					const startDate = userLabData.created_at;
-					const unit = "months";
-					const durationInMonth = dateDifference(startDate, endDate, unit);
-					if (durationInMonth > lab.criteria.duration_in_days) {
-						labWithStatus.isExpired = "yes";
-						labWithStatus.created_at = userLabData.created_at;
-					}
-				}
-			}
-			labWithStatus.result = userLabData;
-			return labWithStatus;
-		});
-		return {
-			code: codes.RESOURCE_FETCHED,
-			data: results
-		};
-	} catch (error) {
-		throw error;
-	}
+        const ageEndDate = new Date();
+        const ageUnit = "years";
+        const userAge = dateDifference(userData.dob, ageEndDate, ageUnit);
+        const recommendationFilter = {
+            "criteria.min_age": {$lte: userAge},
+            "criteria.max_age": {$gte: userAge},
+            "criteria.gender": {$in: [userData.gender]}
+        };
+        const recommendedLabs = await Labs.find(recommendationFilter) || []
+        const userLabs = await UserLabs.find({user_id: userId, type: "recommended"});
+        const userLabsDictionaryKey = "lab_id";
+        const userLabsDictionary = createDictionary(userLabs, userLabsDictionaryKey);
+        const results = recommendedLabs.map((lab) => {
+            const labWithStatus = {
+                id: lab._id,
+                title: lab.title,
+                isCompleted: "no"
+            };
+            const keyValue = lab._id.toString();
+            const userLabData = userLabsDictionary[keyValue];
+            if (userLabData) {
+                labWithStatus.isCompleted = "yes";
+                if (lab.criteria.duration_in_days > 0) {
+                    console.log(lab);
+                    const endDate = new Date();
+                    const startDate = userLabData.created_at;
+                    const unit = "months";
+                    const durationInMonth = dateDifference(startDate, endDate, unit);
+                    if (durationInMonth > lab.criteria.duration_in_days) {
+                        labWithStatus.isExpired = "yes";
+                        labWithStatus.created_at = userLabData.created_at;
+                    }
+                }
+            }
+            labWithStatus.result = userLabData;
+            return labWithStatus;
+        });
+        return {
+            code: codes.RESOURCE_FETCHED,
+            data: results
+        };
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const createUserRecommendedLabResult = async (payload) => {
-	try {
-		const userLabData = await customCreate(UserLabs, payload);
-		return {
-			code: codes.RESOURCE_CREATED,
-			data: userLabData
-		};
-	} catch (error) {
-		throw error;
-	}
+    try {
+        const userLabData = await customCreate(UserLabs, payload);
+        return {
+            code: codes.RESOURCE_CREATED,
+            data: userLabData
+        };
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const createUserLab = async (payload) => {
-	try {
-		const userLabData = await customCreate(UserLabs, payload);
-		return {
-			code: codes.RESOURCE_CREATED,
-			data: userLabData
-		};
-	} catch (error) {
-		throw error;
-	}
+    try {
+        const userLabData = await customCreate(UserLabs, payload);
+        return {
+            code: codes.RESOURCE_CREATED,
+            data: userLabData
+        };
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const fetchUserLabs = async (payload = {}) => {
-	try {
-		const { page, pageSize, ...filters } = payload;
-		const result = await paginate({ Model: UserLabs, page, pageSize, filters ,referenceName:"lab_id"});
-		return {
-			code: codes.RESOURCE_FETCHED,
-			data:{
-				...result,
-				results:  result.results.map((item) => {
-					if(item.type === "recommended"){
-						const labName = item.lab_id.title;
-						delete item.lab_id;
-						return {
-							name:labName,
-							...item
-						}
-					}
-					return item
-				})
-			}
-		};
-	} catch (error) {
-		throw error;
-	}
+    try {
+        const {page, pageSize, ...filters} = payload;
+        const result = await paginate({Model: UserLabs, page, pageSize, filters, referenceName: "lab_id"});
+        return {
+            code: codes.RESOURCE_FETCHED,
+            data: {
+                ...result,
+                results: result.results.map((item) => {
+                    if (item.type === "recommended") {
+                        const labName = item.lab_id.title;
+                        delete item.lab_id;
+                        return {
+                            name: labName,
+                            ...item
+                        }
+                    }
+                    return item
+                })
+            }
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const fetchUntrackedVitals = async (payload = {}) => {
+    try {
+        const userResult = await fetchUser(payload)
+        const vitalTypesResult  =  await  fetchVitalTypes();
+        const userVitals = userResult.data.preference.vitals;
+        const vitalTypes = vitalTypesResult.data.results;
+         return {
+             code: codes.RESOURCE_FETCHED,
+             data: {
+                 results: vitalTypes.filter(vital => !userVitals.some(vitalId => vitalId.toString() === vital.id))
+             }
+         }
+    } catch (error) {
+        throw error
+    }
 };
 
 export const createDeviceToken = async (payload) => {
-	try {
-		const data = await DeviceToken.find({ user_id: payload.user_id });
-		if (data.length === 0) {
-			await customCreate(DeviceToken, payload);
-		} else {
-			await DeviceToken.updateOne({ user_id: payload.user_id }, { $set: { deviceToken: payload.deviceToken } });
-		}
-		return {
-			code: codes.RESOURCE_CREATED
-		};
-	} catch (error) {
-		throw error;
-	}
+    try {
+        const data = await DeviceToken.find({user_id: payload.user_id});
+        if (data.length === 0) {
+            await customCreate(DeviceToken, payload);
+        } else {
+            await DeviceToken.updateOne({user_id: payload.user_id}, {$set: {deviceToken: payload.deviceToken}});
+        }
+        return {
+            code: codes.RESOURCE_CREATED
+        };
+    } catch (error) {
+        throw error;
+    }
 };

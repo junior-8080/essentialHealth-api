@@ -1,77 +1,29 @@
 import mongoose, { Schema } from "mongoose";
 
-const VitalTargetSchema = new mongoose.Schema({
-	type: {
-		type: String,
+const VitalSchema = new mongoose.Schema({
+	vital_id: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'VitalType',
 		required: true
-	},
-	unit: {
-		type: String,
-
-		required: true
-	},
-	data_type: {
-		type: String,
-		enum: ["string", "number", "date"],
-		required: true
-	},
-	target: {
-		type: Schema.Types.Mixed
-	},
-	value: {
-		type: Schema.Types.Mixed
 	},
 	user_id: {
 		type: mongoose.Schema.Types.ObjectId, // Define as ObjectId type
 		ref: "User" // Reference to the Category model
 	},
-	created_at: {
-		type: Date,
-		default: Date.now()
-	}
-});
-
-const VitalTargetSchemaOLD = new mongoose.Schema({
-	blood_pressure: {
-		dia: {
-			progress: { type: Number },
-			target: { type: Number },
-			unit: { type: String }
+	variables: [{
+		keyword: {
+			type: String,
+			required: true
 		},
-		sys: {
-			progress: { type: Number },
-			target: { type: Number },
-			unit: { type: String }
-		},
-		pulse: {
-			progress: { type: Number },
-			target: { type: Number },
-			unit: { type: String }
+		value: {
+			type: Number,
+			required: true
 		}
-	},
-	sugar_level: {
-		progress: { type: Number },
-		target: { type: Number },
-		unit: { type: String }
-	},
-	steps: {
-		progress: { type: Number },
-		target: { type: Number },
-		unit: { type: String }
-	},
-	water_cups: {
-		progress: { type: Number },
-		target: { type: Number },
-		unit: { type: String }
-	},
-	user_id: {
-		type: mongoose.Schema.Types.ObjectId, // Define as ObjectId type
-		ref: "User" // Reference to the Category model
-	},
+	}],
 	created_at: {
 		type: Date,
 		default: Date.now()
 	}
 });
 
-export default VitalTargetSchema;
+export default VitalSchema;
