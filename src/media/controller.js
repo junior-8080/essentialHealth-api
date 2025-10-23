@@ -19,8 +19,6 @@ export const createMedia = async (request, response, next) => {
       type: getFileCategory(file.mimetype),
       ...request.body
     };
-    // console.log(saveMediaPayload);
-    // const validPayload = await validateRequestPayload();
     const responsePayload = await mediaServices.createMedia(saveMediaPayload);
     response.locals.responsePayload = {
       ...responsePayload
