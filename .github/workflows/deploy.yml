@@ -1,0 +1,114 @@
+name: Health Essentials CI/CD
+
+on:
+  push:
+    branches:
+      - develop       # deploy on push to develop
+  pull_request:
+    branches:
+      - develop       # validate on PRs (no deploy)
+
+jobs:
+  # ──────────────────────────────────────────────────────────
+  # JOB 1: Validate
+  # This app has no test/lint suite, so we just install deps and
+  # syntax-check every source file to catch parse errors early.
+  # ──────────────────────────────────────────────────────────
+  validate:
+    name: Install & Syntax Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Syntax-check all source files
+        run: find src -name '*.js' -print0 | xargs -0 -n1 node --check
+
+  # ──────────────────────────────────────────────────────────
+  # JOB 2: Deploy (only on push to main)
+  # No build step: this is a plain Express ESM app run via PM2.
+  # ──────────────────────────────────────────────────────────
+  deploy:
+    name: Deploy to Hetzner
+    runs-on: ubuntu-latest
+    needs: validate                    # only runs if validate passes
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ── Package the runtime artefacts ────────────────────
+      # No compile step, so we ship the source as-is. Dependencies
+      # are installed on the server. (public/ and v1/ are dev-only
+      # assets and are intentionally excluded.)
+      - name: Package release
+        run: |
+          tar -czf release.tar.gz \
+            src/ \
+            package.json \
+            ecosystem.config.cjs
+
+      # ── Upload to server ─────────────────────────────────
+      - name: Copy release to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HETZNER_HOST }}
+          username: ${{ secrets.HETZNER_USER }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          source: release.tar.gz
+          target: /home/${{ secrets.HETZNER_USER }}/releases/health-essentials-api/
+
+      # ── SSH in and do a zero-downtime swap ───────────────
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HETZNER_HOST }}
+          username: ${{ secrets.HETZNER_USER }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script: |
+            set -euo pipefail
+
+            RELEASE_DIR="${HOME}/releases/health-essentials-api"
+            APP_DIR="${HOME}/services/health-essentials-api"
+
+            echo "→ Preparing directories..."
+            mkdir -p "${RELEASE_DIR}" "${APP_DIR}" "${APP_DIR}/logs"
+
+            echo "→ Extracting release..."
+            cd "${APP_DIR}"
+            tar -xzf "${RELEASE_DIR}/release.tar.gz" --overwrite
+
+            if [ ! -f "${APP_DIR}/.env" ]; then
+              echo "✗ Missing ${APP_DIR}/.env — create it once with the production environment variables." >&2
+              exit 1
+            fi
+
+            echo "→ Installing production dependencies..."
+            npm install --omit=dev --no-audit --no-fund
+
+            echo "→ Reloading PM2 (zero-downtime)..."
+            if pm2 describe health-essentials-api > /dev/null 2>&1; then
+              pm2 reload ecosystem.config.cjs --update-env
+            else
+              pm2 start ecosystem.config.cjs
+            fi
+
+            echo "→ Saving PM2 process list..."
+            pm2 save
+
+            echo "→ Cleaning up old release archive..."
+            rm -f "${RELEASE_DIR}/release.tar.gz"
+
+            echo "✓ Deployment complete!"
+            pm2 status health-essentials-api
