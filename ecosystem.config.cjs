@@ -9,7 +9,7 @@
 module.exports = {
   apps: [
     {
-      name: "health-essentials-api",
+      name: "wellnesskasa-api",
       script: "src/app.js",
       node_args: "-r dotenv/config",
       instances: 1,

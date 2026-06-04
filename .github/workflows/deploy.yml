@@ -26,7 +26,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
@@ -67,7 +66,7 @@ jobs:
           username: ${{ secrets.HETZNER_USER }}
           key: ${{ secrets.HETZNER_SSH_KEY }}
           source: release.tar.gz
-          target: /home/${{ secrets.HETZNER_USER }}/releases/health-essentials-api/
+          target: /home/${{ secrets.HETZNER_USER }}/releases/wellnesskasa-api/
 
       # ── SSH in and do a zero-downtime swap ───────────────
       - name: Deploy on server
@@ -79,8 +78,8 @@ jobs:
           script: |
             set -euo pipefail
 
-            RELEASE_DIR="${HOME}/releases/health-essentials-api"
-            APP_DIR="${HOME}/services/health-essentials-api"
+            RELEASE_DIR="${HOME}/releases/wellnesskasa-api"
+            APP_DIR="${HOME}/services/wellnesskasa-api"
 
             echo "→ Preparing directories..."
             mkdir -p "${RELEASE_DIR}" "${APP_DIR}" "${APP_DIR}/logs"
@@ -98,7 +97,7 @@ jobs:
             npm install --omit=dev --no-audit --no-fund
 
             echo "→ Reloading PM2 (zero-downtime)..."
-            if pm2 describe health-essentials-api > /dev/null 2>&1; then
+            if pm2 describe wellnesskasa-api > /dev/null 2>&1; then
               pm2 reload ecosystem.config.cjs --update-env
             else
               pm2 start ecosystem.config.cjs
@@ -111,4 +110,4 @@ jobs:
             rm -f "${RELEASE_DIR}/release.tar.gz"
 
             echo "✓ Deployment complete!"
-            pm2 status health-essentials-api
+            pm2 status wellnesskasa-api
