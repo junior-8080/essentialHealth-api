@@ -1,4 +1,4 @@
-# Node JS backend
+# WellnessKasa backend
 
 ## To get started
 
