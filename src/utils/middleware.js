@@ -24,4 +24,17 @@ const authorize = async function (request, response, next) {
 	}
 };
 
+export const routeAccess = (routeAllowedRoles) => (request, response, next) => {
+	const { role } = request.userDetails || {};
+
+	if (!role || !routeAllowedRoles.includes(role)) {
+		return responseHandler(
+			{ code: codes.FORBIDDEN, message: `Access forbidden` },
+			response
+		);
+	}
+	next();
+};
+
+
 export default authorize;

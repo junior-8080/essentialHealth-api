@@ -1,5 +1,7 @@
 import express from "express";
 import * as rewardClaimServices from "./controller.js";
+import {routeAccess} from "../utils/middleware.js";
+import {permissions} from "../utils/permissions.js";
 // import authorize from "../utils/middleware.js";
 const router = express.Router();
 

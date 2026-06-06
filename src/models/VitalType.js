@@ -1,4 +1,4 @@
 import mongoose from "mongoose";
-import VitalType from "../schemas/VitalTypeSchema.js";
+import VitalTypeSchema from "../schemas/VitalTypeSchema.js";
 
-export default mongoose.model("VitalType", VitalType);
+export default mongoose.model("VitalType", VitalTypeSchema);

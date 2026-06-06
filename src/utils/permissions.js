@@ -1,0 +1,36 @@
+
+export const ROLES = {
+    ADMIN: 'Admin',
+    USER: 'User',
+}
+
+export const permissions = {
+    can_create_content: [ROLES.ADMIN],
+    can_update_content: [ROLES.ADMIN],
+    can_delete_content: [ROLES.ADMIN],
+    can_create_reward: [ROLES.ADMIN],
+    can_update_reward: [ROLES.ADMIN],
+    can_delete_reward: [ROLES.ADMIN],
+    can_create_shorts: [ROLES.ADMIN],
+    can_update_shorts: [ROLES.ADMIN],
+    can_delete_shorts: [ROLES.ADMIN],
+    can_create_subscription_plans: [ROLES.ADMIN],
+    can_update_subscription_plans: [ROLES.ADMIN],
+    can_edit_subscription_plans: [ROLES.ADMIN],
+    can_delete_subscription_plans: [ROLES.ADMIN],
+    can_create_media: [ROLES.ADMIN],
+    can_delete_media: [ROLES.ADMIN],
+    can_update_media: [ROLES.ADMIN],
+    can_create_instructors: [ROLES.ADMIN],
+    can_update_instructors: [ROLES.ADMIN],
+    can_delete_instructors: [ROLES.ADMIN],
+    can_create_category: [ROLES.ADMIN],
+    can_update_category: [ROLES.ADMIN],
+    can_delete_category: [ROLES.ADMIN],
+    can_create_tags: [ROLES.ADMIN],
+    can_update_tags: [ROLES.ADMIN],
+    can_delete_tags: [ROLES.ADMIN],
+    can_create_vital_types: [ROLES.ADMIN],
+    can_update_vital_types: [ROLES.ADMIN],
+    can_delete_vital_types: [ROLES.ADMIN],
+}

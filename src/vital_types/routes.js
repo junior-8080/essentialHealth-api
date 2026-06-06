@@ -1,10 +1,12 @@
 import express from "express";
 import * as vitalTypeControllers from "./controller.js";
-import authorize from "../utils/middleware.js";
+import authorize, {routeAccess} from "../utils/middleware.js";
+import {permissions} from "../utils/permissions.js";
+
 const router = express.Router();
 
-router.post("/", authorize, vitalTypeControllers.createVitalType);
-router.put("/:vitalTypeId", authorize, vitalTypeControllers.updateVitalType);
+router.post("/", authorize, routeAccess(permissions.can_create_vital_types), vitalTypeControllers.createVitalType);
+router.put("/:vitalTypeId", authorize, routeAccess(permissions.can_update_vital_types), vitalTypeControllers.updateVitalType);
 router.get("/", vitalTypeControllers.fetchVitalTypes);
 router.get("/:vitalTypeId", vitalTypeControllers.fetchVitalType);
 router.delete("/:vitalTypeId", vitalTypeControllers.deleteVitalType);
