@@ -18,7 +18,7 @@ router.post("/:userId/labs", authorize, userControllers.createUserLab);
 router.get("/:userId/labs", authorize, userControllers.fetchUserLabs);
 router.get("/:userId/untracked-vitals", authorize, userControllers.fetchUntrackedVitals);
 
-router.post("/:userId/device-token", userControllers.createDeviceToken);
+router.post("/:userId/device-token",authorize, userControllers.createDeviceToken);
 router.delete("/:userId", userControllers.deleteUser);
 
 export default router;
