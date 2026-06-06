@@ -25,7 +25,7 @@ import billingRoute from "./billing/routes.js";
 import messageRoute from "./messages/routes.js";
 import vitalTypeRoute from "./vital_types/routes.js";
 import {createUploadDirectories} from "./utils/helpers.js";
-import authorize from "./utils/middleware.js";
+import authorize, { errorHandler } from "./utils/middleware.js";
 import {createAdmin} from "./utils/common.js";
 
 const app = express();
@@ -72,10 +72,7 @@ app.use("/api/v1/subscriptions", subscriptionRoute);
 app.use("/api/v1/chats", messageRoute);
 app.use("/api/v1/vital-types", vitalTypeRoute);
 
-app.use((request, response) => {
-    const {responsePayload} = response.locals;
-    return responseHandler(responsePayload, response);
-});
+app.use(errorHandler);
 
 
 const appSetUp = async () => {

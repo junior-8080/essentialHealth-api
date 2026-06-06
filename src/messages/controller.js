@@ -1,7 +1,7 @@
-import { codes } from "../constants/codes.js";
 import { validateRequestPayload } from "../utils/helpers.js";
 import { messageSchema } from "../utils/schemaValidators.js";
 import * as messageServices from "./service.js";
+import responseHandler from "../utils/responseHandler.js";
 
 export const createMessage = async (request, response, next) => {
   try {
@@ -9,67 +9,43 @@ export const createMessage = async (request, response, next) => {
       created_by: request.userDetails.id,
       ...request.body
     };
-
     const validPayload = await validateRequestPayload(messageSchema, requestPayload);
     const responsePayload = await messageServices.createMessage(validPayload);
-    response.locals.responsePayload = {
-      ...responsePayload
-    };
-    next();
+    return responseHandler(responsePayload, response);
   } catch (error) {
-    response.locals.responsePayload = error;
-    next();
+    next(error);
   }
 };
+
 export const fetchMessages = async (request, response, next) => {
   try {
-    const requestPayload = {
-      ...request.query
-    };
-    const userRole = request.userDetails.role;
-    if (userRole === "User") {
+    const requestPayload = { ...request.query };
+    if (request.userDetails.role === "User") {
       requestPayload.user_id = request.userDetails.id;
     }
     const responsePayload = await messageServices.fetchMessages(requestPayload);
-    response.locals.responsePayload = {
-      ...responsePayload
-    };
-    next();
+    return responseHandler(responsePayload, response);
   } catch (error) {
-    response.locals.responsePayload = error;
-    next();
+    next(error);
   }
 };
 
 export const fetchMessage = async (request, response, next) => {
   try {
-    const requestPayload = {
-      ...request.params
-    };
+    const requestPayload = { ...request.params };
     const responsePayload = await messageServices.fetchMessage(requestPayload);
-    response.locals.responsePayload = {
-      ...responsePayload
-    };
-    next();
+    return responseHandler(responsePayload, response);
   } catch (error) {
-    response.locals.responsePayload = error;
-    next();
+    next(error);
   }
 };
 
 export const fetchMessageChats = async (request, response, next) => {
   try {
-    // const requestPayload = {
-    //   ...request.params
-    // };
     const responsePayload = await messageServices.fetchMessageChats();
-    response.locals.responsePayload = {
-      ...responsePayload
-    };
-    next();
+    return responseHandler(responsePayload, response);
   } catch (error) {
-    response.locals.responsePayload = error;
-    next();
+    next(error);
   }
 };
 
@@ -77,12 +53,8 @@ export const deleteMessage = async (request, response, next) => {
   try {
     const messageId = request.params.messageId;
     const responsePayload = await messageServices.deleteMessage(messageId);
-    response.locals.responsePayload = {
-      ...responsePayload
-    };
-    next();
+    return responseHandler(responsePayload, response);
   } catch (error) {
-    response.locals.responsePayload = error;
-    next();
+    next(error);
   }
 };

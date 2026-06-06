@@ -1,5 +1,5 @@
-import {codes} from "../constants/codes.js";
-import {validateRequestPayload} from "../utils/helpers.js";
+import { codes } from "../constants/codes.js";
+import { validateRequestPayload } from "../utils/helpers.js";
 import {
 	userActivityValidationSchema,
 	userLabSchema,
@@ -8,68 +8,47 @@ import {
 	vitalTargetValidationSchema
 } from "../utils/schemaValidators.js";
 import * as userServices from "./service.js";
+import responseHandler from "../utils/responseHandler.js";
 
 export const createUser = async (request, response, next) => {
 	try {
-		const requestPayload = {
-			...request.body
-		};
+		const requestPayload = { ...request.body };
 		const validPayload = await validateRequestPayload(userValidationSchema, requestPayload);
 		const responsePayload = await userServices.createUser(validPayload);
-		response.locals.responsePayload = {
-			...responsePayload
-		};
-		next();
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };
+
 export const fetchUsers = async (request, response, next) => {
 	try {
 		const responsePayload = await userServices.fetchUsers();
-		response.locals.responsePayload = {
-			...responsePayload
-		};
-		next();
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };
 
 export const fetchUser = async (request, response, next) => {
 	try {
-		const requestPayload = {
-			...request.params
-		};
+		const requestPayload = { ...request.params };
 		const responsePayload = await userServices.fetchUser(requestPayload);
-		response.locals.responsePayload = {
-			...responsePayload
-		};
-		next();
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		console.log("🚀 ~ fetchUser ~ error:", error);
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };
 
 export const updateUser = async (request, response, next) => {
 	try {
-		const requestPayload = {
-			...request.body
-		};
+		const requestPayload = { ...request.body };
 		const validPayload = await validateRequestPayload(userUpdateValidationSchema, requestPayload);
 		const userId = request.userDetails.id;
 		const responsePayload = await userServices.updateUser(userId, validPayload);
-		response.locals.responsePayload = {
-			...responsePayload
-		};
-		next();
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };
 
@@ -81,13 +60,9 @@ export const createUserMediaActivity = async (request, response, next) => {
 		};
 		const validPayload = await validateRequestPayload(userActivityValidationSchema, requestPayload);
 		const responsePayload = await userServices.createUserMediaActivity(validPayload);
-		response.locals.responsePayload = {
-			...responsePayload
-		};
-		next();
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };
 
@@ -95,36 +70,23 @@ export const createUserVitalTarget = async (request, response, next) => {
 	try {
 		const requestPayload = {
 			user_id: request.userDetails.id,
-			vitals: {
-				...request.body
-			}
+			vitals: { ...request.body }
 		};
 		const validPayload = await validateRequestPayload(vitalTargetValidationSchema, requestPayload);
 		const responsePayload = await userServices.createUserVitalTarget(validPayload);
-		response.locals.responsePayload = {
-			...responsePayload
-		};
-		next();
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };
 
 export const fetchUserVital = async (request, response, next) => {
 	try {
-		const requestPayload = {
-			...request.params,
-			...request.query
-		};
+		const requestPayload = { ...request.params, ...request.query };
 		const responsePayload = await userServices.fetchUserVitalNewNew(requestPayload);
-		response.locals.responsePayload = {
-			...responsePayload
-		};
-		next();
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };
 
@@ -136,13 +98,9 @@ export const fetchUserReward = async (request, response, next) => {
 			pageSize: request.query.pageSize
 		};
 		const responsePayload = await userServices.fetchUserReward(requestPayload);
-		response.locals.responsePayload = {
-			...responsePayload
-		};
-		next();
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };
 
@@ -153,44 +111,31 @@ export const createDeviceToken = async (request, response, next) => {
 			deviceToken: request.body.deviceToken
 		};
 		const responsePayload = await userServices.createDeviceToken(requestPayload);
-		response.locals.responsePayload = {
-			...responsePayload
-		};
-		next();
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };
 
 export const createUserRecommendedLabResult = async (request, response, next) => {
 	try {
-		const requestPayload = {
-			...request.body,
-			type: "recommended"
-		};
+		const requestPayload = { ...request.body, type: "recommended" };
 		const validPayload = await validateRequestPayload(userLabSchema, requestPayload);
 		validPayload.user_id = request.userDetails.id;
 		const responsePayload = await userServices.createUserRecommendedLabResult(validPayload);
-		response.locals.responsePayload = {
-			...responsePayload
-		};
-		next();
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };
 
 export const fetchUserRecommendedLabs = async (request, response, next) => {
 	try {
 		const userId = request.userDetails.role === "Admin" ? request.params.userId : request.userDetails.id;
-		const requestPayload = { userId };
-		response.locals.responsePayload = await userServices.fetchUserRecommendedLabs(requestPayload);
-		next();
+		const responsePayload = await userServices.fetchUserRecommendedLabs({ userId });
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };
 
@@ -203,56 +148,41 @@ export const createUserLab = async (request, response, next) => {
 			type: "unrecommended"
 		};
 		const responsePayload = await userServices.createUserLab(requestPayload);
-		response.locals.responsePayload = {
-			...responsePayload
-		};
-		next();
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };
 
 export const fetchUserLabs = async (request, response, next) => {
 	try {
 		const userRole = request.userDetails.role;
-		let userId = userRole === "Admin" ? request.params.userId : request.userDetails.id;
+		const userId = userRole === "Admin" ? request.params.userId : request.userDetails.id;
 		if (!userId) {
-			throw {
-				code: codes.INVALID_PARAMETERS,
-				message: "invalid user"
-			};
+			throw { code: codes.INVALID_PARAMETERS, message: "invalid user" };
 		}
 		const requestPayload = { user_id: userId };
-		if(userRole === "User"){
-			requestPayload.type =  "unrecommended"
+		if (userRole === "User") {
+			requestPayload.type = "unrecommended";
 		}
-
-		response.locals.responsePayload = await userServices.fetchUserLabs(requestPayload);
-		next();
+		const responsePayload = await userServices.fetchUserLabs(requestPayload);
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };
 
-export const fetchUntrackedVitals  = async (request, response, next) => {
+export const fetchUntrackedVitals = async (request, response, next) => {
 	try {
 		const userRole = request.userDetails.role;
-		let userId = userRole === "Admin" ? request.params.userId : request.userDetails.id;
+		const userId = userRole === "Admin" ? request.params.userId : request.userDetails.id;
 		if (!userId) {
-			throw {
-				code: codes.INVALID_PARAMETERS,
-				message: "invalid user"
-			};
+			throw { code: codes.INVALID_PARAMETERS, message: "invalid user" };
 		}
-		const requestPayload = {  userId };
-		response.locals.responsePayload = await userServices.fetchUntrackedVitals(requestPayload);
-		next();
+		const responsePayload = await userServices.fetchUntrackedVitals({ userId });
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		console.log(error)
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };
 
@@ -260,12 +190,8 @@ export const deleteUser = async (request, response, next) => {
 	try {
 		const userId = request.params.userId;
 		const responsePayload = await userServices.deleteUser(userId);
-		response.locals.responsePayload = {
-			...responsePayload
-		};
-		next();
+		return responseHandler(responsePayload, response);
 	} catch (error) {
-		response.locals.responsePayload = error;
-		next();
+		next(error);
 	}
 };

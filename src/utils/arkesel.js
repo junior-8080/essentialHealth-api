@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const ARKESEL_BASE_URL = "https://sms.arkesel.com/api";
 
 export const generateAndSendOtpViaArkesel = async (phoneNumber) => {
@@ -20,11 +19,8 @@ export const generateAndSendOtpViaArkesel = async (phoneNumber) => {
 			"api-key": process.env.SMS_API_KEY
 		};
 		const response = await axios.post(`${ARKESEL_BASE_URL}/otp/generate`, data, { headers });
-		console.log("🚀 ~ generateAndSendOtpViaArkesel ~ response:", response.data);
-
 		return response.data;
 	} catch (error) {
-		console.log("🚀 ~ generateAndSendOtpViaArkesel ~ error:", error);
 		throw error;
 	}
 };

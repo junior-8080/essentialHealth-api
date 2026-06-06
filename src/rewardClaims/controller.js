@@ -1,6 +1,7 @@
 import { validateRequestPayload } from "../utils/helpers.js";
 import { rewardClaimUpdatedValidationSchema, rewardClaimValidationSchema } from "../utils/schemaValidators.js";
 import * as rewardClaimServices from "./service.js";
+import responseHandler from "../utils/responseHandler.js";
 
 export const createRewardClaim = async (request, response, next) => {
   try {
@@ -10,13 +11,9 @@ export const createRewardClaim = async (request, response, next) => {
     };
     const validPayload = await validateRequestPayload(rewardClaimValidationSchema, requestPayload);
     const responsePayload = await rewardClaimServices.createRewardClaim(validPayload);
-    response.locals.responsePayload = {
-      ...responsePayload
-    };
-    next();
+    return responseHandler(responsePayload, response);
   } catch (error) {
-    response.locals.responsePayload = error;
-    next();
+    next(error);
   }
 };
 
@@ -26,52 +23,34 @@ export const updateRewardClaim = async (request, response, next) => {
       ...request.body,
       rewardClaimId: request.params.rewardClaimId
     };
-
     const validPayload = await validateRequestPayload(rewardClaimUpdatedValidationSchema, requestPayload);
     const responsePayload = await rewardClaimServices.updateRewardClaim(validPayload);
-    response.locals.responsePayload = {
-      ...responsePayload
-    };
-    next();
+    return responseHandler(responsePayload, response);
   } catch (error) {
-    response.locals.responsePayload = error;
-    next();
+    next(error);
   }
 };
 
 export const fetchRewardClaims = async (request, response, next) => {
   try {
-    const requestPayload = {
-      ...request.params,
-      ...request.query
-    };
+    const requestPayload = { ...request.params, ...request.query };
     const userRole = request.userDetails.role;
-    // console.log("🚀 ~ fetchRewardClaims ~ userRole:", userRole);
-    const userId = request.userDetails.id;
     if (userRole === "User") {
-      requestPayload.user_id = userId;
+      requestPayload.user_id = request.userDetails.id;
     }
     const responsePayload = await rewardClaimServices.fetchRewardClaims(requestPayload, userRole);
-    response.locals.responsePayload = {
-      ...responsePayload
-    };
-    next();
+    return responseHandler(responsePayload, response);
   } catch (error) {
-    response.locals.responsePayload = error;
-    next();
+    next(error);
   }
 };
 
 export const fetchRewardClaim = async (request, response, next) => {
   try {
     const responsePayload = await rewardClaimServices.fetchRewardClaim(request.params.rewardClaimId);
-    response.locals.responsePayload = {
-      ...responsePayload
-    };
-    next();
+    return responseHandler(responsePayload, response);
   } catch (error) {
-    response.locals.responsePayload = error;
-    next();
+    next(error);
   }
 };
 
@@ -79,12 +58,8 @@ export const deleteRewardClaim = async (request, response, next) => {
   try {
     const rewardClaimId = request.params.rewardClaimId;
     const responsePayload = await rewardClaimServices.deleteRewardClaim(rewardClaimId);
-    response.locals.responsePayload = {
-      ...responsePayload
-    };
-    next();
+    return responseHandler(responsePayload, response);
   } catch (error) {
-    response.locals.responsePayload = error;
-    next();
+    next(error);
   }
 };
