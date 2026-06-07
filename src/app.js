@@ -54,11 +54,11 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/tags", tagsRouter);
 app.use("/api/v1/categories", categoriesRouter);
 app.use("/api/v1/billing", billingRoute);
-app.use("/api/v1/users", userRouter);
 
 
 //Protected on all routes
-app.use(authorize)
+app.use(authorize);
+app.use("/api/v1/users", userRouter);
 app.use("/api/v1/media", mediaRouter);
 app.use("/api/v1/instructors", instructorsRouter);
 app.use("/api/v1/contents", contentsRouter);
