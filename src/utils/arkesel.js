@@ -12,7 +12,7 @@ export const generateAndSendOtpViaArkesel = async (phoneNumber) => {
 			medium: "sms",
 			message: "Essential Health verification code:%otp_code%",
 			number: phoneNumber,
-			sender_id: "Test",
+			sender_id: process.env.SMS_SEND_ID || "Test",
 			type: "numeric"
 		};
 		const headers = {
