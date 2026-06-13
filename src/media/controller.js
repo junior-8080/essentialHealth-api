@@ -1,6 +1,6 @@
 import { codes } from "../constants/codes.js";
 import { getFileCategory, validateRequestPayload } from "../utils/helpers.js";
-import { uploadToS3 } from "../utils/s3Setup.js";
+import { uploadToCloudinary } from "../utils/cloudinarySetup.js";
 import * as mediaServices from "./service.js";
 import responseHandler from "../utils/responseHandler.js";
 
@@ -11,7 +11,7 @@ export const createMedia = async (request, response, next) => {
       throw { code: codes.INVALID_PARAMETERS, message: "file is required" };
     }
     const fileCategory = getFileCategory(file.mimetype);
-    const fileUrl = await uploadToS3(file.path, file.filename, file.mimetype, fileCategory);
+    const fileUrl = await uploadToCloudinary(file.path, file.filename, file.mimetype, fileCategory);
     const saveMediaPayload = { fileUrl, type: fileCategory, ...request.body };
     const responsePayload = await mediaServices.createMedia(saveMediaPayload);
     return responseHandler(responsePayload, response);

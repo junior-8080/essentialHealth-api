@@ -5,7 +5,6 @@ import responseHandler from "./responseHandler.js";
 const authorize = async function (request, response, next) {
     try {
         const authToken = request.headers["x-access-token"];
-        console.log(authToken);
         if (!authToken) {
             throw {
                 code: codes.FORBIDDEN,
