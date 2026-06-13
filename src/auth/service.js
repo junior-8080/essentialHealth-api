@@ -6,15 +6,24 @@ import { createUser, fetchUser, fetchUsers } from "../users/service.js";
 
 export const login = async (payload) => {
 	try {
-		const { phoneNumber } = payload;
-		const otpData = await generateAndSendOtpViaArkesel(phoneNumber);
+		let { phoneNumber } = payload;
+		if (phoneNumber.startsWith("0")) {
+			phoneNumber = "233" + phoneNumber.slice(1);
+		}
+		const user = await fetchUserByPhoneNumber(phoneNumber);
+		if (!user) {
+			throw {
+				code: codes.NOT_FOUND,
+				message: "User not found"
+			};
+		}
+		generateAndSendOtpViaArkesel(phoneNumber).catch(console.error);
 		return {
 			code: codes.RESOURCE_CREATED,
-			message: "Opt has been send to sent successfully",
+			message: "Otp has been sent successfully",
 			data: {
 				otp_expires_minutes: process.env.OTP_EXPIRY_TIME,
-				otp_length: process.env.OPT_LENGTH,
-				otp_ussd_code: otpData.ussd_code
+				otp_length: process.env.OPT_LENGTH
 			}
 		};
 	} catch (error) {
